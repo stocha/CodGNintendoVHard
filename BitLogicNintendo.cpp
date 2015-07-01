@@ -19,87 +19,124 @@ using namespace std;
  * "00000083 000000e5"
  */
 
- std::vector<bitset<512>> solveIt(bitset<512> input,bitset<512> hypoth,int size,int depth){
-    std::vector<bitset<512>> res(128);
-    int magic[]={0,size/2-1,size/2+1,size-1};
-    for(int i=0;i<4;i++){
-        magic[i]+=depth;        
-    }
-    for(unsigned int i=0;i<16;i++){
+std::vector<bitset < 512 >> solveIt(bitset<512> input, bitset<512> hypoth, int size, int depth) {
+    std::vector<bitset < 512 >> res(128);
+    int magic[] = {0, size / 2 - 1, size / 2 + 1, size - 1};
+
+    for (unsigned int i = 0; i < 16; i++) {
         bitset<512> v;
-        v[magic[0]]=i&1;
-        v[magic[1]]=(i>>1 & 1);
+        v[magic[0] + depth] = i & 1;
+        v[magic[1] + depth] = ((i >> 1) & 1);
+        v[magic[2] + depth] = ((i >> 2) & 1);
+        v[magic[3] + depth] = ((i >> 2) & 1);
+
+        for (int i = 0; i < depth; i++) {
+            v[magic[0] + i] = hypoth[magic[0] + i];
+            v[magic[1] + i] = hypoth[magic[1] + i];
+            v[magic[2] + i] = hypoth[magic[2] + i];
+            v[magic[3] + i] = hypoth[magic[3] + i];
+        }
+        
+        // check formula ....
+        bool ext=input[depth];
+        bool possible=false;
+        for(int i=0;i<depth+1;i++){
+            int h=size/2;
+            possible=possible^(v[i]&v[h+(depth-i)]);
+        }
+        if(ext==possible){
+            res.push_back(v);
+        }
     }
-    
+
     return res;
 }
 
- std::string toStringBs(bitset<512> dat,int size){          
-      std::string mystring =
-    dat.to_string<char,std::string::traits_type,std::string::allocator_type>();
-      
-      return mystring.substr(512-size,512);
- }
- 
- std::string formula(int size){
-     std::string res;
-     std::string tmp[size];
-     res+="Formula ";
-     for(int i=0;i<size/2;i++){
-         for(int j=0;j<size/2;j++){
-             std::stringstream sstm;
-             int k=j+size/2;
-            sstm << "(" << i << "&" << k<<")";
-             tmp[i+j]+=""+sstm.str();;
-         }
-         
-     }
-     for(int i=0;i<size;i++){
-         res+=tmp[i];
-         res+="|";
-     }
-     
-     
-     return res;
- }
- 
- void showSomeDisplayVariableSize(){
-    testInputOutputCompareRef();
-    
-    bitset<512> my;
-        int size=6;
-      
-    //cout << formula(size/2) << endl;         
-    //cout << formula(size) << endl;     
-    //cout << formula(size*2) << endl;
-    
-    for(int sz=0;sz<=size;sz++){
-        cout << formula(sz) << endl;    
-        for(int i=0;i<myPow(2,sz);i++){
-            my=i;
+std::string toStringBs(bitset<512> dat, int size) {
+    std::string mystring =
+            dat.to_string<char, std::string::traits_type, std::string::allocator_type>();
 
-            cout<< toStringBs(my,sz) << " -> ";
-            cout<< toStringBs(applyDirectFun(my,sz),sz)<<endl;        
+    return mystring.substr(512 - size, 512);
+}
+
+std::string formula(int size) {
+    std::string res;
+    std::string tmp[size];
+    res += "Formula ";
+    for (int i = 0; i < size / 2; i++) {
+        for (int j = 0; j < size / 2; j++) {
+            std::stringstream sstm;
+            int k = j + size / 2;
+            sstm << "(" << i << "&" << k << ")";
+            tmp[i + j] += "" + sstm.str();
+            ;
         }
-    
 
     }
-    
-     
- 
- }
+    for (int i = 0; i < size; i++) {
+        res += tmp[i];
+        res += "|";
+    }
 
-int main(int argc, char** argv) {   
+
+    return res;
+}
+
+void testMyFunctionWithDifferentManualSize() {
+    testInputOutputCompareRef();
     bitset<512> my;
-        int size=16;
-      
+    int sz = 4;
     //cout << formula(size/2) << endl;         
     //cout << formula(size) << endl;     
     //cout << formula(size*2) << endl;
-    
-    for(int sz=16;sz<=size;sz++){
-        cout << formula(sz) << endl;       
+
+        for (int i = 0; i < myPow(2, sz); i++) {
+            my = i;
+
+            cout << toStringBs(my, sz) << " -> ";
+            cout << toStringBs(applyDirectFun(my, sz), sz) << endl;
+        }
+    cout<< "----------- END OF DIRECT --------" <<endl;
+
+        for (int i = 0; i < myPow(2, sz); i++) {
+    //for (int i = 0; i < 0; i++) {
+            my = i;
+            cout << " inverting " << toStringBs(my, sz)<< endl;
+            std::vector<bitset < 512 >> res=solveIt(my, my, sz, 0);
+            for(int sol=0;sol<res.size();sol++){
+                cout << toStringBs(res[sol], sz) << endl;
+            }
+            
+        }
+}
+
+void showSomeDisplayVariableSize() {
+    testInputOutputCompareRef();
+    bitset<512> my;
+    int size = 6;
+    //cout << formula(size/2) << endl;         
+    //cout << formula(size) << endl;     
+    //cout << formula(size*2) << endl;
+    for (int sz = 0; sz <= size; sz++) {
+        cout << formula(sz) << endl;
+        for (int i = 0; i < myPow(2, sz); i++) {
+            my = i;
+
+            cout << toStringBs(my, sz) << " -> ";
+            cout << toStringBs(applyDirectFun(my, sz), sz) << endl;
+        }
     }
+}
+
+int main(int argc, char** argv) {
+    testMyFunctionWithDifferentManualSize();
+    
+    //bitset<512> my;
+    //int size = 16;
+
+    //for (int sz = 16; sz <= size; sz++) {
+    //    cout << formula(sz) << endl;
+    //}
 
     return 0;
 }
