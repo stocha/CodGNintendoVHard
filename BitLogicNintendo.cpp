@@ -45,28 +45,32 @@ std::vector<bitset < 512 >> solveIt(bitset<512> input, bitset<512> hypoth, int s
         cout<< "v(aft hyp) : " << toStringBs(v, size) << endl;        
         
         // check formula .... left
-        bool ext=input[depth];
+        bool ext=input[depth-depth];
         bool possible=false;
         cout<<"{";
         for(int i=0;i<depth+1;i++){
             int h=size/2;
-            possible=possible^(v[i]&v[h+(depth-i)]);
-            cout<<"("<<i<<"&"<<(h+(depth-i))<<")";
+                int riand=i;
+                int rilef=h+(depth-i);            
+            possible=possible^(v[riand]&v[rilef]);
+            cout<<"("<<(riand)<<"&"<<(rilef)<<")"<< v[riand] << "&" <<  v[rilef];
         }
         cout<<"}"<<endl;
         cout << "ext " << ext << " calc "<< possible << endl;
         bool rightFormulaIsPassed=false;
         if(ext==possible){
             // check formula .... right
-            cout << " check right formula part " << endl;
+            cout << " check right formula part inputIs(" << toStringBs(input, size)  << ") " << endl;
             int rightEdge=size-1-depth;
-            bool ext=input[rightEdge];
+            bool ext=input[size-1-depth]; cout << "Extern bit " << " (" <<(size-1-depth) <<") is " << input[size-1-depth] <<endl;
             bool possible=false;
             cout<<"right {";
             for(int i=0;i<depth+1;i++){
                 int h=size/2;
-                possible=possible^(v[h-i-1]&v[rightEdge-i]);
-                cout<<"("<<(h-i-1)<<"&"<<(rightEdge-i)<<")";
+                int riand=h-i-1;
+                int rilef=rightEdge-i;
+                possible=possible^(v[riand]&v[rilef]);
+                cout<<"("<<(riand)<<"&"<<(rilef)<<")"<< v[riand] << "&" <<  v[rilef];
             }
             cout<<"}"<<endl;
             cout << "right form ext " << ext << " calc "<< possible << endl;     
