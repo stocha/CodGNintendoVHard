@@ -20,7 +20,7 @@ using namespace std;
  */
 
 std::vector<bitset < 512 >> solveIt(bitset<512> input, bitset<512> hypoth, int size, int depth) {
-    std::vector<bitset < 512 >> res(128);
+    std::vector<bitset < 512 >> res;
     int magic[] = {0, size / 2 - 1, size / 2 + 1, size - 1};
 
     for (unsigned int i = 0; i < 16; i++) {
@@ -104,7 +104,7 @@ void testMyFunctionWithDifferentManualSize() {
             cout << " inverting " << toStringBs(my, sz)<< endl;
             std::vector<bitset < 512 >> res=solveIt(my, my, sz, 0);
             for(int sol=0;sol<res.size();sol++){
-                cout << toStringBs(res[sol], sz) << endl;
+                cout << sol << " : " << toStringBs(res[sol], sz) << endl;
             }
             
         }
