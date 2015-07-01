@@ -23,6 +23,7 @@ std::vector<bitset < 512 >> solveIt(bitset<512> input, bitset<512> hypoth, int s
     std::vector<bitset < 512 >> res;
     int magic[] = {0, size / 2 - 1, size / 2 , size - 1};
     
+    cout << "hyp " << toStringBs(hypoth, size) << " deep= " << depth<<" ";
     cout <<"magic ";for(int i=0;i<4;i++)cout << magic[i] ;cout << endl;
 
     for (unsigned int i = 0; i < 16; i++) {
@@ -52,7 +53,15 @@ std::vector<bitset < 512 >> solveIt(bitset<512> input, bitset<512> hypoth, int s
         cout<<"}"<<endl;
         cout << "ext " << ext << " calc "<< possible << endl;
         if(ext==possible){
-            res.push_back(v);
+            
+            if(depth >=(size/2)-1){
+                res.push_back(v);
+            }else{
+                std::vector<bitset < 512 >> sub= solveIt(input,v,size,depth+1);
+                for(int sol=0;sol<sub.size();sol++){
+                    res.push_back(sub[sol]);
+                }
+            }
         }
     }
 
@@ -110,6 +119,35 @@ void testMyFunctionWithDifferentManualSize() {
         }
 }
 
+void testMyFunctionWithOneManualSize(){
+    testInputOutputCompareRef();
+    bitset<512> my;
+    int sz = 4;
+    int val=5;
+    //cout << formula(size/2) << endl;         
+    //cout << formula(size) << endl;     
+    //cout << formula(size*2) << endl;
+
+        for (int i = val; i < val+1; i++) {
+            my = i;
+
+            cout << toStringBs(my, sz) << " -> ";
+            cout << toStringBs(applyDirectFun(my, sz), sz) << endl;
+        }
+    cout<< "----------- END OF DIRECT --------" <<endl;
+
+        for (int i = val; i < val+1; i++) {
+    //for (int i = 0; i < 0; i++) {
+            my = i;
+            cout << " inverting " << toStringBs(my, sz)<< endl;
+            std::vector<bitset < 512 >> res=solveIt(my, my, sz, 0);
+            for(int sol=0;sol<res.size();sol++){
+                cout << sol << " : " << toStringBs(res[sol], sz) << endl;
+            }
+            
+        }    
+}
+
 void showSomeDisplayVariableSize() {
     testInputOutputCompareRef();
     bitset<512> my;
@@ -129,7 +167,10 @@ void showSomeDisplayVariableSize() {
 }
 
 int main(int argc, char** argv) {
-    testMyFunctionWithDifferentManualSize();
+    testMyFunctionWithOneManualSize();
+    
+    //testMyFunctionWithDifferentManualSize();
+    //testMyFunctionWithOneManualSize
     
     //bitset<512> my;
     //int size = 16;
