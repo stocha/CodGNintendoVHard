@@ -7,6 +7,7 @@
 
 #include <cstdlib>
 #include "Tools.h"
+#include <iomanip>
 
 using namespace std;
 
@@ -37,7 +38,7 @@ void official(string data){
                          (a[j / 32 + size / 32] >> (j % 32)) & 1 ) << ((i + j) % 32);   // Magic centaurian operation
 
     for(int i = 0; i < size / 16; i++)
-      cout << hex << b[i] << " ";       // print result    
+      cout << setfill('0') << setw(8) << hex << b[i] << " ";       // print result    
     
 }
 int main(int argc, char** argv) {
