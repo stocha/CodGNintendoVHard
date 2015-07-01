@@ -16,6 +16,16 @@ using namespace std;
  * "00000083 000000e5"
  */
 
+bitset<512> applyDirectFun (bitset<512> dat, int size){
+    bitset<512> out;
+    for(int i=0;i<size/2;i++){
+        for(int j=0;j<size/2;j++){
+            out[i+j]=out[i+j]^(dat[i]&dat[j+size/2]);
+        }
+    }
+    return out;
+}
+
 tuple<bitset<512>, int> toBitSet(string data){
     unique_ptr<std::istringstream> in=Tools::stringToStdin(data);
     int size=0;
@@ -83,10 +93,13 @@ int main(int argc, char** argv) {
     string form="32\nb0c152f9 ebf2831f"; //46508fb7 6677e201
     //string form="64\n0cf5c2bf 9aba68ef c18fb79b de70eef7"; //0cf5c2bf 9aba68ef c18fb79b de70eef7
     //string form="128\nc58f4047 d73fe36a 24be2846 e2ebe432 a30d28bd bda19675 3f95d074 b6f69434"; //0cf5c2bf 9aba68ef c18fb79b de70eef7
-    official(form);
+
     bitset<512> inpubs;int size;
     tie(inpubs,size)= toBitSet(form);
     toCout(inpubs,size);
+    
+    toCout(applyDirectFun(inpubs,size),size);
+     cout<<"official : ";   official(form);
     return 0;
 }
 
