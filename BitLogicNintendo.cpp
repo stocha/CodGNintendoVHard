@@ -44,7 +44,7 @@ std::vector<bitset < 512 >> solveIt(bitset<512> input, bitset<512> hypoth, int s
         
         cout<< "v(aft hyp) : " << toStringBs(v, size) << endl;        
         
-        // check formula ....
+        // check formula .... left
         bool ext=input[depth];
         bool possible=false;
         cout<<"{";
@@ -55,7 +55,30 @@ std::vector<bitset < 512 >> solveIt(bitset<512> input, bitset<512> hypoth, int s
         }
         cout<<"}"<<endl;
         cout << "ext " << ext << " calc "<< possible << endl;
+        bool rightFormulaIsPassed=false;
         if(ext==possible){
+            // check formula .... right
+            cout << " check right formula part " << endl;
+            int rightEdge=size-1-depth;
+            bool ext=input[rightEdge];
+            bool possible=false;
+            cout<<"right {";
+            for(int i=0;i<depth+1;i++){
+                int h=size/2;
+                possible=possible^(v[h-i-1]&v[rightEdge-i]);
+                cout<<"("<<(h-i-1)<<"&"<<(rightEdge-i)<<")";
+            }
+            cout<<"}"<<endl;
+            cout << "right form ext " << ext << " calc "<< possible << endl;     
+            
+            cout << "right form " <<" ext "<< ext << " possible "  << possible << endl;
+            
+            rightFormulaIsPassed=(ext==possible);
+            cout << "righ formula is passed " << rightFormulaIsPassed << endl;
+        }
+
+        
+        if(rightFormulaIsPassed){
             
             if(depth >=(size/2)-1){
                 cout << " adding validated " <<  toStringBs(v, size) << endl;
@@ -172,6 +195,7 @@ void showSomeDisplayVariableSize() {
 }
 
 int main(int argc, char** argv) {
+    cout << formula(8) << endl;
     cout << formula(4) << endl;    
     testMyFunctionWithOneManualSize();
     
