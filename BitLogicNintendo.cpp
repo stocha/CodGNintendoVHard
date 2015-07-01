@@ -33,13 +33,16 @@ std::vector<bitset < 512 >> solveIt(bitset<512> input, bitset<512> hypoth, int s
         v[magic[2] + depth] = ((i >> 2) & 1);
         v[magic[3] + depth] = ((i >> 3) & 1);
 
-        cout<< "v : " << toStringBs(v, size) << endl;
+        cout<< "v(b hyp) : " << toStringBs(v, size) << endl;
+        
         for (int i = 0; i < depth; i++) {
             v[magic[0] + i] = hypoth[magic[0] + i];
             v[magic[1] + i] = hypoth[magic[1] + i];
             v[magic[2] + i] = hypoth[magic[2] + i];
             v[magic[3] + i] = hypoth[magic[3] + i];
         }
+        
+        cout<< "v(aft hyp) : " << toStringBs(v, size) << endl;        
         
         // check formula ....
         bool ext=input[depth];
@@ -55,9 +58,11 @@ std::vector<bitset < 512 >> solveIt(bitset<512> input, bitset<512> hypoth, int s
         if(ext==possible){
             
             if(depth >=(size/2)-1){
+                cout << " adding validated " <<  toStringBs(v, size) << endl;
                 res.push_back(v);
             }else{
                 std::vector<bitset < 512 >> sub= solveIt(input,v,size,depth+1);
+                cout << "++++++++ back to "<< depth << " " << "hyp " << toStringBs(hypoth, size) << " deep= " << depth<<" " <<endl;
                 for(int sol=0;sol<sub.size();sol++){
                     res.push_back(sub[sol]);
                 }
@@ -167,6 +172,7 @@ void showSomeDisplayVariableSize() {
 }
 
 int main(int argc, char** argv) {
+    cout << formula(4) << endl;    
     testMyFunctionWithOneManualSize();
     
     //testMyFunctionWithDifferentManualSize();
