@@ -45,7 +45,7 @@ std::vector<bitset < 512 >> solveIt(bitset<512> input, bitset<512> hypoth, int s
         cout<< "v(aft hyp) : " << toStringBs(v, size) << endl;        
         
         // check formula .... left
-        bool ext=input[depth-depth];
+        bool ext=input[0+depth];
         bool possible=false;
         cout<<"{";
         for(int i=0;i<depth+1;i++){
@@ -62,8 +62,8 @@ std::vector<bitset < 512 >> solveIt(bitset<512> input, bitset<512> hypoth, int s
             // check formula .... right
             cout << " check right formula part inputIs(" << toStringBs(input, size)  << ") " << endl;
             int rightEdge=size-1-depth;
-            bool ext=input[size-1-depth]; cout << "Extern bit " << " (" <<(size-1-depth) <<") is " << input[size-1-depth] <<endl;
-            bool possible=false;
+            ext=input[size-2-depth]; cout << "Extern bit " << " (" <<(size-2-depth) <<") is " << input[size-2-depth] <<endl;
+            possible=false;
             cout<<"right {";
             for(int i=0;i<depth+1;i++){
                 int h=size/2;
@@ -174,7 +174,7 @@ void testMyFunctionWithOneManualSize(){
             cout << " inverting " << toStringBs(my, sz)<< endl;
             std::vector<bitset < 512 >> res=solveIt(my, my, sz, 0);
             for(int sol=0;sol<res.size();sol++){
-                cout << sol << " : " << toStringBs(res[sol], sz) << endl;
+                cout << sol << " ------- found ------ : " << toStringBs(res[sol], sz) << endl;
             }
             
         }    
