@@ -84,16 +84,20 @@ void official(string data){
 }
 
  void testInputOutputCompareRef(){
-     string form="32\nb0c152f9 ebf2831f"; //46508fb7 6677e201
+     //string form="32\nb0c152f9 ebf2831f"; //46508fb7 6677e201
     //string form="64\n0cf5c2bf 9aba68ef c18fb79b de70eef7"; //0cf5c2bf 9aba68ef c18fb79b de70eef7
     //string form="128\nc58f4047 d73fe36a 24be2846 e2ebe432 a30d28bd bda19675 3f95d074 b6f69434"; //0cf5c2bf 9aba68ef c18fb79b de70eef7
 
+     string form1="32\n0000b0c5 0000cd55"; //738377c1 00000000
+     string form2="32\nebf2831f b0c152f9";//46508fb7 6677e201
+     
+     
     bitset<512> inpubs;int size;
-    tie(inpubs,size)= toBitSet(form);
-    toCout(inpubs,size);
-    
+    tie(inpubs,size)= toBitSet(form1);
     toCout(applyDirectFun(inpubs,size),size);
-     cout<<"official : ";   official(form);
+    tie(inpubs,size)= toBitSet(form2);
+    toCout(applyDirectFun(inpubs,size),size);    
+
  }
 
 #endif	/* BLN_EXT001_H */

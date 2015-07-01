@@ -27,13 +27,48 @@ using namespace std;
       return mystring.substr(512-size,512);
  }
  
-
+ std::string formula(int size){
+     std::string res;
+     std::string tmp[size];
+     res+="Formula ";
+     for(int i=0;i<size/2;i++){
+         for(int j=0;j<size/2;j++){
+             std::stringstream sstm;
+             int k=j+size/2;
+            sstm << "(" << i << "&" << k<<")";
+             tmp[i+j]+=""+sstm.str();;
+         }
+         
+     }
+     for(int i=0;i<size;i++){
+         res+=tmp[i];
+         res+="|";
+     }
+     
+     
+     return res;
+ }
 
 int main(int argc, char** argv) {   
-    bitset<512> my (std::string("1001"));
-    int size=4;
-    cout<< toStringBs(my,size) << endl;
-     cout<< toStringBs(applyDirectFun(my,size),size)<<endl;
+    testInputOutputCompareRef();
+    
+    bitset<512> my;
+        int size=8;
+      
+    cout << formula(size/2) << endl;         
+    cout << formula(size) << endl;     
+    cout << formula(size*2) << endl;
+    for(int i=0;i<0xFF;i++){
+        my=i;
+        
+        cout<< toStringBs(my,size) << " -> ";
+        cout<< toStringBs(applyDirectFun(my,size),size)<<endl;        
+    }
+    
+
+    
+    
+
     return 0;
 }
 
