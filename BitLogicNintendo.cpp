@@ -21,15 +21,18 @@ using namespace std;
 
 std::vector<bitset < 512 >> solveIt(bitset<512> input, bitset<512> hypoth, int size, int depth) {
     std::vector<bitset < 512 >> res;
-    int magic[] = {0, size / 2 - 1, size / 2 + 1, size - 1};
+    int magic[] = {0, size / 2 - 1, size / 2 , size - 1};
+    
+    cout <<"magic ";for(int i=0;i<4;i++)cout << magic[i] ;cout << endl;
 
     for (unsigned int i = 0; i < 16; i++) {
         bitset<512> v;
         v[magic[0] + depth] = i & 1;
         v[magic[1] + depth] = ((i >> 1) & 1);
         v[magic[2] + depth] = ((i >> 2) & 1);
-        v[magic[3] + depth] = ((i >> 2) & 1);
+        v[magic[3] + depth] = ((i >> 3) & 1);
 
+        cout<< "v : " << toStringBs(v, size) << endl;
         for (int i = 0; i < depth; i++) {
             v[magic[0] + i] = hypoth[magic[0] + i];
             v[magic[1] + i] = hypoth[magic[1] + i];
@@ -40,23 +43,20 @@ std::vector<bitset < 512 >> solveIt(bitset<512> input, bitset<512> hypoth, int s
         // check formula ....
         bool ext=input[depth];
         bool possible=false;
+        cout<<"{";
         for(int i=0;i<depth+1;i++){
             int h=size/2;
             possible=possible^(v[i]&v[h+(depth-i)]);
+            cout<<"("<<i<<"&"<<(h+(depth-i))<<")";
         }
+        cout<<"}"<<endl;
+        cout << "ext " << ext << " calc "<< possible << endl;
         if(ext==possible){
             res.push_back(v);
         }
     }
 
     return res;
-}
-
-std::string toStringBs(bitset<512> dat, int size) {
-    std::string mystring =
-            dat.to_string<char, std::string::traits_type, std::string::allocator_type>();
-
-    return mystring.substr(512 - size, 512);
 }
 
 std::string formula(int size) {

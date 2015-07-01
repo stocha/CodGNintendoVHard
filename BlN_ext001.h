@@ -110,6 +110,14 @@ void official(string data){
     toCout(applyDirectFun(inpubs,size),size);    
 
  }
+ 
+ 
+std::string toStringBs(bitset<512> dat, int size) {
+    std::string mystring =
+            dat.to_string<char, std::string::traits_type, std::string::allocator_type>();
+
+    return mystring.substr(512 - size, 512);
+} 
 
 #endif	/* BLN_EXT001_H */
 
