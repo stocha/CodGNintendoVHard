@@ -16,38 +16,37 @@ using namespace std;
  * "00000083 000000e5"
  */
 
-bitset<64> toBitSet(string data){
+tuple<bitset<512>, int> toBitSet(string data){
     unique_ptr<std::istringstream> in=Tools::stringToStdin(data);
     int size=0;
     *in >> size;    
-    if(size != 32) {cout << "Unsuported size"; exit(1);}
     
-    unsigned int a[32 / 16];
-    bitset<32> ab[32 / 16]; 
+    unsigned int a[size / 16];
+    bitset<32> ab[size / 16]; 
     for (int i = 0; i < size / 16; i++) {
       *in >> hex >> a[i];
       ab[i]=bitset<32>(a[i]);
     }
-    bitset<64> outp;
+    bitset<512> outp;
     
-    for(int i=0;i<outp.size();i++){
+    for(int i=0;i<size*2;i++){
         int dec=i/32;
         int ind=i%32;
         outp[i]=ab[dec][ind];
     }
-    return outp;
+    return make_tuple(outp,size*2);
 }
 
-void  toCout(bitset<64> data){
-    cout << data << endl;
-    unsigned int a [data.size() / 32];
-    bitset<32> ab[data.size() / 32];
-    for(int i=0;i<data.size();i++){
+void  toCout(bitset<512> data,int size){
+    //cout << data << endl;
+    unsigned int a [size / 32];
+    bitset<32> ab[size / 32];
+    for(int i=0;i<size*2;i++){
         int dec=i/32;
         int ind=i%32;
         ab[dec][ind]=data[i];
     }
-    for(int i = 0; i < data.size() / 32; i++)
+    for(int i = 0; i < size / 32; i++)
       cout << setfill('0') << setw(8) << hex << ab[i].to_ulong() << " ";       // print result       
     cout<<endl;
 }
@@ -81,10 +80,13 @@ void official(string data){
     
 }
 int main(int argc, char** argv) {
-    string form="32\n00000001 00000001";
+    string form="32\nb0c152f9 ebf2831f"; //46508fb7 6677e201
+    //string form="64\n0cf5c2bf 9aba68ef c18fb79b de70eef7"; //0cf5c2bf 9aba68ef c18fb79b de70eef7
+    //string form="128\nc58f4047 d73fe36a 24be2846 e2ebe432 a30d28bd bda19675 3f95d074 b6f69434"; //0cf5c2bf 9aba68ef c18fb79b de70eef7
     official(form);
-    bitset<64> inpubs= toBitSet(form);
-    toCout(inpubs);
+    bitset<512> inpubs;int size;
+    tie(inpubs,size)= toBitSet(form);
+    toCout(inpubs,size);
     return 0;
 }
 
