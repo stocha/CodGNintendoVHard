@@ -22,7 +22,7 @@ public:
     Tools(const Tools& orig);
     virtual ~Tools();
     
-    static std::unique_ptr<std::istringstream> stringToStdin( );
+    static std::unique_ptr<std::istringstream> stringToStdin(string inString );
 private:
 
 };

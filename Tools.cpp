@@ -23,8 +23,8 @@ Tools::Tools(const Tools& orig) {
 Tools::~Tools() {
 }
 
-std::unique_ptr<std::istringstream> Tools::stringToStdin(){
-    string inString="00000083 000000e5";
+std::unique_ptr<std::istringstream> Tools::stringToStdin(string inString){
+    //string inString="00000083 000000e5";
     unique_ptr<std::istringstream> res(new istringstream(inString));
     //std::istringstream sin(inString);
     return res;
