@@ -49,6 +49,7 @@ std::unordered_set<bitset < SZVEC >> solveItV3(bitset<SZVEC> input, int size) {
         }
         if (depth >= (size / 2) -1) {
             res.insert(v);
+            cout << "found "<< toStringBs(v, size) << endl;
             if(increment(depth,v,size)) return res;
         }     
         // ++++++++++++++++++++ Right formula on current Hyp
@@ -138,6 +139,45 @@ void testAndValidateMyInvertingAtRandomWithManualSize() {
 
 }
 
+
+    struct {
+        bool operator()(bitset < SZVEC > a, bitset < SZVEC > b)
+        {   
+            for(int i=a.size()-1;i>=0;i--){
+                if(a[i]==true && b[i]==false) return false;
+                if(a[i]==false && b[i]==true) return true;
+            }
+            return false;
+        }   
+    } customLess;
+std::vector<bitset < SZVEC >> sortedFunctionInversion(bitset<SZVEC> input, int size) {
+    std::unordered_set<bitset < SZVEC >> unres=solveItV3(input,size);
+    std::vector<bitset < SZVEC >> res;
+                for (const auto& subv : unres) {
+                    res.push_back(subv);
+                } 
+        std::sort (res.begin(), res.end(),customLess);
+    return res;
+
+}
+
+void applyRealCase(){
+    //string data="32\n000073af 00000000";
+    string data="16\n73af 0000";
+    int size;
+    bitset<SZVEC> bs;
+    tie(bs,size)=toBitSet(data);
+    
+    cout << " from " << data << " inverting " <<toStringBs(bs, size)<< endl;
+    std::vector<bitset < SZVEC >> res= sortedFunctionInversion(bs,size);
+    for(int i=0;i<res.size();i++){
+        toCout(res[i],size);
+    }
+    
+    
+}
+
 int main(int argc, char** argv) {
-    testAndValidateMyInvertingAtRandomWithManualSize();
+    //testAndValidateMyInvertingAtRandomWithManualSize();
+    applyRealCase(  );
 }
