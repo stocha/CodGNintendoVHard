@@ -20,8 +20,8 @@ int myPow(int x, int p)
 }
 
 
-bitset<512> applyDirectFun (bitset<512> dat, int size){
-    bitset<512> out;
+bitset<SZVEC> applyDirectFun (bitset<SZVEC> dat, int size){
+    bitset<SZVEC> out;
     for(int i=0;i<size/2;i++){
         for(int j=0;j<size/2;j++){
             out[i+j]=out[i+j]^(dat[i]&dat[j+size/2]);
@@ -30,7 +30,7 @@ bitset<512> applyDirectFun (bitset<512> dat, int size){
     return out;
 }
 
-tuple<bitset<512>, int> toBitSet(string data){
+tuple<bitset<SZVEC>, int> toBitSet(string data){
     unique_ptr<std::istringstream> in=Tools::stringToStdin(data);
     int size=0;
     *in >> size;    
@@ -41,7 +41,7 @@ tuple<bitset<512>, int> toBitSet(string data){
       *in >> hex >> a[i];
       ab[i]=bitset<32>(a[i]);
     }
-    bitset<512> outp;
+    bitset<SZVEC> outp;
     
     for(int i=0;i<size*2;i++){
         int dec=i/32;
@@ -51,7 +51,27 @@ tuple<bitset<512>, int> toBitSet(string data){
     return make_tuple(outp,size*2);
 }
 
-void  toCout(bitset<512> data,int size){
+tuple<bitset<SZVEC>, int> readBitSetFromStdin(){
+    int size=0;
+    cin >> size;    
+    
+    unsigned int a[size / 16];
+    bitset<32> ab[size / 16]; 
+    for (int i = 0; i < size / 16; i++) {
+      cin >> hex >> a[i];
+      ab[i]=bitset<32>(a[i]);
+    }
+    bitset<SZVEC> outp;
+    
+    for(int i=0;i<size*2;i++){
+        int dec=i/32;
+        int ind=i%32;
+        outp[i]=ab[dec][ind];
+    }
+    return make_tuple(outp,size*2);
+}
+
+void  toCout(bitset<SZVEC> data,int size){
     //cout << data << endl;
     unsigned int a [size / 32];
     bitset<32> ab[size / 32];
@@ -103,7 +123,7 @@ void official(string data){
      string form2="32\nebf2831f b0c152f9";//46508fb7 6677e201
      
      
-    bitset<512> inpubs;int size;
+    bitset<SZVEC> inpubs;int size;
     tie(inpubs,size)= toBitSet(form1);
     toCout(applyDirectFun(inpubs,size),size);
     tie(inpubs,size)= toBitSet(form2);
@@ -112,12 +132,12 @@ void official(string data){
  }
  
  
-std::string toStringBs(bitset<512> dat, int size) {
+std::string toStringBs(bitset<SZVEC> dat, int size) {
     std::string mystring =
             dat.to_string<char, std::string::traits_type, std::string::allocator_type>();
 
     //cout << "doublageProvisoire pour test" << endl;
-    return mystring.substr(512 - size, 512);
+    return mystring.substr(SZVEC - size, SZVEC);
 } 
 
 #endif	/* BLN_EXT001_H */

@@ -15,22 +15,29 @@
 
 using namespace std;
 
+const int SZVEC = 64;
+
 #include "BlN_ext001.h"
+
+
 
 /*std::string& inString
  * "00000083 000000e5"
  */
 
-std::unordered_set<bitset < 512 >> solveIt(bitset<512> input, bitset<512> hypoth, int size, int depth) {
-    std::unordered_set<bitset < 512 >> res;
+
+
+
+std::unordered_set<bitset < SZVEC >> solveIt(bitset<SZVEC> input, bitset<SZVEC> hypoth, int size, int depth) {
+    std::unordered_set<bitset < SZVEC >> res;
     int magic[] = {0, size / 2 - 1, size / 2, size - 1};
 
-    //  cout << "hyp " << toStringBs(hypoth, size) << " deep= " << depth<<" ";
+      cout << "hyp " << toStringBs(hypoth, size) << " deep= " << depth<<" ";
     //  cout <<"magic ";for(int i=0;i<4;i++)cout << magic[i] ;cout << endl;
 
 
     for (unsigned int i = 0; i < 16; i++) {
-        bitset<512> v;
+        bitset<SZVEC> v;
         v[magic[0] + depth] = i & 1;
         v[magic[1] - depth] = ((i >> 1) & 1);
         v[magic[2] + depth] = ((i >> 2) & 1);
@@ -45,20 +52,20 @@ std::unordered_set<bitset < 512 >> solveIt(bitset<512> input, bitset<512> hypoth
             v[magic[3] - i] = hypoth[magic[3] - i];
         }
 
-      //    cout<< "v(aft hyp) : " << toStringBs(v, size) << endl;        
+          cout<< "v(aft hyp) : " << toStringBs(v, size) << endl;        
 
         // check formula .... left
         bool ext = input[0 + depth];
         bool possible = false;
-        // cout<<"{";
+         cout<<"{";
         for (int i = 0; i < depth + 1; i++) {
             int h = size / 2;
             int riand = i;
             int rilef = h + (depth - i);
             possible = possible^(v[riand] & v[rilef]);
-          //       cout<<"("<<(riand)<<"&"<<(rilef)<<")"<< v[riand] << "&" <<  v[rilef];
+                 cout<<"("<<(riand)<<"&"<<(rilef)<<")"<< v[riand] << "&" <<  v[rilef];
         }
-         //cout<<"}"<<endl;
+         cout<<"}"<<endl;
          // cout << "ext " << ext << " calc "<< possible << endl;
         bool rightFormulaIsPassed = false;
         
@@ -67,19 +74,19 @@ std::unordered_set<bitset < 512 >> solveIt(bitset<512> input, bitset<512> hypoth
          }else        
         if (ext == possible) {
             // check formula .... right
-            //     cout << " check right formula part inputIs(" << toStringBs(input, size)  << ") " << endl;
+                 cout << " check right formula part inputIs(" << toStringBs(input, size)  << ") " << endl;
             int rightEdge = size - 1 - depth;
             ext = input[size - 2 - depth]; // cout << "Extern bit " << " (" <<(size-2-depth) <<") is " << input[size-2-depth] <<endl;
             possible = false;
-               //  cout<<"right {";
+                 cout<<"right {";
             for (int i = 0; i < depth + 1; i++) {
                 int h = size / 2;
                 int riand = h - i - 1;
                 int rilef = rightEdge - i;
                 possible = possible^(v[riand] & v[rilef]);
-           //       cout<<"("<<(riand)<<"&"<<(rilef)<<")"<< v[riand] << "&" <<  v[rilef];
+                  cout<<"("<<(riand)<<"&"<<(rilef)<<")"<< v[riand] << "&" <<  v[rilef];
             }
-             // cout<<"}"<<endl; 
+              cout<<"}"<<endl; 
 
               // cout << "right form " <<" ext "<< ext << " possible "  << possible << endl;
 
@@ -96,8 +103,8 @@ std::unordered_set<bitset < 512 >> solveIt(bitset<512> input, bitset<512> hypoth
                 res.insert(v);
 
             } else {
-                std::unordered_set<bitset < 512 >> sub = solveIt(input, v, size, depth + 1);
-                //      cout << "++++++++ back to "<< depth << " " << "hyp " << toStringBs(hypoth, size) << " deep= " << depth<<" " <<endl;
+                std::unordered_set<bitset < SZVEC >> sub = solveIt(input, v, size, depth + 1);
+                      cout << "++++++++ back to "<< depth << " " << "hyp " << toStringBs(hypoth, size) << " deep= " << depth<<" " <<endl;
                 for (const auto& subv : sub) {
                     res.insert(subv);
                     /* ... process elem ... */
@@ -110,7 +117,7 @@ std::unordered_set<bitset < 512 >> solveIt(bitset<512> input, bitset<512> hypoth
 }
 
     struct {
-        bool operator()(bitset < 512 > a, bitset < 512 > b)
+        bool operator()(bitset < SZVEC > a, bitset < SZVEC > b)
         {   
             for(int i=a.size()-1;i>=0;i--){
                 if(a[i]==true && b[i]==false) return false;
@@ -119,9 +126,9 @@ std::unordered_set<bitset < 512 >> solveIt(bitset<512> input, bitset<512> hypoth
             return false;
         }   
     } customLess;
-std::vector<bitset < 512 >> sortedFunctionInversion(bitset<512> input, int size) {
-    std::unordered_set<bitset < 512 >> unres=solveIt(input,input,size,0);
-    std::vector<bitset < 512 >> res;
+std::vector<bitset < SZVEC >> sortedFunctionInversion(bitset<SZVEC> input, int size) {
+    std::unordered_set<bitset < SZVEC >> unres=solveIt(input,input,size,0);
+    std::vector<bitset < SZVEC >> res;
                 for (const auto& subv : unres) {
                     res.push_back(subv);
                 } 
@@ -155,8 +162,8 @@ std::string formula(int size) {
 
 void testMyFunctionWithDifferentManualSize() {
     testInputOutputCompareRef();
-    bitset<512> my;
-    int sz = 4;
+    bitset<SZVEC> my;
+    int sz = 10;
     //cout << formula(size/2) << endl;         
     //cout << formula(size) << endl;     
     //cout << formula(size*2) << endl;
@@ -173,7 +180,7 @@ void testMyFunctionWithDifferentManualSize() {
         //for (int i = 0; i < 0; i++) {
         my = i;
         cout << " inverting " << toStringBs(my, sz) << endl;
-        std::vector<bitset < 512 >> res = sortedFunctionInversion(my, sz);
+        std::vector<bitset < SZVEC >> res = sortedFunctionInversion(my, sz);
 
         {
             int elemind = 0;
@@ -187,9 +194,9 @@ void testMyFunctionWithDifferentManualSize() {
 
 void testMyFunctionWithOneManualSize() {
     testInputOutputCompareRef();
-    bitset<512> my;
-    int sz = 4;
-    int val = 3;
+    bitset<SZVEC> my;
+    int sz = 8;
+    unsigned int val = 0x014;
     //cout << formula(size/2) << endl;         
     //cout << formula(size) << endl;     
     //cout << formula(size*2) << endl;
@@ -199,14 +206,16 @@ void testMyFunctionWithOneManualSize() {
 
         cout << toStringBs(my, sz) << " -> ";
         cout << toStringBs(applyDirectFun(my, sz), sz) << endl;
+        my=applyDirectFun(my, sz);
+ 
     }
     cout << "----------- END OF DIRECT --------" << endl;
 
     for (int i = val; i < val + 1; i++) {
         //for (int i = 0; i < 0; i++) {
-        my = i;
+
         cout << " inverting " << toStringBs(my, sz) << endl;
-        std::unordered_set<bitset < 512 >> res = solveIt(my, my, sz, 0);
+        std::unordered_set<bitset < SZVEC >> res = solveIt(my, my, sz, 0);
 
         {
             int elemind = 0;
@@ -218,9 +227,49 @@ void testMyFunctionWithOneManualSize() {
     }
 }
 
+void testMyInvertingWithManualSize(){
+    std::unordered_set<bitset < SZVEC >> done;
+    
+    bitset<SZVEC> my;
+    int sz = 8;
+    unsigned int val = 0x0e24;
+    //cout << formula(size/2) << endl;         
+    //cout << formula(size) << endl;     
+    //cout << formula(size*2) << endl;
+
+    for (int i = 0; i < myPow(2, sz); i++) {
+        my = i;
+
+        cout << toStringBs(my, sz) << " -> ";
+        cout << toStringBs(applyDirectFun(my, sz), sz) << endl;
+        bitset<SZVEC> myori=my;
+        my=applyDirectFun(my, sz);
+        
+        if(done.find(my)==done.end()){
+            done.insert(my);
+
+                cout << " inverting " << toStringBs(myori, sz) << endl;
+                std::unordered_set<bitset < SZVEC >> res = solveIt(my, my, sz, 0);
+                {
+                    int elemind = 0;
+                    for (const auto& elem : res) {
+                        cout << (elemind++) << " : " << toStringBs(elem, sz) << endl;
+                    }
+                }   
+                if(res.find(myori)==res.end()){
+                    cout << " ERROR " << toStringBs(myori,sz) << " not found " << endl;
+                }
+        }
+ 
+    }
+    cout << "----------- END OF DIRECT --------" << endl;
+
+  
+}
+
 void showSomeDisplayVariableSize() {
     testInputOutputCompareRef();
-    bitset<512> my;
+    bitset<SZVEC> my;
     int size = 6;
     //cout << formula(size/2) << endl;         
     //cout << formula(size) << endl;      
@@ -236,16 +285,47 @@ void showSomeDisplayVariableSize() {
     }
 }
 
+void applyRealCase(){
+    string data="32\n000073af 00000000";
+    int size;
+    bitset<SZVEC> bs;
+    tie(bs,size)=toBitSet(data);
+    std::vector<bitset < SZVEC >> res= sortedFunctionInversion(bs,size);
+    for(int i=0;i<res.size();i++){
+        toCout(res[i],size);
+    }
+    
+    
+}
+
+void applyStdIn(){
+    int size;
+    bitset<SZVEC> bs;
+    tie(bs,size)=readBitSetFromStdin();
+    std::vector<bitset < SZVEC >> res= sortedFunctionInversion(bs,size);
+    for(int i=0;i<res.size();i++){
+        toCout(res[i],size);
+    }
+    
+    
+}
+
 int main(int argc, char** argv) {
+    
+    //applyRealCase();
+    //applyStdIn();
+    
+    //testMyInvertingWithManualSize();
+    
     cout << formula(8) << endl;
-    cout << formula(4) << endl;
-    //testMyFunctionWithOneManualSize();
-    testMyFunctionWithDifferentManualSize();
+    //cout << formula(4) << endl;
+    testMyFunctionWithOneManualSize();
+    //testMyFunctionWithDifferentManualSize();
 
     //testMyFunctionWithDifferentManualSize();
     //testMyFunctionWithOneManualSize
 
-    //bitset<512> my;
+    //bitset<SZVEC> my;
     //int size = 16;
 
     //for (int sz = 16; sz <= size; sz++) {
