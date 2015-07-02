@@ -45,21 +45,21 @@ std::unordered_set<bitset < 512 >> solveIt(bitset<512> input, bitset<512> hypoth
             v[magic[3] - i] = hypoth[magic[3] - i];
         }
 
-          cout<< "v(aft hyp) : " << toStringBs(v, size) << endl;        
+      //    cout<< "v(aft hyp) : " << toStringBs(v, size) << endl;        
 
         // check formula .... left
         bool ext = input[0 + depth];
         bool possible = false;
-         cout<<"{";
+        // cout<<"{";
         for (int i = 0; i < depth + 1; i++) {
             int h = size / 2;
             int riand = i;
             int rilef = h + (depth - i);
             possible = possible^(v[riand] & v[rilef]);
-                 cout<<"("<<(riand)<<"&"<<(rilef)<<")"<< v[riand] << "&" <<  v[rilef];
+          //       cout<<"("<<(riand)<<"&"<<(rilef)<<")"<< v[riand] << "&" <<  v[rilef];
         }
-         cout<<"}"<<endl;
-          cout << "ext " << ext << " calc "<< possible << endl;
+         //cout<<"}"<<endl;
+         // cout << "ext " << ext << " calc "<< possible << endl;
         bool rightFormulaIsPassed = false;
         
          if (depth >= (size / 2) - 1) {
@@ -71,20 +71,20 @@ std::unordered_set<bitset < 512 >> solveIt(bitset<512> input, bitset<512> hypoth
             int rightEdge = size - 1 - depth;
             ext = input[size - 2 - depth]; // cout << "Extern bit " << " (" <<(size-2-depth) <<") is " << input[size-2-depth] <<endl;
             possible = false;
-                 cout<<"right {";
+               //  cout<<"right {";
             for (int i = 0; i < depth + 1; i++) {
                 int h = size / 2;
                 int riand = h - i - 1;
                 int rilef = rightEdge - i;
                 possible = possible^(v[riand] & v[rilef]);
-                  cout<<"("<<(riand)<<"&"<<(rilef)<<")"<< v[riand] << "&" <<  v[rilef];
+           //       cout<<"("<<(riand)<<"&"<<(rilef)<<")"<< v[riand] << "&" <<  v[rilef];
             }
-              cout<<"}"<<endl; 
+             // cout<<"}"<<endl; 
 
-               cout << "right form " <<" ext "<< ext << " possible "  << possible << endl;
+              // cout << "right form " <<" ext "<< ext << " possible "  << possible << endl;
 
             rightFormulaIsPassed = (ext == possible);
-              cout << "righ formula is passed " << rightFormulaIsPassed << endl;
+            //  cout << "righ formula is passed " << rightFormulaIsPassed << endl;
         }
 
 
@@ -107,6 +107,27 @@ std::unordered_set<bitset < 512 >> solveIt(bitset<512> input, bitset<512> hypoth
     } // fin parcours hypotheses
 
     return res;
+}
+
+    struct {
+        bool operator()(bitset < 512 > a, bitset < 512 > b)
+        {   
+            for(int i=a.size()-1;i>=0;i--){
+                if(a[i]==true && b[i]==false) return false;
+                if(a[i]==false && b[i]==true) return true;
+            }
+            return false;
+        }   
+    } customLess;
+std::vector<bitset < 512 >> sortedFunctionInversion(bitset<512> input, int size) {
+    std::unordered_set<bitset < 512 >> unres=solveIt(input,input,size,0);
+    std::vector<bitset < 512 >> res;
+                for (const auto& subv : unres) {
+                    res.push_back(subv);
+                } 
+        std::sort (res.begin(), res.end(),customLess);
+    return res;
+
 }
 
 std::string formula(int size) {
@@ -152,7 +173,7 @@ void testMyFunctionWithDifferentManualSize() {
         //for (int i = 0; i < 0; i++) {
         my = i;
         cout << " inverting " << toStringBs(my, sz) << endl;
-        std::unordered_set<bitset < 512 >> res = solveIt(my, my, sz, 0);
+        std::vector<bitset < 512 >> res = sortedFunctionInversion(my, sz);
 
         {
             int elemind = 0;
@@ -218,8 +239,8 @@ void showSomeDisplayVariableSize() {
 int main(int argc, char** argv) {
     cout << formula(8) << endl;
     cout << formula(4) << endl;
-    testMyFunctionWithOneManualSize();
-    //testMyFunctionWithDifferentManualSize();
+    //testMyFunctionWithOneManualSize();
+    testMyFunctionWithDifferentManualSize();
 
     //testMyFunctionWithDifferentManualSize();
     //testMyFunctionWithOneManualSize
