@@ -88,7 +88,12 @@ std::unordered_set<bitset < SZVEC >> solveItV2(bitset<SZVEC> input, int size) {
         if (possible != ext) // reject value
         {
             if(increment(depth,v,size)) return res;
+            continue;
         }
+        if (depth >= (size / 2) -1) {
+            res.insert(v);
+            if(increment(depth,v,size)) return res;
+        }     
         // ++++++++++++++++++++ Right formula on current Hyp
         //+++++++++++++++
         // check formula .... right
@@ -104,13 +109,10 @@ std::unordered_set<bitset < SZVEC >> solveItV2(bitset<SZVEC> input, int size) {
         if (possible != ext) // reject value
         {
             if(increment(depth,v,size)) return res;
+            continue;
         }
         //+++++++++++++++ Value accepted
-        if (depth >= (size / 2) - 1) {
-            res.insert(v);
-            if(increment(depth,v,size)) return res;
-        }
-        else{
+        { // send it to next wave of checks
             depth++;
         }
 
@@ -254,8 +256,8 @@ void testAndValidateMyInvertingAtRandomWithManualSize() {
 
             cout << " from " << toStringBs(myori, sz) << " inverting " <<toStringBs(my, sz)<< endl;
             clock_t begin = clock();
-           // std::unordered_set<bitset < SZVEC >> res = solveIt(my,my, sz,0);
-             std::unordered_set<bitset < SZVEC >> res = solveItV2(my, sz);
+            //std::unordered_set<bitset < SZVEC >> res = solveIt(my,my, sz,0);
+            std::unordered_set<bitset < SZVEC >> res = solveItV2(my, sz);
             {
                 int elemind = 0;
                 if (showResult) for (const auto& elem : res) {
