@@ -300,7 +300,7 @@ void testAndValidateMyInvertingAtRandomWithManualSize(){
     for (int i = 0; i < nbNumberToTry; i++) {
         long rl=rand()^(((long)rand()) << 32);
         rl=rl%maxValue;
-        cout << " Random " << hex << rl << endl;
+        //cout << " Random " << hex << rl << endl;
         my = rl;
 
         cout << toStringBs(my, sz) << " -> ";
@@ -311,7 +311,8 @@ void testAndValidateMyInvertingAtRandomWithManualSize(){
         if(done.find(my)==done.end()){
             done.insert(my);
 
-               // cout << " inverting " << toStringBs(myori, sz) << endl;
+                cout << " inverting " << toStringBs(myori, sz) ;
+                 clock_t begin = clock();
                 std::unordered_set<bitset < SZVEC >> res = solveIt(my, my, sz, 0);
                 {
                     int elemind = 0;
@@ -319,6 +320,9 @@ void testAndValidateMyInvertingAtRandomWithManualSize(){
                        // cout << (elemind++) << " : " << toStringBs(elem, sz) << endl;
                   //  }
                 }   
+                clock_t end = clock();
+                double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;   
+                cout << "  { exec time " << elapsed_secs << " s " << endl;
                 if(res.find(myori)==res.end()){
                     cout << " ERROR " << toStringBs(myori,sz) << " not found " << endl;
                 }
