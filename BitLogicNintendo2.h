@@ -190,9 +190,10 @@ std::string toStringBs(bitset<SZVEC> dat, int size) {
 
 
 
-bool increment(int& depth,bitset < SZVEC >& v , int size){
+bool increment(int& depth,int &count,bitset < SZVEC >& v , int size){
     
     int magic[] = {0, size / 2 - 1, size / 2, size - 1};
+    count++;
 
     bool debugIncr = false; 
 
@@ -241,6 +242,7 @@ std::unordered_set<bitset < SZVEC >> solveItV2(bitset<SZVEC> input, int size) {
     int magic[] = {0, size / 2 - 1, size / 2, size - 1};
 
     int depth = 0;
+    int count;
 
     bool debugIncr = false;
     bool debugCurrLoopState = false;
@@ -270,12 +272,12 @@ std::unordered_set<bitset < SZVEC >> solveItV2(bitset<SZVEC> input, int size) {
         }
         if (possible != ext) // reject value
         {
-            if(increment(depth,v,size)) return res;
+            if(increment(depth,count,v,size)) return res;
             continue;
         }
         if (depth >= (size / 2) -1) {
             res.insert(v);
-            if(increment(depth,v,size)) return res;
+            if(increment(depth,count,v,size)) return res;
         }     
         // ++++++++++++++++++++ Right formula on current Hyp
         //+++++++++++++++
@@ -291,7 +293,7 @@ std::unordered_set<bitset < SZVEC >> solveItV2(bitset<SZVEC> input, int size) {
         }
         if (possible != ext) // reject value
         {
-            if(increment(depth,v,size)) return res;
+            if(increment(depth,count,v,size)) return res;
             continue;
         }
         //+++++++++++++++ Value accepted

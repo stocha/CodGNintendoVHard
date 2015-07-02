@@ -9,15 +9,18 @@
 
 
 
+
 std::unordered_set<bitset < SZVEC >> solveItV3(bitset<SZVEC> input, int size) {
     std::unordered_set<bitset < SZVEC >> res;
     bitset<SZVEC> v;
     int magic[] = {0, size / 2 - 1, size / 2, size - 1};
+    int count=0;
 
     int depth = 0;
 
     bool debugIncr = false;
     bool debugCurrLoopState = false;
+    bool debugCount=true;
     
     //std::unordered_set<bitset < SZVEC >> debugHypSeq[10];
 
@@ -44,13 +47,13 @@ std::unordered_set<bitset < SZVEC >> solveItV3(bitset<SZVEC> input, int size) {
         }
         if (possible != ext) // reject value
         {
-            if(increment(depth,v,size)) return res;
+            if(increment(depth,count,v,size)){  if(debugCount) cout << " COMPLEX " << count << endl;return res; }
             continue;
         }
         if (depth >= (size / 2) -1) {
             res.insert(v);
-            cout << "found "<< toStringBs(v, size) << endl;
-            if(increment(depth,v,size)) return res;
+            cout << "found "<< toStringBs(v, size) << " curr compl " << count << endl;
+            if(increment(depth,count,v,size)){ if(debugCount) cout << " COMPLEX " << count << endl;return res;  }
         }     
         // ++++++++++++++++++++ Right formula on current Hyp
         //+++++++++++++++
@@ -66,7 +69,7 @@ std::unordered_set<bitset < SZVEC >> solveItV3(bitset<SZVEC> input, int size) {
         }
         if (possible != ext) // reject value
         {
-            if(increment(depth,v,size)) return res;
+            if(increment(depth,count,v,size)){ if(debugCount) cout << " COMPLEX " << count << endl;return res;  }
             continue;
         }
         //+++++++++++++++ Value accepted
@@ -81,13 +84,36 @@ std::unordered_set<bitset < SZVEC >> solveItV3(bitset<SZVEC> input, int size) {
 }
 
 
+void randize(bitset<SZVEC>& r,int a, int b, int c, int d, int sz){
+    bitset<SZVEC> one=1;
+    one =a;
+    r=one;
+    r=r<<16;
+    one =b;
+    r|=one;
+    r=r<<16;
+    one =c;
+    r|=one;
+    r=r<<16;
+    one =d;
+    r|one;
+           
+    bitset<SZVEC> m=1;
+    one=1;
+    while(sz-1>0){
+        sz=sz-1;
+        m=m<<1 | one;
+    }
+    //r=r&m;
+}
+
 void testAndValidateMyInvertingAtRandomWithManualSize() {
 
     bool showResult = true;
 
     cout << "testAndValidateMyInvertingAtRandomWithManualSize " << endl;
     std::unordered_set<bitset < SZVEC >> done;
-    srand(0x478754);
+    srand(0x4787599F4);
     bitset<SZVEC> my;
     int sz = 48;
     unsigned int val = 0x0e24FF;
@@ -95,7 +121,7 @@ void testAndValidateMyInvertingAtRandomWithManualSize() {
     //cout << formula(size) << endl;     
     //cout << formula(size*2) << endl;
 
-    int nbNumberToTry = 3;
+    int nbNumberToTry = 3000;
     long maxValue = 1;
     for (int i = 0; i < sz - 1; i++) {
         maxValue |= maxValue << 1;
@@ -104,9 +130,17 @@ void testAndValidateMyInvertingAtRandomWithManualSize() {
     cout << "MaxValue " << maxValue << endl;
     for (int i = 0; i < nbNumberToTry; i++) {
         long rl = rand()^(((long) rand()) << 32);
+        
         rl = rl % maxValue;
+
         //cout << " Random " << hex << rl << endl;
-        my = rl;
+
+        if(sz <=16)
+                my = rl;
+        else{
+            randize(my,rand(),rand(),rand(),rand(),sz);
+        }        
+        
         bitset<SZVEC> myori = my;
         my = applyDirectFun(my, sz);
             bitset<SZVEC> checkIt;
@@ -163,9 +197,9 @@ std::vector<bitset < SZVEC >> sortedFunctionInversion(bitset<SZVEC> input, int s
 
 }
 
-void applyRealCase(){
+void applyRealCase(string data){
     //string data="32\n000073af 00000000";
-    string data="16\n73af 0000";
+    //string data="16\n73af 0000";
     int size;
     bitset<SZVEC> bs;
     tie(bs,size)=toBitSet(data);
@@ -179,7 +213,38 @@ void applyRealCase(){
     
 }
 
+std::string formula(int size) {
+    std::string res;
+    std::string tmp[size];
+    res += "Formula ";
+    for (int i = 0; i < size / 2; i++) {
+        for (int j = 0; j < size / 2; j++) {
+            std::stringstream sstm;
+            int k = j + size / 2;
+            sstm << "(" << i << "&" << k << ")";
+            tmp[i + j] += "" + sstm.str();
+            ;
+        }
+
+    }
+    for (int i = 0; i < size; i++) {
+        res += tmp[i];
+        res += "|\n";
+    }
+  //  res += tmp[0];res += "|\n";
+  //  res += tmp[size/2];res += "|\n";
+  //  res += tmp[size/2 +1];res += "|\n";
+  //  res += tmp[size-2];res += "|\n";
+
+
+    return res;
+}
+
 int main(int argc, char** argv) {
+   // cout << formula(4) << endl;
+    //cout << formula(64) << endl;
     testAndValidateMyInvertingAtRandomWithManualSize();
-   // applyRealCase(  );
+    //applyRealCase( "16\n000f 0000" );
+    //applyRealCase( "16\n00af 0000" );
+    //applyRealCase( "32\n46508fb7 6677e201");    
 }

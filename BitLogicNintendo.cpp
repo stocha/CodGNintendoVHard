@@ -394,7 +394,7 @@ int main_____firstV1(int argc, char** argv) {
     
    //testMyInvertingWithManualSize();
     
-    //cout << formula(8) << endl;
+    cout << formula(8) << endl;
     //cout << formula(4) << endl;
     //testMyFunctionWithOneManualSize();
     testAndValidateMyInvertingAtRandomWithManualSize();
