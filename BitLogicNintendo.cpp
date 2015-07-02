@@ -31,7 +31,12 @@ const int SZVEC = 64;
 std::unordered_set<bitset < SZVEC >> solveIt(bitset<SZVEC> input, bitset<SZVEC> hypoth, int size, int depth) {
     std::unordered_set<bitset < SZVEC >> res;
     int magic[] = {0, size / 2 - 1, size / 2, size - 1};
+    
+    bool activate_formul_debug=false;
+    
+    if(depth==0) activate_formul_debug=false;
 
+    if(activate_formul_debug)
       cout << "hyp " << toStringBs(hypoth, size) << " deep= " << depth<<" ";
     //  cout <<"magic ";for(int i=0;i<4;i++)cout << magic[i] ;cout << endl;
 
@@ -52,20 +57,22 @@ std::unordered_set<bitset < SZVEC >> solveIt(bitset<SZVEC> input, bitset<SZVEC> 
             v[magic[3] - i] = hypoth[magic[3] - i];
         }
 
-          cout<< "v(aft hyp) : " << toStringBs(v, size) << endl;        
+        //if(depth>=1 && v==20) activate_formul_debug=true;
+            if(activate_formul_debug)
+          cout<< "--- depth " << depth << " v(aft hyp) : " << toStringBs(v, size) << endl;        
 
         // check formula .... left
         bool ext = input[0 + depth];
         bool possible = false;
-         cout<<"{";
+         if(activate_formul_debug)    cout<<"{";
         for (int i = 0; i < depth + 1; i++) {
             int h = size / 2;
             int riand = i;
             int rilef = h + (depth - i);
             possible = possible^(v[riand] & v[rilef]);
-                 cout<<"("<<(riand)<<"&"<<(rilef)<<")"<< v[riand] << "&" <<  v[rilef];
+              if(activate_formul_debug)       cout<<"("<<(riand)<<"&"<<(rilef)<<")"<< v[riand] << "&" <<  v[rilef];
         }
-         cout<<"}"<<endl;
+        if(activate_formul_debug)     cout<<"}"<<endl;
          // cout << "ext " << ext << " calc "<< possible << endl;
         bool rightFormulaIsPassed = false;
         
@@ -74,19 +81,19 @@ std::unordered_set<bitset < SZVEC >> solveIt(bitset<SZVEC> input, bitset<SZVEC> 
          }else        
         if (ext == possible) {
             // check formula .... right
-                 cout << " check right formula part inputIs(" << toStringBs(input, size)  << ") " << endl;
-            int rightEdge = size - 1 - depth;
+             if(activate_formul_debug)        cout << " check right formula part inputIs(" << toStringBs(input, size)  << ") " << endl;
+            int rightEdge = size - 1;
             ext = input[size - 2 - depth]; // cout << "Extern bit " << " (" <<(size-2-depth) <<") is " << input[size-2-depth] <<endl;
             possible = false;
-                 cout<<"right {";
+              if(activate_formul_debug)       cout<<"right {";
             for (int i = 0; i < depth + 1; i++) {
                 int h = size / 2;
                 int riand = h - i - 1;
                 int rilef = rightEdge - i;
                 possible = possible^(v[riand] & v[rilef]);
-                  cout<<"("<<(riand)<<"&"<<(rilef)<<")"<< v[riand] << "&" <<  v[rilef];
+             if(activate_formul_debug)         cout<<"("<<(riand)<<"&"<<(rilef)<<")"<< v[riand] << "&" <<  v[rilef];
             }
-              cout<<"}"<<endl; 
+             if(activate_formul_debug)     cout<<"}"<<endl; 
 
               // cout << "right form " <<" ext "<< ext << " possible "  << possible << endl;
 
@@ -104,7 +111,7 @@ std::unordered_set<bitset < SZVEC >> solveIt(bitset<SZVEC> input, bitset<SZVEC> 
 
             } else {
                 std::unordered_set<bitset < SZVEC >> sub = solveIt(input, v, size, depth + 1);
-                      cout << "++++++++ back to "<< depth << " " << "hyp " << toStringBs(hypoth, size) << " deep= " << depth<<" " <<endl;
+              if(activate_formul_debug)            cout << "++++++++ back to "<< depth << " " << "hyp " << toStringBs(hypoth, size) << " deep= " << depth<<" " <<endl;
                 for (const auto& subv : sub) {
                     res.insert(subv);
                     /* ... process elem ... */
@@ -315,11 +322,11 @@ int main(int argc, char** argv) {
     //applyRealCase();
     //applyStdIn();
     
-    //testMyInvertingWithManualSize();
+    testMyInvertingWithManualSize();
     
     cout << formula(8) << endl;
     //cout << formula(4) << endl;
-    testMyFunctionWithOneManualSize();
+    //testMyFunctionWithOneManualSize();
     //testMyFunctionWithDifferentManualSize();
 
     //testMyFunctionWithDifferentManualSize();
