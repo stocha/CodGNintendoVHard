@@ -14,6 +14,8 @@ std::unordered_set<bitset < SZVEC >> solveItV2(bitset<SZVEC> input, int size) {
 
     int depth = 0;
 
+    bool debugIncr = true;
+
     while (true) {
 
 
@@ -30,7 +32,10 @@ std::unordered_set<bitset < SZVEC >> solveItV2(bitset<SZVEC> input, int size) {
         }
         if (possible != ext) // reject value
         { // incr
-            {
+            if(depth< (size/2 -1)){
+                if (debugIncr) cout << " Magic for d " << depth << " is " << (magic[0] + depth) << "|" << (magic[1] - depth) << "|" << (magic[2] + depth) << "|" << (magic[3] - depth) << "|" << endl;
+                if (debugIncr) cout << "(L) increment (before)" << " depth is  " << depth << " v " << toStringBs(v, size) << endl;
+
                 int inc = 0;
                 inc |= v[magic[0] + depth] ? 1 : 0;
                 inc |= v[magic[1] - depth] ? 2 : 0;
@@ -44,6 +49,8 @@ std::unordered_set<bitset < SZVEC >> solveItV2(bitset<SZVEC> input, int size) {
                 v[magic[2] + depth] = ((inc >> 2) & 1);
                 v[magic[3] - depth] = ((inc >> 3) & 1);
 
+                if (debugIncr) cout << "(L) increment (after)" << " depth is  " << depth << " v " << toStringBs(v, size) << " inc compt " << inc << endl;
+
                 if (inc >= 16) {
                     // Depth end MAX REACH
                     if (depth == 0) return res;
@@ -52,6 +59,9 @@ std::unordered_set<bitset < SZVEC >> solveItV2(bitset<SZVEC> input, int size) {
                 } else {
                     continue;
                 }
+            }else{
+                    depth--;
+                    continue;                
             }
         }
         // ++++++++++++++++++++ Right formula on current Hyp
@@ -68,7 +78,11 @@ std::unordered_set<bitset < SZVEC >> solveItV2(bitset<SZVEC> input, int size) {
         }
         if (possible != ext) // reject value
         { // incr
+            if(depth< (size/2 -1))
             {
+                if (debugIncr) cout << " Magic for d " << depth << " is " << (magic[0] + depth) << "|" << (magic[1] - depth) << "|" << (magic[2] + depth) << "|" << (magic[3] - depth) << "|" << endl;
+                if (debugIncr) cout << "(R) increment (before)" << " depth is  " << depth << " v " << toStringBs(v, size) << endl;
+
                 int inc = 0;
                 inc |= v[magic[0] + depth] ? 1 : 0;
                 inc |= v[magic[1] - depth] ? 2 : 0;
@@ -82,6 +96,8 @@ std::unordered_set<bitset < SZVEC >> solveItV2(bitset<SZVEC> input, int size) {
                 v[magic[2] + depth] = ((inc >> 2) & 1);
                 v[magic[3] - depth] = ((inc >> 3) & 1);
 
+                if (debugIncr) cout << "(R) increment (after)" << " depth is  " << depth << " v " << toStringBs(v, size) << " inc compt " << inc << endl;
+
                 if (inc >= 16) {
                     // Depth end MAX REACH
                     if (depth == 0) return res;
@@ -90,6 +106,9 @@ std::unordered_set<bitset < SZVEC >> solveItV2(bitset<SZVEC> input, int size) {
                 } else {
                     continue;
                 }
+            }else{
+                    depth--;
+                    continue;                
             }
         }
         //+++++++++++++++ Value accepted
@@ -102,7 +121,11 @@ std::unordered_set<bitset < SZVEC >> solveItV2(bitset<SZVEC> input, int size) {
             while (!foundIncr) {
                 depth--;
                 // incr
+                if(depth< (size/2 -1)){
                 {
+                    if (debugIncr) cout << " Magic for d " << depth << " is " << (magic[0] + depth) << "|" << (magic[1] - depth) << "|" << (magic[2] + depth) << "|" << (magic[3] - depth) << "|" << endl;
+                    if (debugIncr) cout << "(K) increment (before)" << " depth is  " << depth << " v " << toStringBs(v, size) << endl;
+
                     int inc = 0;
                     inc |= v[magic[0] + depth] ? 1 : 0;
                     inc |= v[magic[1] - depth] ? 2 : 0;
@@ -116,6 +139,8 @@ std::unordered_set<bitset < SZVEC >> solveItV2(bitset<SZVEC> input, int size) {
                     v[magic[2] + depth] = ((inc >> 2) & 1);
                     v[magic[3] - depth] = ((inc >> 3) & 1);
 
+                    if (debugIncr) cout << "(K) increment (after)" << " depth is  " << depth << " v " << toStringBs(v, size) << " inc compt " << inc << endl;
+
                     if (inc >= 16) {
                         // Depth end MAX REACH
                         if (depth == 0) return res;
@@ -124,7 +149,10 @@ std::unordered_set<bitset < SZVEC >> solveItV2(bitset<SZVEC> input, int size) {
                         foundIncr = true;
                         break;
                     }
-                } // Incr block                   
+                } // Incr block        else{
+                    depth--;
+                    continue;                
+            }           
             }
             continue; // incrementation done
         } else {
@@ -269,7 +297,7 @@ void testAndValidateMyInvertingAtRandomWithManualSize() {
         if (done.find(my) == done.end()) {
             done.insert(my);
 
-            cout << " inverting " << toStringBs(myori, sz);
+            cout << " inverting " << toStringBs(myori, sz) << endl;
             clock_t begin = clock();
             std::unordered_set<bitset < SZVEC >> res = solveItV2(my, sz);
             {
