@@ -32,13 +32,16 @@ std::unordered_set<bitset < SZVEC >> solveIt(bitset<SZVEC> input, bitset<SZVEC> 
     std::unordered_set<bitset < SZVEC >> res;
     int magic[] = {0, size / 2 - 1, size / 2, size - 1};
     
+    bool activCond=false;
     bool activate_formul_debug=false;
+    unsigned long valHypActDebug=41;
     
-    if(depth==0) activate_formul_debug=false;
+    if(activCond)if(depth==0) activate_formul_debug=true;
 
     if(activate_formul_debug)
       cout << "hyp " << toStringBs(hypoth, size) << " deep= " << depth<<" ";
     //  cout <<"magic ";for(int i=0;i<4;i++)cout << magic[i] ;cout << endl;
+    //if( input!=40 || depth==0 )cout <<"input " <<toStringBs(input, size) << "--- depth " << depth << endl;
 
 
     for (unsigned int i = 0; i < 16; i++) {
@@ -57,7 +60,7 @@ std::unordered_set<bitset < SZVEC >> solveIt(bitset<SZVEC> input, bitset<SZVEC> 
             v[magic[3] - i] = hypoth[magic[3] - i];
         }
 
-        //if(depth>=1 && v==20) activate_formul_debug=true;
+       if(activCond) if(depth>=1 && v==valHypActDebug) activate_formul_debug=true;
             if(activate_formul_debug)
           cout<< "--- depth " << depth << " v(aft hyp) : " << toStringBs(v, size) << endl;        
 
@@ -89,7 +92,7 @@ std::unordered_set<bitset < SZVEC >> solveIt(bitset<SZVEC> input, bitset<SZVEC> 
             for (int i = 0; i < depth + 1; i++) {
                 int h = size / 2;
                 int riand = h - i - 1;
-                int rilef = rightEdge - i;
+                int rilef = rightEdge - depth + i;
                 possible = possible^(v[riand] & v[rilef]);
              if(activate_formul_debug)         cout<<"("<<(riand)<<"&"<<(rilef)<<")"<< v[riand] << "&" <<  v[rilef];
             }
@@ -203,7 +206,7 @@ void testMyFunctionWithOneManualSize() {
     testInputOutputCompareRef();
     bitset<SZVEC> my;
     int sz = 8;
-    unsigned int val = 0x014;
+    unsigned int val = 41;
     //cout << formula(size/2) << endl;         
     //cout << formula(size) << endl;     
     //cout << formula(size*2) << endl;
@@ -322,11 +325,11 @@ int main(int argc, char** argv) {
     //applyRealCase();
     //applyStdIn();
     
-    testMyInvertingWithManualSize();
+   // testMyInvertingWithManualSize();
     
     cout << formula(8) << endl;
     //cout << formula(4) << endl;
-    //testMyFunctionWithOneManualSize();
+    testMyFunctionWithOneManualSize();
     //testMyFunctionWithDifferentManualSize();
 
     //testMyFunctionWithDifferentManualSize();
