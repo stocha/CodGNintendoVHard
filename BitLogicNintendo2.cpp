@@ -89,7 +89,7 @@ void testAndValidateMyInvertingAtRandomWithManualSize() {
     std::unordered_set<bitset < SZVEC >> done;
     srand(0x478754);
     bitset<SZVEC> my;
-    int sz = 32;
+    int sz = 48;
     unsigned int val = 0x0e24FF;
     //cout << formula(size/2) << endl;         
     //cout << formula(size) << endl;     
@@ -109,7 +109,7 @@ void testAndValidateMyInvertingAtRandomWithManualSize() {
         my = rl;
         bitset<SZVEC> myori = my;
         my = applyDirectFun(my, sz);
-
+            bitset<SZVEC> checkIt;
         if (done.find(my) == done.end()) {
             cout << toStringBs(myori, sz) << " Appli direct -> "<< toStringBs(my, sz) << endl;            
             
@@ -122,7 +122,9 @@ void testAndValidateMyInvertingAtRandomWithManualSize() {
             {
                 int elemind = 0;
                 if (showResult) for (const auto& elem : res) {
-                        cout << (elemind++) << " : " << toStringBs(elem, sz) << endl;
+                    checkIt=applyDirectFun(elem, sz);
+                    bool valid=(checkIt==my);
+                        cout << (elemind++) << " : " << toStringBs(elem, sz)<< " valid " << valid << endl;
                     }
             }
             clock_t end = clock();
@@ -178,6 +180,6 @@ void applyRealCase(){
 }
 
 int main(int argc, char** argv) {
-    //testAndValidateMyInvertingAtRandomWithManualSize();
-    applyRealCase(  );
+    testAndValidateMyInvertingAtRandomWithManualSize();
+   // applyRealCase(  );
 }
