@@ -32,17 +32,17 @@ std::unordered_set<bitset < 512 >> solveIt(bitset<512> input, bitset<512> hypoth
     for (unsigned int i = 0; i < 16; i++) {
         bitset<512> v;
         v[magic[0] + depth] = i & 1;
-        v[magic[1] + depth] = ((i >> 1) & 1);
+        v[magic[1] - depth] = ((i >> 1) & 1);
         v[magic[2] + depth] = ((i >> 2) & 1);
-        v[magic[3] + depth] = ((i >> 3) & 1);
+        v[magic[3] - depth] = ((i >> 3) & 1);
 
         //  cout<< "v(b hyp) : " << toStringBs(v, size) << endl;
 
         for (int i = 0; i < depth; i++) {
             v[magic[0] + i] = hypoth[magic[0] + i];
-            v[magic[1] + i] = hypoth[magic[1] + i];
+            v[magic[1] - i] = hypoth[magic[1] - i];
             v[magic[2] + i] = hypoth[magic[2] + i];
-            v[magic[3] + i] = hypoth[magic[3] + i];
+            v[magic[3] - i] = hypoth[magic[3] - i];
         }
 
         //  cout<< "v(aft hyp) : " << toStringBs(v, size) << endl;        
@@ -145,7 +145,7 @@ void testMyFunctionWithDifferentManualSize() {
     }
     cout << "----------- END OF DIRECT --------" << endl;
 
-    for (int i = 0; i < myPow(2, sz); i++) {
+    for (int i = 0; i < myPow(2, sz-1); i++) {
         //for (int i = 0; i < 0; i++) {
         my = i;
         cout << " inverting " << toStringBs(my, sz) << endl;

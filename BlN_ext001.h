@@ -116,6 +116,7 @@ std::string toStringBs(bitset<512> dat, int size) {
     std::string mystring =
             dat.to_string<char, std::string::traits_type, std::string::allocator_type>();
 
+    //cout << "doublageProvisoire pour test" << endl;
     return mystring.substr(512 - size, 512);
 } 
 
