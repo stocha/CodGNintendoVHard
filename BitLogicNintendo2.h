@@ -1,12 +1,31 @@
 /* 
- * File:   BlN_ext001.h
+ * File:   BitLogicNintendo2.h
  * Author: Jahan
  *
- * Created on 1 juillet 2015, 17:33
+ * Created on 2 juillet 2015, 12:02
  */
 
-#ifndef BLN_EXT001_H
-#define	BLN_EXT001_H
+#ifndef BITLOGICNINTENDO2_H
+#define	BITLOGICNINTENDO2_H
+
+#include <cstdlib>
+#include <iomanip>
+#include <bitset>
+#include <vector>
+#include <unordered_set>
+#include <algorithm>
+#include <string>
+#include <iostream>
+#include <vector>
+#include <sstream> 
+#include <sstream> //this is where istringstream is defined
+#include <string>
+#include <memory>
+
+
+using namespace std;
+
+const int SZVEC = 64;
 
 class Tools {
 public:
@@ -34,7 +53,6 @@ std::unique_ptr<std::istringstream> Tools::stringToStdin(string inString){
     //std::istringstream sin(inString);
     return res;
 }
-
 
 int myPow(int x, int p)
 {
@@ -167,5 +185,5 @@ std::string toStringBs(bitset<SZVEC> dat, int size) {
     return mystring.substr(SZVEC - size, SZVEC);
 } 
 
-#endif	/* BLN_EXT001_H */
+#endif	/* BITLOGICNINTENDO2_H */
 

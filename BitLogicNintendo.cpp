@@ -11,9 +11,19 @@
 #include <vector>
 #include <unordered_set>
 #include <algorithm>
-#include "Tools.h"
+#include <string>
+#include <iostream>
+#include <vector>
+#include <sstream> 
+#include <sstream> //this is where istringstream is defined
+#include <string>
+#include <memory>
 
 using namespace std;
+namespace bilninV1
+{
+    
+    using namespace bilninV1;
 
 const int SZVEC = 64;
 
@@ -377,7 +387,7 @@ void applyStdIn(){
     
 }
 
-int main(int argc, char** argv) {
+int main_____firstV1(int argc, char** argv) {
     
     //applyRealCase();
     //applyStdIn();
@@ -403,3 +413,4 @@ int main(int argc, char** argv) {
     return 0;
 }
 
+}
