@@ -6,10 +6,12 @@
  */
 
 #include <cstdlib>
-#include "Tools.h"
 #include <iomanip>
 #include <bitset>
 #include <vector>
+#include <unordered_set>
+#include <algorithm>
+#include "Tools.h"
 
 using namespace std;
 
@@ -19,12 +21,13 @@ using namespace std;
  * "00000083 000000e5"
  */
 
-std::vector<bitset < 512 >> solveIt(bitset<512> input, bitset<512> hypoth, int size, int depth) {
-    std::vector<bitset < 512 >> res;
-    int magic[] = {0, size / 2 - 1, size / 2 , size - 1};
-    
-    cout << "hyp " << toStringBs(hypoth, size) << " deep= " << depth<<" ";
-    cout <<"magic ";for(int i=0;i<4;i++)cout << magic[i] ;cout << endl;
+std::unordered_set<bitset < 512 >> solveIt(bitset<512> input, bitset<512> hypoth, int size, int depth) {
+    std::unordered_set<bitset < 512 >> res;
+    int magic[] = {0, size / 2 - 1, size / 2, size - 1};
+
+    //  cout << "hyp " << toStringBs(hypoth, size) << " deep= " << depth<<" ";
+    //  cout <<"magic ";for(int i=0;i<4;i++)cout << magic[i] ;cout << endl;
+
 
     for (unsigned int i = 0; i < 16; i++) {
         bitset<512> v;
@@ -33,69 +36,72 @@ std::vector<bitset < 512 >> solveIt(bitset<512> input, bitset<512> hypoth, int s
         v[magic[2] + depth] = ((i >> 2) & 1);
         v[magic[3] + depth] = ((i >> 3) & 1);
 
-        cout<< "v(b hyp) : " << toStringBs(v, size) << endl;
-        
+        //  cout<< "v(b hyp) : " << toStringBs(v, size) << endl;
+
         for (int i = 0; i < depth; i++) {
             v[magic[0] + i] = hypoth[magic[0] + i];
             v[magic[1] + i] = hypoth[magic[1] + i];
             v[magic[2] + i] = hypoth[magic[2] + i];
             v[magic[3] + i] = hypoth[magic[3] + i];
         }
-        
-        cout<< "v(aft hyp) : " << toStringBs(v, size) << endl;        
-        
+
+        //  cout<< "v(aft hyp) : " << toStringBs(v, size) << endl;        
+
         // check formula .... left
-        bool ext=input[0+depth];
-        bool possible=false;
-        cout<<"{";
-        for(int i=0;i<depth+1;i++){
-            int h=size/2;
-                int riand=i;
-                int rilef=h+(depth-i);            
-            possible=possible^(v[riand]&v[rilef]);
-            cout<<"("<<(riand)<<"&"<<(rilef)<<")"<< v[riand] << "&" <<  v[rilef];
+        bool ext = input[0 + depth];
+        bool possible = false;
+        // cout<<"{";
+        for (int i = 0; i < depth + 1; i++) {
+            int h = size / 2;
+            int riand = i;
+            int rilef = h + (depth - i);
+            possible = possible^(v[riand] & v[rilef]);
+            //     cout<<"("<<(riand)<<"&"<<(rilef)<<")"<< v[riand] << "&" <<  v[rilef];
         }
-        cout<<"}"<<endl;
-        cout << "ext " << ext << " calc "<< possible << endl;
-        bool rightFormulaIsPassed=false;
-        if(ext==possible){
+        // cout<<"}"<<endl;
+        //  cout << "ext " << ext << " calc "<< possible << endl;
+        bool rightFormulaIsPassed = false;
+        if (ext == possible) {
             // check formula .... right
-            cout << " check right formula part inputIs(" << toStringBs(input, size)  << ") " << endl;
-            int rightEdge=size-1-depth;
-            ext=input[size-2-depth]; cout << "Extern bit " << " (" <<(size-2-depth) <<") is " << input[size-2-depth] <<endl;
-            possible=false;
-            cout<<"right {";
-            for(int i=0;i<depth+1;i++){
-                int h=size/2;
-                int riand=h-i-1;
-                int rilef=rightEdge-i;
-                possible=possible^(v[riand]&v[rilef]);
-                cout<<"("<<(riand)<<"&"<<(rilef)<<")"<< v[riand] << "&" <<  v[rilef];
+            //     cout << " check right formula part inputIs(" << toStringBs(input, size)  << ") " << endl;
+            int rightEdge = size - 1 - depth;
+            ext = input[size - 2 - depth]; // cout << "Extern bit " << " (" <<(size-2-depth) <<") is " << input[size-2-depth] <<endl;
+            possible = false;
+            //     cout<<"right {";
+            for (int i = 0; i < depth + 1; i++) {
+                int h = size / 2;
+                int riand = h - i - 1;
+                int rilef = rightEdge - i;
+                possible = possible^(v[riand] & v[rilef]);
+                //  cout<<"("<<(riand)<<"&"<<(rilef)<<")"<< v[riand] << "&" <<  v[rilef];
             }
-            cout<<"}"<<endl;
-            cout << "right form ext " << ext << " calc "<< possible << endl;     
-            
-            cout << "right form " <<" ext "<< ext << " possible "  << possible << endl;
-            
-            rightFormulaIsPassed=(ext==possible);
-            cout << "righ formula is passed " << rightFormulaIsPassed << endl;
+            //  cout<<"}"<<endl;
+            //   cout << "right form ext " << ext << " calc "<< possible << endl;     
+
+            //   cout << "right form " <<" ext "<< ext << " possible "  << possible << endl;
+
+            rightFormulaIsPassed = (ext == possible);
+            //  cout << "righ formula is passed " << rightFormulaIsPassed << endl;
         }
 
-        
-        if(rightFormulaIsPassed){
-            
-            if(depth >=(size/2)-1){
-                cout << " adding validated " <<  toStringBs(v, size) << endl;
-                res.push_back(v);
-            }else{
-                std::vector<bitset < 512 >> sub= solveIt(input,v,size,depth+1);
-                cout << "++++++++ back to "<< depth << " " << "hyp " << toStringBs(hypoth, size) << " deep= " << depth<<" " <<endl;
-                for(int sol=0;sol<sub.size();sol++){
-                    res.push_back(sub[sol]);
+
+        if (rightFormulaIsPassed) {
+
+            if (depth >= (size / 2) - 1) {
+                //   cout << " adding validated " <<  toStringBs(v, size) << endl;
+
+                res.insert(v);
+
+            } else {
+                std::unordered_set<bitset < 512 >> sub = solveIt(input, v, size, depth + 1);
+                //      cout << "++++++++ back to "<< depth << " " << "hyp " << toStringBs(hypoth, size) << " deep= " << depth<<" " <<endl;
+                for (const auto& subv : sub) {
+                    res.insert(subv);
+                    /* ... process elem ... */
                 }
             }
         }
-    }
+    } // fin parcours hypotheses
 
     return res;
 }
@@ -131,53 +137,61 @@ void testMyFunctionWithDifferentManualSize() {
     //cout << formula(size) << endl;     
     //cout << formula(size*2) << endl;
 
-        for (int i = 0; i < myPow(2, sz); i++) {
-            my = i;
+    for (int i = 0; i < myPow(2, sz); i++) {
+        my = i;
 
-            cout << toStringBs(my, sz) << " -> ";
-            cout << toStringBs(applyDirectFun(my, sz), sz) << endl;
-        }
-    cout<< "----------- END OF DIRECT --------" <<endl;
+        cout << toStringBs(my, sz) << " -> ";
+        cout << toStringBs(applyDirectFun(my, sz), sz) << endl;
+    }
+    cout << "----------- END OF DIRECT --------" << endl;
 
-        for (int i = 0; i < myPow(2, sz); i++) {
-    //for (int i = 0; i < 0; i++) {
-            my = i;
-            cout << " inverting " << toStringBs(my, sz)<< endl;
-            std::vector<bitset < 512 >> res=solveIt(my, my, sz, 0);
-            for(int sol=0;sol<res.size();sol++){
-                cout << sol << " : " << toStringBs(res[sol], sz) << endl;
+    for (int i = 0; i < myPow(2, sz); i++) {
+        //for (int i = 0; i < 0; i++) {
+        my = i;
+        cout << " inverting " << toStringBs(my, sz) << endl;
+        std::unordered_set<bitset < 512 >> res = solveIt(my, my, sz, 0);
+
+        {
+            int elemind = 0;
+            for (const auto& elem : res) {
+                cout << (elemind++) << " : " << toStringBs(elem, sz) << endl;
             }
-            
         }
+
+    }
 }
 
-void testMyFunctionWithOneManualSize(){
+void testMyFunctionWithOneManualSize() {
     testInputOutputCompareRef();
     bitset<512> my;
     int sz = 4;
-    int val=5;
+    int val = 5;
     //cout << formula(size/2) << endl;         
     //cout << formula(size) << endl;     
     //cout << formula(size*2) << endl;
 
-        for (int i = val; i < val+1; i++) {
-            my = i;
+    for (int i = val; i < val + 1; i++) {
+        my = i;
 
-            cout << toStringBs(my, sz) << " -> ";
-            cout << toStringBs(applyDirectFun(my, sz), sz) << endl;
-        }
-    cout<< "----------- END OF DIRECT --------" <<endl;
+        cout << toStringBs(my, sz) << " -> ";
+        cout << toStringBs(applyDirectFun(my, sz), sz) << endl;
+    }
+    cout << "----------- END OF DIRECT --------" << endl;
 
-        for (int i = val; i < val+1; i++) {
-    //for (int i = 0; i < 0; i++) {
-            my = i;
-            cout << " inverting " << toStringBs(my, sz)<< endl;
-            std::vector<bitset < 512 >> res=solveIt(my, my, sz, 0);
-            for(int sol=0;sol<res.size();sol++){
-                cout << sol << " ------- found ------ : " << toStringBs(res[sol], sz) << endl;
+    for (int i = val; i < val + 1; i++) {
+        //for (int i = 0; i < 0; i++) {
+        my = i;
+        cout << " inverting " << toStringBs(my, sz) << endl;
+        std::unordered_set<bitset < 512 >> res = solveIt(my, my, sz, 0);
+
+        {
+            int elemind = 0;
+            for (const auto& elem : res) {
+                cout << (elemind++) << " : " << toStringBs(elem, sz) << endl;
             }
-            
-        }    
+        }
+
+    }
 }
 
 void showSomeDisplayVariableSize() {
@@ -185,7 +199,7 @@ void showSomeDisplayVariableSize() {
     bitset<512> my;
     int size = 6;
     //cout << formula(size/2) << endl;         
-    //cout << formula(size) << endl;     
+    //cout << formula(size) << endl;      
     //cout << formula(size*2) << endl;
     for (int sz = 0; sz <= size; sz++) {
         cout << formula(sz) << endl;
@@ -200,12 +214,13 @@ void showSomeDisplayVariableSize() {
 
 int main(int argc, char** argv) {
     cout << formula(8) << endl;
-    cout << formula(4) << endl;    
-    testMyFunctionWithOneManualSize();
-    
+    cout << formula(4) << endl;
+    //testMyFunctionWithOneManualSize();
+    testMyFunctionWithDifferentManualSize();
+
     //testMyFunctionWithDifferentManualSize();
     //testMyFunctionWithOneManualSize
-    
+
     //bitset<512> my;
     //int size = 16;
 
