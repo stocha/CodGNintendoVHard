@@ -17,16 +17,16 @@ std::unordered_set<bitset < SZVEC >> solveItV2(bitset<SZVEC> input, int size) {
     bool debugIncr = false;
     bool debugCurrLoopState = true;
     
-    std::unordered_set<bitset < SZVEC >> debugHypSeq;
+    std::unordered_set<bitset < SZVEC >> debugHypSeq[10];
 
     while (true) {
         if(debugCurrLoopState) cout << "dept " << depth << " v " <<  toStringBs(v, size) << endl;
         
-        if (debugHypSeq.find(v) != debugHypSeq.end()) {      
-            cout << " ======= ERROR " << " already visited " << endl;
+        if (debugHypSeq[depth].find(v) != debugHypSeq[depth].end()) {      
+            cout << " ======= ERROR " << " already visited "<< "for " << depth << endl;
                         return res;
         }  else{
-            debugHypSeq.insert(v);
+            debugHypSeq[depth].insert(v);
         }
 
         // ++++++++++++++++ Left formula on current Hyp
