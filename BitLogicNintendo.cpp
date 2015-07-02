@@ -45,43 +45,46 @@ std::unordered_set<bitset < 512 >> solveIt(bitset<512> input, bitset<512> hypoth
             v[magic[3] - i] = hypoth[magic[3] - i];
         }
 
-        //  cout<< "v(aft hyp) : " << toStringBs(v, size) << endl;        
+          cout<< "v(aft hyp) : " << toStringBs(v, size) << endl;        
 
         // check formula .... left
         bool ext = input[0 + depth];
         bool possible = false;
-        // cout<<"{";
+         cout<<"{";
         for (int i = 0; i < depth + 1; i++) {
             int h = size / 2;
             int riand = i;
             int rilef = h + (depth - i);
             possible = possible^(v[riand] & v[rilef]);
-            //     cout<<"("<<(riand)<<"&"<<(rilef)<<")"<< v[riand] << "&" <<  v[rilef];
+                 cout<<"("<<(riand)<<"&"<<(rilef)<<")"<< v[riand] << "&" <<  v[rilef];
         }
-        // cout<<"}"<<endl;
-        //  cout << "ext " << ext << " calc "<< possible << endl;
+         cout<<"}"<<endl;
+          cout << "ext " << ext << " calc "<< possible << endl;
         bool rightFormulaIsPassed = false;
+        
+         if (depth >= (size / 2) - 1) {
+             rightFormulaIsPassed=(ext == possible);
+         }else        
         if (ext == possible) {
             // check formula .... right
             //     cout << " check right formula part inputIs(" << toStringBs(input, size)  << ") " << endl;
             int rightEdge = size - 1 - depth;
             ext = input[size - 2 - depth]; // cout << "Extern bit " << " (" <<(size-2-depth) <<") is " << input[size-2-depth] <<endl;
             possible = false;
-            //     cout<<"right {";
+                 cout<<"right {";
             for (int i = 0; i < depth + 1; i++) {
                 int h = size / 2;
                 int riand = h - i - 1;
                 int rilef = rightEdge - i;
                 possible = possible^(v[riand] & v[rilef]);
-                //  cout<<"("<<(riand)<<"&"<<(rilef)<<")"<< v[riand] << "&" <<  v[rilef];
+                  cout<<"("<<(riand)<<"&"<<(rilef)<<")"<< v[riand] << "&" <<  v[rilef];
             }
-            //  cout<<"}"<<endl;
-            //   cout << "right form ext " << ext << " calc "<< possible << endl;     
+              cout<<"}"<<endl; 
 
-            //   cout << "right form " <<" ext "<< ext << " possible "  << possible << endl;
+               cout << "right form " <<" ext "<< ext << " possible "  << possible << endl;
 
             rightFormulaIsPassed = (ext == possible);
-            //  cout << "righ formula is passed " << rightFormulaIsPassed << endl;
+              cout << "righ formula is passed " << rightFormulaIsPassed << endl;
         }
 
 
@@ -165,7 +168,7 @@ void testMyFunctionWithOneManualSize() {
     testInputOutputCompareRef();
     bitset<512> my;
     int sz = 4;
-    int val = 5;
+    int val = 3;
     //cout << formula(size/2) << endl;         
     //cout << formula(size) << endl;     
     //cout << formula(size*2) << endl;
@@ -215,8 +218,8 @@ void showSomeDisplayVariableSize() {
 int main(int argc, char** argv) {
     cout << formula(8) << endl;
     cout << formula(4) << endl;
-    //testMyFunctionWithOneManualSize();
-    testMyFunctionWithDifferentManualSize();
+    testMyFunctionWithOneManualSize();
+    //testMyFunctionWithDifferentManualSize();
 
     //testMyFunctionWithDifferentManualSize();
     //testMyFunctionWithOneManualSize
