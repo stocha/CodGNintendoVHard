@@ -205,7 +205,7 @@ void testMyFunctionWithDifferentManualSize() {
 void testMyFunctionWithOneManualSize() {
     testInputOutputCompareRef();
     bitset<SZVEC> my;
-    int sz = 8;
+    int sz = 16;
     unsigned int val = 41;
     //cout << formula(size/2) << endl;         
     //cout << formula(size) << endl;     
@@ -277,6 +277,59 @@ void testMyInvertingWithManualSize(){
   
 }
 
+
+void testAndValidateMyInvertingAtRandomWithManualSize(){
+    
+    cout << "testAndValidateMyInvertingAtRandomWithManualSize "  << endl;
+    std::unordered_set<bitset < SZVEC >> done;
+    srand (0x478754);
+    bitset<SZVEC> my;
+    int sz = 16;
+    unsigned int val = 0x0e24;
+    //cout << formula(size/2) << endl;         
+    //cout << formula(size) << endl;     
+    //cout << formula(size*2) << endl;
+
+    int nbNumberToTry=10000;
+    long maxValue=1;
+    for(int i=0;i<sz-1;i++){
+        maxValue|= maxValue<<1;
+    }
+    
+    cout << "MaxValue " << maxValue << endl;
+    for (int i = 0; i < nbNumberToTry; i++) {
+        long rl=rand()^(((long)rand()) << 32);
+        rl=rl%maxValue;
+        cout << " Random " << hex << rl << endl;
+        my = rl;
+
+        cout << toStringBs(my, sz) << " -> ";
+        cout << toStringBs(applyDirectFun(my, sz), sz) << endl;
+        bitset<SZVEC> myori=my;
+        my=applyDirectFun(my, sz);
+        
+        if(done.find(my)==done.end()){
+            done.insert(my);
+
+               // cout << " inverting " << toStringBs(myori, sz) << endl;
+                std::unordered_set<bitset < SZVEC >> res = solveIt(my, my, sz, 0);
+                {
+                    int elemind = 0;
+                   // for (const auto& elem : res) {
+                       // cout << (elemind++) << " : " << toStringBs(elem, sz) << endl;
+                  //  }
+                }   
+                if(res.find(myori)==res.end()){
+                    cout << " ERROR " << toStringBs(myori,sz) << " not found " << endl;
+                }
+        }
+ 
+    }
+    cout << "----------- END OF testAndValidateMyInvertingAtRandomWithManualSize --------" << endl;
+
+  
+}
+
 void showSomeDisplayVariableSize() {
     testInputOutputCompareRef();
     bitset<SZVEC> my;
@@ -325,11 +378,12 @@ int main(int argc, char** argv) {
     //applyRealCase();
     //applyStdIn();
     
-   // testMyInvertingWithManualSize();
+   //testMyInvertingWithManualSize();
     
-    cout << formula(8) << endl;
+    //cout << formula(8) << endl;
     //cout << formula(4) << endl;
-    testMyFunctionWithOneManualSize();
+    //testMyFunctionWithOneManualSize();
+    testAndValidateMyInvertingAtRandomWithManualSize();
     //testMyFunctionWithDifferentManualSize();
 
     //testMyFunctionWithDifferentManualSize();
