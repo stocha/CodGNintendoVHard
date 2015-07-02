@@ -15,9 +15,19 @@ std::unordered_set<bitset < SZVEC >> solveItV2(bitset<SZVEC> input, int size) {
     int depth = 0;
 
     bool debugIncr = false;
+    bool debugCurrLoopState = true;
+    
+    std::unordered_set<bitset < SZVEC >> debugHypSeq;
 
     while (true) {
-
+        if(debugCurrLoopState) cout << "dept " << depth << " v " <<  toStringBs(v, size) << endl;
+        
+        if (debugHypSeq.find(v) != debugHypSeq.end()) {      
+            cout << " ======= ERROR " << " already visited " << endl;
+                        return res;
+        }  else{
+            debugHypSeq.insert(v);
+        }
 
         // ++++++++++++++++ Left formula on current Hyp
         //+++++++++++++
@@ -32,7 +42,7 @@ std::unordered_set<bitset < SZVEC >> solveItV2(bitset<SZVEC> input, int size) {
         }
         if (possible != ext) // reject value
         { // incr
-            if (depth < (size / 2 - 1)) {
+            if (depth < (size / 4)) {
                 if (debugIncr) cout << " Magic for d " << depth << " is " << (magic[0] + depth) << "|" << (magic[1] - depth) << "|" << (magic[2] + depth) << "|" << (magic[3] - depth) << "|" << endl;
                 if (debugIncr) cout << "(L) increment (before)" << " depth is  " << depth << " v " << toStringBs(v, size) << endl;
 
@@ -104,7 +114,7 @@ std::unordered_set<bitset < SZVEC >> solveItV2(bitset<SZVEC> input, int size) {
         }
         if (possible != ext) // reject value
         { // incr
-            if (depth < (size / 2 - 1)) {
+            if (depth < (size / 4)) {
                 if (debugIncr) cout << " Magic for d " << depth << " is " << (magic[0] + depth) << "|" << (magic[1] - depth) << "|" << (magic[2] + depth) << "|" << (magic[3] - depth) << "|" << endl;
                 if (debugIncr) cout << "(R) increment (before)" << " depth is  " << depth << " v " << toStringBs(v, size) << endl;
 
@@ -173,7 +183,7 @@ std::unordered_set<bitset < SZVEC >> solveItV2(bitset<SZVEC> input, int size) {
             while (!foundIncr) {
                 depth--;
                 // incr
-                if (depth < (size / 2 - 1)) {
+                if (depth < (size / 4)) {
                     {
                         if (debugIncr) cout << " Magic for d " << depth << " is " << (magic[0] + depth) << "|" << (magic[1] - depth) << "|" << (magic[2] + depth) << "|" << (magic[3] - depth) << "|" << endl;
                         if (debugIncr) cout << "(K) increment (before)" << " depth is  " << depth << " v " << toStringBs(v, size) << endl;
@@ -354,7 +364,7 @@ void testAndValidateMyInvertingAtRandomWithManualSize() {
     //cout << formula(size) << endl;     
     //cout << formula(size*2) << endl;
 
-    int nbNumberToTry = 1000;
+    int nbNumberToTry = 10;
     long maxValue = 1;
     for (int i = 0; i < sz - 1; i++) {
         maxValue |= maxValue << 1;
