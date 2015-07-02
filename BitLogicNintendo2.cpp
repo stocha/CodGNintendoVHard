@@ -7,6 +7,134 @@
 
 #include "BitLogicNintendo2.h"
 
+std::unordered_set<bitset < SZVEC >> solveItV2(bitset<SZVEC> input, int size) {
+    std::unordered_set<bitset < SZVEC >> res;
+    bitset<SZVEC> v;
+    int magic[] = {0, size / 2 - 1, size / 2, size - 1};    
+    
+    int depth=0;
+    
+    while(true){
+        
+        
+        // ++++++++++++++++ Left formula on current Hyp
+        //+++++++++++++
+        // check formula .... left
+        bool ext = input[0 + depth];
+        bool possible = false;
+        for (int i = 0; i < depth + 1; i++) {
+            int h = size / 2;
+            int riand = i;
+            int rilef = h + (depth - i);
+            possible = possible^(v[riand] & v[rilef]);
+        }
+        if(possible != ext) // reject value
+        { // incr
+            {
+                int inc=0;
+                inc | = v[magic[0] + depth]?1:0;
+                inc | = v[magic[1] - depth]?2:0;
+                inc | = v[magic[2] + depth]?4:0;
+                inc | = v[magic[3] - depth]?8:0;
+                
+                inc++;
+                // Incrementation might be 0 if overflow
+                    v[magic[0] + depth] = inc & 1;
+                    v[magic[1] - depth] = ((inc >> 1) & 1);
+                    v[magic[2] + depth] = ((inc >> 2) & 1);
+                    v[magic[3] - depth] = ((inc >> 3) & 1);                
+                
+                if(inc >= 16){
+                    // Depth end MAX REACH
+                    if(depth==0) return res;
+                    depth--;
+                    continue;
+                }else{
+                    continue;
+                }
+            }
+        }        
+        // ++++++++++++++++++++ Right formula on current Hyp
+        //+++++++++++++++
+            // check formula .... right
+            int rightEdge = size - 1;
+            ext = input[size - 2 - depth]; // cout << "Extern bit " << " (" <<(size-2-depth) <<") is " << input[size-2-depth] <<endl;
+            possible = false;
+            for (int i = 0; i < depth + 1; i++) {
+                int h = size / 2;
+                int riand = h - i - 1;
+                int rilef = rightEdge - depth + i;
+                possible = possible^(v[riand] & v[rilef]);
+            }
+            if(possible != ext) // reject value
+            { // incr
+                {
+                    int inc=0;
+                    inc | = v[magic[0] + depth]?1:0;
+                    inc | = v[magic[1] - depth]?2:0;
+                    inc | = v[magic[2] + depth]?4:0;
+                    inc | = v[magic[3] - depth]?8:0;
+
+                    inc++;
+                    // Incrementation might be 0 if overflow
+                        v[magic[0] + depth] = inc & 1;
+                        v[magic[1] - depth] = ((inc >> 1) & 1);
+                        v[magic[2] + depth] = ((inc >> 2) & 1);
+                        v[magic[3] - depth] = ((inc >> 3) & 1);                
+
+                    if(inc >= 16){
+                        // Depth end MAX REACH
+                        if(depth==0) return res;
+                        depth--;
+                        continue;
+                    }else{
+                        continue;
+                    }
+                }
+            }        
+        //+++++++++++++++ Value accepted
+            if (depth >= (size / 2) - 1) {
+                //   cout << " adding validated " <<  toStringBs(v, size) << endl;
+                res.insert(v);
+                
+                bool foundIncr=false;
+                
+                while(!foundIncr){
+                    depth--;                
+                    // incr
+                    {
+                        int inc=0;
+                        inc | = v[magic[0] + depth]?1:0;
+                        inc | = v[magic[1] - depth]?2:0;
+                        inc | = v[magic[2] + depth]?4:0;
+                        inc | = v[magic[3] - depth]?8:0;
+
+                        inc++;
+                        // Incrementation might be 0 if overflow
+                            v[magic[0] + depth] = inc & 1;
+                            v[magic[1] - depth] = ((inc >> 1) & 1);
+                            v[magic[2] + depth] = ((inc >> 2) & 1);
+                            v[magic[3] - depth] = ((inc >> 3) & 1);                
+
+                        if(inc >= 16){
+                            // Depth end MAX REACH
+                            if(depth==0) return res;
+                            continue; // depth will be decremented
+                        }else{
+                            foundIncr=true;
+                            break;
+                        }
+                    }    // Incr block                   
+                } continue; // incrementation done
+            } else {
+                depth++;
+            }                        
+            
+            
+    }// Fin boucle principale
+    
+}
+
 
 std::unordered_set<bitset < SZVEC >> solveIt(bitset<SZVEC> input, bitset<SZVEC> hypoth, int size, int depth) {
     std::unordered_set<bitset < SZVEC >> res;
