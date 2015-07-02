@@ -7,6 +7,51 @@
 
 #include "BitLogicNintendo2.h"
 
+
+bool increment(int& depth,bitset < SZVEC >& v , int size){
+    
+    int magic[] = {0, size / 2 - 1, size / 2, size - 1};
+
+    bool debugIncr = false; 
+
+            bool foundIncr = false;
+            while (!foundIncr) {
+                if(depth<0) return true;
+                // incr
+                if (depth < (size / 4)) {
+                    {
+                        if (debugIncr) cout << " Magic for d " << depth << " is " << (magic[0] + depth) << "|" << (magic[1] - depth) << "|" << (magic[2] + depth) << "|" << (magic[3] - depth) << "|" << endl;
+                        if (debugIncr) cout << "(K) increment (before)" << " depth is  " << depth << " v " << toStringBs(v, size) << endl;
+
+                        int inc = 0;
+                        inc |= v[magic[0] + depth] ? 1 : 0;
+                        inc |= v[magic[1] - depth] ? 2 : 0;
+                        inc |= v[magic[2] + depth] ? 4 : 0;
+                        inc |= v[magic[3] - depth] ? 8 : 0;
+
+                        inc++;
+                        // Incrementation might be 0 if overflow
+                        v[magic[0] + depth] = inc & 1;
+                        v[magic[1] - depth] = ((inc >> 1) & 1);
+                        v[magic[2] + depth] = ((inc >> 2) & 1);
+                        v[magic[3] - depth] = ((inc >> 3) & 1);
+
+                        if (debugIncr) cout << "(K) increment (after)" << " depth is  " << depth << " v " << toStringBs(v, size) << " inc compt " << inc << endl;
+
+                        if (inc >= 16) {
+                            // Depth end MAX REACH
+                            depth--;
+                        } else { // incr reussie
+                            break;
+                        }
+                    } 
+                }else{ // increMaxReached
+                    depth--;
+                }
+            }    
+            return false;
+}
+
 std::unordered_set<bitset < SZVEC >> solveItV2(bitset<SZVEC> input, int size) {
     std::unordered_set<bitset < SZVEC >> res;
     bitset<SZVEC> v;
@@ -41,64 +86,8 @@ std::unordered_set<bitset < SZVEC >> solveItV2(bitset<SZVEC> input, int size) {
             possible = possible^(v[riand] & v[rilef]);
         }
         if (possible != ext) // reject value
-        { // incr
-            if (depth < (size / 4)) {
-                if (debugIncr) cout << " Magic for d " << depth << " is " << (magic[0] + depth) << "|" << (magic[1] - depth) << "|" << (magic[2] + depth) << "|" << (magic[3] - depth) << "|" << endl;
-                if (debugIncr) cout << "(L) increment (before)" << " depth is  " << depth << " v " << toStringBs(v, size) << endl;
-
-                int inc = 0;
-                inc |= v[magic[0] + depth] ? 1 : 0;
-                inc |= v[magic[1] - depth] ? 2 : 0;
-                inc |= v[magic[2] + depth] ? 4 : 0;
-                inc |= v[magic[3] - depth] ? 8 : 0;
-
-                inc++;
-                // Incrementation might be 0 if overflow
-                v[magic[0] + depth] = inc & 1;
-                v[magic[1] - depth] = ((inc >> 1) & 1);
-                v[magic[2] + depth] = ((inc >> 2) & 1);
-                v[magic[3] - depth] = ((inc >> 3) & 1);
-
-                if (debugIncr) cout << "(L) increment (after)" << " depth is  " << depth << " v " << toStringBs(v, size) << " inc compt " << inc << endl;
-
-                if (inc >= 16) {
-                    // Depth end MAX REACH
-                    if (depth == 0) return res;
-                    depth--;
-                    continue;
-                } else {
-                    continue;
-                }
-            } else {
-                depth--;
-                if (debugIncr) cout << " Magic for d " << depth << " is " << (magic[0] + depth) << "|" << (magic[1] - depth) << "|" << (magic[2] + depth) << "|" << (magic[3] - depth) << "|" << endl;
-                if (debugIncr) cout << "(R) increment (before)" << " depth is  " << depth << " v " << toStringBs(v, size) << endl;
-
-                int inc = 0;
-                inc |= v[magic[0] + depth] ? 1 : 0;
-                inc |= v[magic[1] - depth] ? 2 : 0;
-                inc |= v[magic[2] + depth] ? 4 : 0;
-                inc |= v[magic[3] - depth] ? 8 : 0;
-
-                inc++;
-                // Incrementation might be 0 if overflow
-                v[magic[0] + depth] = inc & 1;
-                v[magic[1] - depth] = ((inc >> 1) & 1);
-                v[magic[2] + depth] = ((inc >> 2) & 1);
-                v[magic[3] - depth] = ((inc >> 3) & 1);
-
-                if (debugIncr) cout << "(R) increment (after)" << " depth is  " << depth << " v " << toStringBs(v, size) << " inc compt " << inc << endl;
-
-                if (inc >= 16) {
-                    // Depth end MAX REACH
-                    if (depth == 0) return res;
-                    depth--;
-                    continue;
-                } else {
-                    continue;
-                }
-                continue;
-            }
+        {
+            if(increment(depth,v,size)) return res;
         }
         // ++++++++++++++++++++ Right formula on current Hyp
         //+++++++++++++++
@@ -113,139 +102,14 @@ std::unordered_set<bitset < SZVEC >> solveItV2(bitset<SZVEC> input, int size) {
             possible = possible^(v[riand] & v[rilef]);
         }
         if (possible != ext) // reject value
-        { // incr
-            if (depth < (size / 4)) {
-                if (debugIncr) cout << " Magic for d " << depth << " is " << (magic[0] + depth) << "|" << (magic[1] - depth) << "|" << (magic[2] + depth) << "|" << (magic[3] - depth) << "|" << endl;
-                if (debugIncr) cout << "(R) increment (before)" << " depth is  " << depth << " v " << toStringBs(v, size) << endl;
-
-                int inc = 0;
-                inc |= v[magic[0] + depth] ? 1 : 0;
-                inc |= v[magic[1] - depth] ? 2 : 0;
-                inc |= v[magic[2] + depth] ? 4 : 0;
-                inc |= v[magic[3] - depth] ? 8 : 0;
-
-                inc++;
-                // Incrementation might be 0 if overflow
-                v[magic[0] + depth] = inc & 1;
-                v[magic[1] - depth] = ((inc >> 1) & 1);
-                v[magic[2] + depth] = ((inc >> 2) & 1);
-                v[magic[3] - depth] = ((inc >> 3) & 1);
-
-                if (debugIncr) cout << "(R) increment (after)" << " depth is  " << depth << " v " << toStringBs(v, size) << " inc compt " << inc << endl;
-
-                if (inc >= 16) {
-                    // Depth end MAX REACH
-                    if (depth == 0) return res;
-                    depth--;
-                    continue;
-                } else {
-                    continue;
-                }
-            } else {
-                depth--;
-                if (debugIncr) cout << " Magic for d " << depth << " is " << (magic[0] + depth) << "|" << (magic[1] - depth) << "|" << (magic[2] + depth) << "|" << (magic[3] - depth) << "|" << endl;
-                if (debugIncr) cout << "(R) increment (before)" << " depth is  " << depth << " v " << toStringBs(v, size) << endl;
-
-                int inc = 0;
-                inc |= v[magic[0] + depth] ? 1 : 0;
-                inc |= v[magic[1] - depth] ? 2 : 0;
-                inc |= v[magic[2] + depth] ? 4 : 0;
-                inc |= v[magic[3] - depth] ? 8 : 0;
-
-                inc++;
-                // Incrementation might be 0 if overflow
-                v[magic[0] + depth] = inc & 1;
-                v[magic[1] - depth] = ((inc >> 1) & 1);
-                v[magic[2] + depth] = ((inc >> 2) & 1);
-                v[magic[3] - depth] = ((inc >> 3) & 1);
-
-                if (debugIncr) cout << "(R) increment (after)" << " depth is  " << depth << " v " << toStringBs(v, size) << " inc compt " << inc << endl;
-
-                if (inc >= 16) {
-                    // Depth end MAX REACH
-                    if (depth == 0) return res;
-                    depth--;
-                    continue;
-                } else {
-                    continue;
-                }
-
-                continue;
-            }
+        {
+            if(increment(depth,v,size)) return res;
         }
         //+++++++++++++++ Value accepted
         if (depth >= (size / 2) - 1) {
-            //   cout << " adding validated " <<  toStringBs(v, size) << endl;
             res.insert(v);
-
-            bool foundIncr = false;
-
-            while (!foundIncr) {
-                depth--;
-                // incr
-                if (depth < (size / 4)) {
-                    {
-                        if (debugIncr) cout << " Magic for d " << depth << " is " << (magic[0] + depth) << "|" << (magic[1] - depth) << "|" << (magic[2] + depth) << "|" << (magic[3] - depth) << "|" << endl;
-                        if (debugIncr) cout << "(K) increment (before)" << " depth is  " << depth << " v " << toStringBs(v, size) << endl;
-
-                        int inc = 0;
-                        inc |= v[magic[0] + depth] ? 1 : 0;
-                        inc |= v[magic[1] - depth] ? 2 : 0;
-                        inc |= v[magic[2] + depth] ? 4 : 0;
-                        inc |= v[magic[3] - depth] ? 8 : 0;
-
-                        inc++;
-                        // Incrementation might be 0 if overflow
-                        v[magic[0] + depth] = inc & 1;
-                        v[magic[1] - depth] = ((inc >> 1) & 1);
-                        v[magic[2] + depth] = ((inc >> 2) & 1);
-                        v[magic[3] - depth] = ((inc >> 3) & 1);
-
-                        if (debugIncr) cout << "(K) increment (after)" << " depth is  " << depth << " v " << toStringBs(v, size) << " inc compt " << inc << endl;
-
-                        if (inc >= 16) {
-                            // Depth end MAX REACH
-                            if (depth == 0) return res;
-                            continue; // depth will be decremented
-                        } else {
-                            foundIncr = true;
-                            break;
-                        }
-                    } // Incr block        else{
-                    depth--;
-                    if (debugIncr) cout << " Magic for d " << depth << " is " << (magic[0] + depth) << "|" << (magic[1] - depth) << "|" << (magic[2] + depth) << "|" << (magic[3] - depth) << "|" << endl;
-                    if (debugIncr) cout << "(R) increment (before)" << " depth is  " << depth << " v " << toStringBs(v, size) << endl;
-
-                    int inc = 0;
-                    inc |= v[magic[0] + depth] ? 1 : 0;
-                    inc |= v[magic[1] - depth] ? 2 : 0;
-                    inc |= v[magic[2] + depth] ? 4 : 0;
-                    inc |= v[magic[3] - depth] ? 8 : 0;
-
-                    inc++;
-                    // Incrementation might be 0 if overflow
-                    v[magic[0] + depth] = inc & 1;
-                    v[magic[1] - depth] = ((inc >> 1) & 1);
-                    v[magic[2] + depth] = ((inc >> 2) & 1);
-                    v[magic[3] - depth] = ((inc >> 3) & 1);
-
-                    if (debugIncr) cout << "(R) increment (after)" << " depth is  " << depth << " v " << toStringBs(v, size) << " inc compt " << inc << endl;
-
-                    if (inc >= 16) {
-                        // Depth end MAX REACH
-                        if (depth == 0) return res;
-                        depth--;
-                        continue;
-                    } else {
-                        continue;
-                    }
-                    continue;
-                }
-            }
-            continue; // incrementation done
-        } else {
-            depth++;
         }
+        if(increment(depth,v,size)) return res;
 
 
     }// Fin boucle principale
