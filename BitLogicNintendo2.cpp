@@ -60,7 +60,7 @@ std::unordered_set<bitset < SZVEC >> solveItV2(bitset<SZVEC> input, int size) {
     int depth = 0;
 
     bool debugIncr = false;
-    bool debugCurrLoopState = true;
+    bool debugCurrLoopState = false;
     
     std::unordered_set<bitset < SZVEC >> debugHypSeq[10];
 
@@ -108,8 +108,12 @@ std::unordered_set<bitset < SZVEC >> solveItV2(bitset<SZVEC> input, int size) {
         //+++++++++++++++ Value accepted
         if (depth >= (size / 2) - 1) {
             res.insert(v);
+            if(increment(depth,v,size)) return res;
         }
-        if(increment(depth,v,size)) return res;
+        else{
+            depth++;
+        }
+
 
 
     }// Fin boucle principale
