@@ -348,13 +348,13 @@ void testAndValidateMyInvertingAtRandomWithManualSize() {
     std::unordered_set<bitset < SZVEC >> done;
     srand(0x478754);
     bitset<SZVEC> my;
-    int sz = 4;
+    int sz = 8;
     unsigned int val = 0x0e24;
     //cout << formula(size/2) << endl;         
     //cout << formula(size) << endl;     
     //cout << formula(size*2) << endl;
 
-    int nbNumberToTry = 10;
+    int nbNumberToTry = 1000;
     long maxValue = 1;
     for (int i = 0; i < sz - 1; i++) {
         maxValue |= maxValue << 1;
@@ -366,16 +366,15 @@ void testAndValidateMyInvertingAtRandomWithManualSize() {
         rl = rl % maxValue;
         //cout << " Random " << hex << rl << endl;
         my = rl;
-
-        cout << toStringBs(my, sz) << " -> ";
-        cout << toStringBs(applyDirectFun(my, sz), sz) << endl;
         bitset<SZVEC> myori = my;
         my = applyDirectFun(my, sz);
 
         if (done.find(my) == done.end()) {
+            cout << toStringBs(myori, sz) << " Appli direct -> "<< toStringBs(my, sz) << endl;            
+            
             done.insert(my);
 
-            cout << " inverting " << toStringBs(myori, sz) << endl;
+            cout << " from " << toStringBs(myori, sz) << " inverting " <<toStringBs(my, sz)<< endl;
             clock_t begin = clock();
             std::unordered_set<bitset < SZVEC >> res = solveItV2(my, sz);
             {
