@@ -234,7 +234,7 @@ void testAndValidateMyInvertingAtRandomWithManualSize() {
     //cout << formula(size) << endl;     
     //cout << formula(size*2) << endl;
 
-    int nbNumberToTry = 3;
+    int nbNumberToTry = 1000;
     long maxValue = 1;
     for (int i = 0; i < sz - 1; i++) {
         maxValue |= maxValue << 1;
