@@ -1,13 +1,9 @@
 /* 
- * File:   SurfaceHard_saves001.h
+ * File:   main.cpp
  * Author: Jahan
  *
- * Created on 3 juillet 2015, 12:43
+ * Created on 2 juillet 2015, 23:34
  */
-
-#ifndef SURFACEHARD_SAVES001_H
-#define	SURFACEHARD_SAVES001_H
-
 
 #include <iostream>
 #include <string>
@@ -20,91 +16,112 @@
 using namespace std;
 
 namespace b {
-    const int maxX = 1200;
-    const int maxY = 1200;
-    const int sqsz = maxX*maxY;
+    const long maxX = 1200;
+    const long maxY = 1200;
+    const long sqsz = maxX*maxY;
 
     class World {
     public:
-        int h, l;
+        
+        clock_t begin;
+        long h, l;
         bitset<sqsz> dat;
 
-        vector<int> inputX;
-        vector<int> inputY;
+        vector<long> inputX;
+        vector<long> inputY;
 
-        vector<int> buff;
-        vector<int> areaSize;
+        vector<long> buff;
+        vector<long> areaSize;
 
-        int lakechain[sqsz];
-        int lakesize[sqsz];
+        long lakechain[sqsz];
+        long lakesize[sqsz];
 
         World(void) {
+            
+             begin = clock();
             dat^=dat;
-            for (int i = 0; i < maxX; i++) {
-                for (int j = 0; j < maxY; j++) {
+            buff.reserve(sqsz);
+            
+            cerr << "INIT CHAIN " << "  " << maxX << " " << maxY <<" endCo "<< co(maxX,maxY ) << endl;
+            for (long i = 0; i < maxX-4; i++) {
+                for (long j = 0; j < maxY-4; j++) {
                     lakechain[co(i, j)] = co(i, j);
                     lakesize[co(i, j)] = 0;
+                    
+                    //long debughim=3646;
+                    //if(co(i,j)==debughim) cerr << debughim << " polong to -> " << lakechain[debughim];                     
                 }
             }
         }
 
-        int co(int x, int y) {
-            return (x + 1) + (y + 1) * (l + 2);
+        long co(long x, long y) {
+            long cc= (x + 1) + (y + 1) * (maxY + 2);
+                        if(cc==0){  cerr<<" coord x y "<<x <<","<< y <<cc <<endl; exit(0); }
+            return cc;
         }
 
-        int findIdLake(int x, int y) {
+        long findIdLake(long x, long y) {
             buff.clear();
-            int c = co(x, y);
-            
+            long c = co(x, y);
+            //cerr << "finding " << c << "->" << lakechain[c]<<endl;
             while (c != lakechain[c]) {
+                if(c==0){  cerr<<"  "<<c << "->" ;for (long i=0;i<buff.size();i++) std::cout << buff[i] << " P  "; cout<<endl; exit(0); }                
+                
                 buff.push_back(c);
                 c = lakechain[c];
+                
+                
+             //   clock_t end = clock();
+             //   double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;    
+             //   if(elapsed_secs > 0.5) cerr<<" "<< elapsed_secs << "  "<<c << "->" << lakechain[c]<<endl;
             }
-            for(int i=0;i<buff.size();i++){
-                lakechain[c]=c;
+            for(long i=0;i<buff.size();i++){
+              //  cerr << "optFind " << buff[i] << "<-" << c;
+                lakechain[buff[i]]=c;
             }
+            //cerr<<endl;
+            // clock_t end = clock();
+            // double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
             return c;
         }
 
-        void putLakeSquare(int x, int y) {
+        void putLakeSquare(long x, long y) {
             dat[co(x, y)] = true;            
             
-            int root = -1;
-            int ts = 0;
-            int ls = 0;
-            int mesz = 1;
+            long root = -1;
+            long me=co(x,y);
+            long ts = 0;
+            long ls = 0;
+            long mesz = 1;
             if (dat[co(x, y - 1)]) {
                 root = findIdLake(x, y - 1);
                 mesz += lakesize[root];
-
+                lakechain[me]=root;                
+                me=root;
             }
-            if (dat[co(x - 1, y)] && findIdLake(x - 1, y) != root) {
-                if (root != -1) {
-                    lakechain[root] = co(x, y);
-                }
-
-                root = findIdLake(x - 1, y);
-                mesz += lakesize[root];
-                
+            long idLeft=findIdLake(x - 1, y);
+            if (dat[co(x - 1, y)] && idLeft != me) {
+                mesz += lakesize[idLeft];
+                lakechain[idLeft] = me;
             }
-            if(root!=-1)
-                lakechain[root] = co(x, y);
-            lakesize[co(x, y)] = mesz;
+            lakesize[me] = mesz;
 
         }
 
-        void putLine(string row, int numL) {
-            for (int i = 0; i < row.length(); ++i) {
+        void putLine(string row, long numL) {
+            for (long i = 0; i < row.length(); ++i) {
                 char c = row[i];
                 if (c == 'O') {
                     putLakeSquare(i, numL);
                 }
             }
+        //    long debughim=3646;
+          //  cerr << debughim << " polong to -> " << lakechain[debughim]; 
         }
         
-        int findSize(int x,int y){
+        long findSize(long x,long y){
             
-                int root = findIdLake(x, y);
+                long root = findIdLake(x, y);
                 //cout << setfill('0') << setw(2) << hex << " "<<inputX[cas]<<","<< inputY[cas]<<" is " << root << " " << dat[root] << endl;
 
                 if (dat[root] == true)
@@ -118,40 +135,40 @@ namespace b {
             
         }
 
-        void debug_print(bitset<sqsz> m) {
-            for (int i = 0; i < l + 1; i++) {
-                for (int j = 0; j < h; j++) {
+        void debug_prlong(bitset<sqsz> m) {
+            for (long i = 0; i < l + 1; i++) {
+                for (long j = 0; j < h; j++) {
                     cerr << m[co(i, j)] ? 'O' : '#';
                 }
                 cerr << endl;
             }
         }
         
-        void debug_print(){
+        void debug_prlong(){
             
-            for (int i = 0; i < h ; i++) {
-                for (int j = 0; j < l; j++) {
+            for (long i = 0; i < h ; i++) {
+                for (long j = 0; j < l; j++) {
                     cerr << dat[co(j,i)] ? 'O' : '#';
                 }
                 cerr << endl;
             }
             cout << "REF" << endl;
-            for (int i = 0; i < h ; i++) {
-                for (int j = 0; j < l; j++) {
+            for (long i = 0; i < h ; i++) {
+                for (long j = 0; j < l; j++) {
                     cout << "|" << setfill('0') << setw(2) << hex << co(j,i) ;
                 }
                 cerr << endl;
             }              
             cout << "ROOTS " << endl;
-            for (int i = 0; i < h; i++) {
-                for (int j = 0; j < l; j++) {
+            for (long i = 0; i < h; i++) {
+                for (long j = 0; j < l; j++) {
                     cout << "|" << setfill('0') << setw(2) << hex << lakechain[co(j,i)] ;
                 }
                 cerr << endl;
             }     
             cout << "SIZE" << endl;
-            for (int i = 0; i < h ; i++) {
-                for (int j = 0; j < l; j++) {
+            for (long i = 0; i < h ; i++) {
+                for (long j = 0; j < l; j++) {
                     cout << "|" << setfill('0') << setw(2) << hex << lakesize[co(j,i)] ;
                 }
                 cerr << endl;
@@ -166,12 +183,12 @@ using namespace b;
 /*
  * 
  */
-int doContest() {
+long doContest() {
     World *w = new World;
-    int L;
+    long L;
     cin >> L;
     cin.ignore();
-    int H;
+    long H;
     cin >> H;
     cin.ignore();
 
@@ -180,7 +197,7 @@ int doContest() {
     //  cerr << " read map " << endl;
                 clock_t begin = clock();
 
-    for (int i = 0; i < H; i++) {
+    for (long i = 0; i < H; i++) {
         string row;
         cin >> row;
         //  cerr << row << endl;
@@ -192,15 +209,21 @@ int doContest() {
         cerr << "lect " << i <<"  t  " << elapsed_secs << endl;
    
     }
-    int N;
+    long N;
     cin >> N;
     cin.ignore();
-    for (int i = 0; i < N; i++) {
-        int X;
-        int Y;
+    for (long i = 0; i < N; i++) {
+        long X;
+        long Y;
 
         cin >> X >> Y;
-        int sz=w->findSize(X, Y);
+        
+        clock_t end = clock();
+        double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;      
+        cerr << "findSize " << X <<"," << Y <<"  t  " << elapsed_secs << endl;
+        long sz=w->findSize(X, Y);
+
+        
         cin.ignore();
         cerr << sz << endl;
         cout << sz << endl;        
@@ -208,19 +231,36 @@ int doContest() {
 
 }
 
+void doLoopTime(){
+                clock_t begin = clock();
+                double last=0;
+    while(true){
+            clock_t end = clock();
+            double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;       
+            
+            if(elapsed_secs > last + 0.01){
+                last= elapsed_secs;
+                cout << " t " << elapsed_secs << endl;
+            
+            }
+            
+            if(elapsed_secs > 1.3) return;
+    }
+}
+
 void doBasicTest() {
         World *w = new World;
-    int L;
+    long L;
     L=6;
-    int H;
+    long H;
     H=4;
 
     w->h = H;
     w->l = L;
 
-    w->putLine("#O#O##",0);
-    w->putLine("#OOO##",1);
-    w->putLine("####OO",2);
+    w->putLine("#OOO##",0);
+    w->putLine("#O#O##",1);
+    w->putLine("#OOOOO",2);
     w->putLine("####OO",3);
     
 
@@ -231,7 +271,7 @@ void doBasicTest() {
    // w->putInputCoord(5, 4);
    // w->calcAllArea();
     
-    //w->debug_print();
+    w->debug_prlong();
 cout << w->findSize(0,0) << endl;
 cout << w->findSize(1,0) << endl;
 cout << w->findSize(1,3) << endl;
@@ -241,10 +281,6 @@ cout << w->findSize(4,3) << endl;
 
 int main() {
     //doBasicTest();
-    doContest();
+   doContest();
+    //doLoopTime();
 }
-
-
-
-#endif	/* SURFACEHARD_SAVES001_H */
-
