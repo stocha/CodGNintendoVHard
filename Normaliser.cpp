@@ -30,9 +30,17 @@ using namespace std;
 namespace normalizerCNF{
     class Var{
         Var(int value) : value(value){
-        }
-        
+        }        
         const int value;
+    };
+    
+    enum class op{AND,OR,XOR,NOT,VAL};
+    
+    class Expr{
+    public :
+        op type;
+        Var val;
+        vector<Expr> dat;
     };
     
 }
