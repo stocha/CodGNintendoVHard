@@ -29,14 +29,35 @@
 using namespace std;
 namespace normalizerCNF{
     class Var{
+    public :
+        Var(){
+            value=-1;
+        }
         Var(int value) : value(value){
         }        
-        const int value;
+        int value;
     };
     
     enum class op{AND,OR,XOR,NOT,VAL};
     
     class Expr{
+    public :
+        Expr(Var v){
+            type=op::VAL;
+            val=v;
+        }
+        Expr(op t,Expr a){
+            type=t;
+            dat.push_back(a);
+        }
+        
+        Expr(op t, Expr a, Expr b){
+            if(t==op::NOT) {cerr << "NOT with two arguments "; exit(1);};
+            type=t;
+            dat.push_back(a);
+            dat.push_back(b);
+        }
+        
     public :
         op type;
         Var val;
