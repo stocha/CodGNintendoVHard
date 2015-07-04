@@ -37,6 +37,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 OBJECTFILES= \
 	${OBJECTDIR}/BitLogicNintendo.o \
 	${OBJECTDIR}/BitLogicNintendo2.o \
+	${OBJECTDIR}/Normaliser.o \
 	${OBJECTDIR}/OfficialEncoder.o \
 	${OBJECTDIR}/main.o
 
@@ -74,6 +75,11 @@ ${OBJECTDIR}/BitLogicNintendo2.o: BitLogicNintendo2.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/BitLogicNintendo2.o BitLogicNintendo2.cpp
+
+${OBJECTDIR}/Normaliser.o: Normaliser.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Normaliser.o Normaliser.cpp
 
 ${OBJECTDIR}/OfficialEncoder.o: OfficialEncoder.cpp 
 	${MKDIR} -p ${OBJECTDIR}

@@ -240,7 +240,7 @@ std::string formula(int size) {
     return res;
 }
 
-int main(int argc, char** argv) {
+int main_blnd2(int argc, char** argv) {
    // cout << formula(4) << endl;
     //cout << formula(64) << endl;
     testAndValidateMyInvertingAtRandomWithManualSize();

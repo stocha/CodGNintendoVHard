@@ -18,6 +18,7 @@
                    projectFiles="true">
       <itemPath>BitLogicNintendo.cpp</itemPath>
       <itemPath>BitLogicNintendo2.cpp</itemPath>
+      <itemPath>Normaliser.cpp</itemPath>
       <itemPath>OfficialEncoder.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
     </logicalFolder>
@@ -53,6 +54,8 @@
       <item path="BitLogicNintendo2.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="BlN_ext001.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Normaliser.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Notes.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -90,6 +93,8 @@
       <item path="BitLogicNintendo2.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="BlN_ext001.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Normaliser.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Notes.h" ex="false" tool="3" flavor2="0">
       </item>
