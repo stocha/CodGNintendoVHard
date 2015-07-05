@@ -43,13 +43,17 @@ namespace normalizerCNF{
         }
     };
     
-    enum op{AND,OR,XOR,NOT,VAL};
-    string optos[]{"&","|","+","!",""};
+    enum op{AND,OR,XOR,NOT,VAL,VOID};
+    string optos[]{"&","|","+","!","","VOID"};
     
     class Expr{
     public :
+        Expr(){
+            type=VOID;
+        }
+        
         Expr(Var v){
-            type=op::VAL;
+            type=VAL;
             val=v;
         }
         Expr(op t,Expr a){
@@ -86,9 +90,39 @@ namespace normalizerCNF{
         vector<Expr> dat;
     };
     
+    vector<Expr> formulesDirectForSize(int sz){
+        vector<Expr> res(sz);
+        
+        for(int i=0;i<sz/2;i++){
+            for(int j=0;j<sz/2;j++){
+                int r=i+j;
+                int a=i;
+                int b=j+sz/2;
+                
+                Expr con=Expr(AND,Expr(Var(a)),Expr(Var(b)));
+                if(res[r].type==VOID){
+                    res[r]=con;
+                }else{
+                    res[r]=Expr(XOR,res[r],con);
+                }
+            }
+        }
+        
+        return res;
+    }
 }
 
 using namespace normalizerCNF;
+
+
+void formesDirectes(int sz){
+    vector<Expr> fdr=formulesDirectForSize(sz);
+    for(int i=0;i<fdr.size();i++){
+        cout << "------- " << i << " ----------" << endl;
+        fdr[i].debug(0);
+    }
+    
+}
         
 void simpleForm(){
     Expr r=Expr(AND,
@@ -107,7 +141,8 @@ void simpleForm(){
  */
 int main(int argc, char** argv) {
     cout << "hello forme normale"<<endl;
-    simpleForm();
+    //simpleForm();
+    formesDirectes(8);
     return 0;
 }
 
