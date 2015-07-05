@@ -93,6 +93,13 @@ namespace normalizerCNF{
             }
         }
         
+        void pushnot(){
+            
+            
+        }
+        
+        
+        
         void debug(int pad){
                         if(type==VAL) {cout << dpad(pad);val.debug();cout <<endl; return;};
             
@@ -102,6 +109,30 @@ namespace normalizerCNF{
             }
             cout<< dpad(pad) << "}" << endl;
         }
+        
+    private :
+        void invertExpr(){
+            if(type!=AND && type!=OR && type!=VAL && type!=NOT) {cerr << "invariant fail : invert base expr";exit(0);}
+            
+            if(type==NOT){
+                type=dat[0].type;
+                dat=dat[0].dat;
+                val=dat[0].val;
+                
+            }
+            
+            
+            
+        }
+        
+        void delMono(){
+            if(dat.size()!=1) {cerr << "invariant fail : del mono non mono";exit(0);}
+            
+                type=dat[0].type;
+                dat=dat[0].dat;
+                val=dat[0].val;            
+        }
+        
         
     public :
         op type;
