@@ -56,6 +56,13 @@ namespace normalizerCNF {
     string optos[]{"&", "|", "+", "!", "", "VOID"};
 
     class Expr {
+
+
+    public:
+        op type;
+        Var val;
+        vector<Expr> dat;        
+        
     public:
 
         Expr() {
@@ -116,6 +123,43 @@ namespace normalizerCNF {
                 dat[i].pushnot();
             }
         }
+        
+        void pushor(){
+            if (type != AND && type != OR && type != VAL ) {
+                cerr << " pushor invariant fail : invert base expr";
+                exit(0);
+            }          
+            
+            if(type==VAL) return;
+            op me=op;
+            
+            while(true){
+                int cc=-1;
+                for(int i=0;i<dat.size();i++){
+                    if(dat[i].type==me){
+                        cc=i;
+                        break;
+                    }
+                }
+                
+                if(cc!=-1){
+                    Expr e=dat[cc];
+                    dat.erase(cc);
+                    for(int i=0;i<e.dat.size();i++){
+                        dat.push_back(e.dat[i]);
+                    }
+                    continue;
+                }
+                
+                break;
+            }
+            
+            if(type==OR){
+                
+            }
+            
+        
+        }
 
         void debug(int pad) {
             if (type == VAL) {
@@ -164,11 +208,6 @@ namespace normalizerCNF {
             dat = dat[0].dat;
         }
 
-
-    public:
-        op type;
-        Var val;
-        vector<Expr> dat;
     };
 
     vector<Expr> formulesDirectForSize(int sz) {
