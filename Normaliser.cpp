@@ -74,6 +74,25 @@ namespace normalizerCNF{
             return res;
         }
         
+        void unxor(){
+            if(type==XOR){
+                if(dat.size()!=2){
+                    cerr << "invariant fail XOR a deux arguments" << endl; 
+                }
+                
+                Expr l=dat[0];
+                Expr r=dat[1];
+                
+                dat.clear();
+                type=AND;
+                dat.push_back(Expr(OR,l,r));
+                dat.push_back(Expr(OR,Expr(NOT,l),Expr(NOT,r)));
+            }
+            for(int i=0;i<dat.size();i++){
+                dat[i].unxor();
+            }
+        }
+        
         void debug(int pad){
                         if(type==VAL) {cout << dpad(pad);val.debug();cout <<endl; return;};
             
@@ -125,13 +144,17 @@ void formesDirectes(int sz){
 }
         
 void simpleForm(){
-    Expr r=Expr(AND,
-            Expr(OR,Expr(Var(1)),Expr(Var(2)) ),
-            Expr(OR,
+    Expr r=Expr(XOR,
+            Expr(XOR,Expr(Var(1)),Expr(Var(2)) ),
+            Expr(XOR,
                 Expr(NOT,Expr(Var(1))),
                 Expr(NOT,Expr(Var(2))) 
             )
         );
+    
+    r.debug(0);
+    cout << "+++++++++ UNXOR +++++++++" << endl;
+    r.unxor();
     
     r.debug(0);
 }
@@ -141,8 +164,8 @@ void simpleForm(){
  */
 int main(int argc, char** argv) {
     cout << "hello forme normale"<<endl;
-    //simpleForm();
-    formesDirectes(8);
+    simpleForm();
+    //formesDirectes(8);
     return 0;
 }
 
