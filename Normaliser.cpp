@@ -119,64 +119,18 @@ namespace normalizerCNF {
                 dat[i].pushnot();
             }
         }
-        
-        void pushor(){
-            while(pushor_rec()){
-                 cout << "debug partiel pushor"<<endl;
-                    debug(0);   
-                    cout << " fin debug partiel pushor"<<endl;
+
+        void pushor() {
+            while (pushor_rec()) {
+                 //cout << "debug partiel pushor"<<endl;
+                  // debug(0);   
+                //  cout << " fin debug partiel pushor"<<endl;
             };
-        }
-
-        bool pushor_rec() {            
-            if (type == VAL) return false;          
-            if(type==AND) {
-                bool hasPushed=false;
-                for (int i = 0; i < dat.size(); i++) {
-                    hasPushed=hasPushed||dat[i].pushor_rec();
-                }      
-                return hasPushed;
-            };
-            
-            op me = type;
-
-            bool hasPushed=false;
-            while (true) {
-                int cc = -1;
-                for (int i = 0; i < dat.size(); i++) {
-                    if (dat[i].type == AND) {
-                        cc = i;
-                        break;
-                    }
-                }
-
-                if (cc != -1) {
-                    hasPushed=true;
-                    Expr head = dat[cc];
-                    dat.erase(dat.begin()+cc);
-                    
-                    Expr nth=*this;                    
-                    for (int i = 0; i < head.dat.size(); i++) {
-                        Expr old=head.dat[i];
-                        head.dat[i]=Expr(OR,head.dat[i],nth);
-                    }                    
-                    copy(head);
-                    continue;
-                }
-
-                break;
-            }            
-            
-            
-            for (int i = 0; i < dat.size(); i++) {
-                dat[i].pushor_rec();
-            }            
-            return hasPushed;
         }
 
         void flatten() {
             if (type != AND && type != OR && type != VAL) {
-                cerr << " pushor invariant fail : invert base expr";
+                cerr << " flatten invariant fail : invert base expr";
                 exit(0);
             }
 
@@ -194,7 +148,7 @@ namespace normalizerCNF {
 
                 if (cc != -1) {
                     Expr e = dat[cc];
-                    dat.erase(dat.begin()+cc);
+                    dat.erase(dat.begin() + cc);
                     for (int i = 0; i < e.dat.size(); i++) {
                         dat.push_back(e.dat[i]);
                     }
@@ -202,6 +156,10 @@ namespace normalizerCNF {
                 }
 
                 break;
+            }
+
+            for (int i = 0; i < dat.size(); i++) {
+                dat[i].flatten();
             }
         }
 
@@ -221,7 +179,61 @@ namespace normalizerCNF {
             cout << dpad(pad) << "}" << endl;
         }
 
+        void normalizeAndOr() {
+            this->unxor();
+            this->pushnot();
+            pushor();
+            flatten();
+        }
+
     private:
+
+        bool pushor_rec() {
+            if (type == VAL) return false;
+            if (type == AND) {
+                bool hasPushed = false;
+                for (int i = 0; i < dat.size(); i++) {
+                    hasPushed = hasPushed || dat[i].pushor_rec();
+                }
+                return hasPushed;
+            };
+
+            op me = type;
+
+            bool hasPushed = false;
+
+            int cc = -1;
+            for (int i = 0; i < dat.size(); i++) {
+                if (dat[i].type == AND) {
+                    cc = i;
+                    break;
+                }
+            }
+
+            if (cc != -1) {
+                hasPushed = true;
+                Expr head = dat[cc];
+                dat.erase(dat.begin() + cc);
+                if (dat.size() == 1) {
+                    delMono();
+
+                }
+
+                Expr nth = *this;
+                for (int i = 0; i < head.dat.size(); i++) {
+                    Expr old = head.dat[i];
+                    head.dat[i] = Expr(OR, head.dat[i], nth);
+                }
+                copy(head);
+            }
+
+
+
+            for (int i = 0; i < dat.size(); i++) {
+             hasPushed=hasPushed||dat[i].pushor_rec();
+            }            
+            return hasPushed;
+        }
 
         void invertExpr() {
             if (type != AND && type != OR && type != VAL && type != NOT) {
@@ -241,11 +253,11 @@ namespace normalizerCNF {
                 val.bar = !val.bar;
             }
         }
-        
-        void copy(Expr e){
+
+        void copy(Expr e) {
             type = e.type;
             val = e.val;
-            dat = e.dat;            
+            dat = e.dat;
         }
 
         void delMono() {
@@ -288,6 +300,10 @@ void formesDirectes(int sz) {
     for (int i = 0; i < fdr.size(); i++) {
         cout << "------- " << i << " ----------" << endl;
         fdr[i].debug(0);
+        
+        cout << "------- " << i << " NORMED ----------" << endl;
+        fdr[i].normalizeAndOr();        
+        fdr[i].debug(0);        
     }
 
 }
@@ -296,8 +312,8 @@ void simpleForm() {
     Expr r = Expr(OR,
             Expr(AND, Expr(Var(1)), Expr(Var(2))),
             Expr(AND,
-            Expr( Expr(Var(1))),
-            Expr(Expr(Var(2)))
+            Expr(Expr(Var(3))),
+            Expr(Expr(Var(4)))
             )
             );
 
@@ -307,7 +323,10 @@ void simpleForm() {
     //r.debug(0);    
     cout << "+++++++++  PUSH OR  +++++++++" << endl;
     r.pushor();
-    r.debug(0);     
+    r.debug(0);
+    cout << "+++++++++  FLATTEN  +++++++++" << endl;
+    r.flatten();
+    r.debug(0);
 }
 
 /*
@@ -315,8 +334,8 @@ void simpleForm() {
  */
 int main(int argc, char** argv) {
     cout << "hello forme normale" << endl;
-    simpleForm();
-    //formesDirectes(8);
+    //simpleForm();
+    formesDirectes(8);
     return 0;
 }
 
