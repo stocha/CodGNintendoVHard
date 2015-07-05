@@ -31,8 +31,6 @@ namespace normalizerCNF {
 
     class Var {
     public:
-        
-        
 
         Var() {
             value = -1;
@@ -41,10 +39,10 @@ namespace normalizerCNF {
         Var(int value) : value(value) {
         }
         int value;
-        bool bar=false;
+        bool bar = false;
 
         void debug() {
-            if(bar) cout << '!';
+            if (bar) cout << '!';
             cout << value;
 
         }
@@ -56,13 +54,11 @@ namespace normalizerCNF {
     string optos[]{"&", "|", "+", "!", "", "VOID"};
 
     class Expr {
-
-
     public:
         op type;
         Var val;
-        vector<Expr> dat;        
-        
+        vector<Expr> dat;
+
     public:
 
         Expr() {
@@ -125,46 +121,94 @@ namespace normalizerCNF {
         }
         
         void pushor(){
-            if (type != AND && type != OR && type != VAL ) {
-                cerr << " pushor invariant fail : invert base expr";
-                exit(0);
-            }          
+            while(pushor_rec()){
+                 cout << "debug partiel pushor"<<endl;
+                    debug(0);   
+                    cout << " fin debug partiel pushor"<<endl;
+            };
+        }
+
+        bool pushor_rec() {            
+            if (type == VAL) return false;          
+            if(type==AND) {
+                bool hasPushed=false;
+                for (int i = 0; i < dat.size(); i++) {
+                    hasPushed=hasPushed||dat[i].pushor_rec();
+                }      
+                return hasPushed;
+            };
             
-            if(type==VAL) return;
-            op me=op;
-            
-            while(true){
-                int cc=-1;
-                for(int i=0;i<dat.size();i++){
-                    if(dat[i].type==me){
-                        cc=i;
+            op me = type;
+
+            bool hasPushed=false;
+            while (true) {
+                int cc = -1;
+                for (int i = 0; i < dat.size(); i++) {
+                    if (dat[i].type == AND) {
+                        cc = i;
                         break;
                     }
                 }
-                
-                if(cc!=-1){
-                    Expr e=dat[cc];
-                    dat.erase(cc);
-                    for(int i=0;i<e.dat.size();i++){
+
+                if (cc != -1) {
+                    hasPushed=true;
+                    Expr head = dat[cc];
+                    dat.erase(dat.begin()+cc);
+                    
+                    Expr nth=*this;                    
+                    for (int i = 0; i < head.dat.size(); i++) {
+                        Expr old=head.dat[i];
+                        head.dat[i]=Expr(OR,head.dat[i],nth);
+                    }                    
+                    copy(head);
+                    continue;
+                }
+
+                break;
+            }            
+            
+            
+            for (int i = 0; i < dat.size(); i++) {
+                dat[i].pushor_rec();
+            }            
+            return hasPushed;
+        }
+
+        void flatten() {
+            if (type != AND && type != OR && type != VAL) {
+                cerr << " pushor invariant fail : invert base expr";
+                exit(0);
+            }
+
+            if (type == VAL) return;
+            op me = type;
+
+            while (true) {
+                int cc = -1;
+                for (int i = 0; i < dat.size(); i++) {
+                    if (dat[i].type == me) {
+                        cc = i;
+                        break;
+                    }
+                }
+
+                if (cc != -1) {
+                    Expr e = dat[cc];
+                    dat.erase(dat.begin()+cc);
+                    for (int i = 0; i < e.dat.size(); i++) {
                         dat.push_back(e.dat[i]);
                     }
                     continue;
                 }
-                
+
                 break;
             }
-            
-            if(type==OR){
-                
-            }
-            
-        
         }
 
         void debug(int pad) {
             if (type == VAL) {
                 cout << dpad(pad);
-                
+
                 val.debug();
                 cout << endl;
                 return;
@@ -186,15 +230,22 @@ namespace normalizerCNF {
             }
             if (type == NOT) {
                 this->delMono();
-            }else if(type==AND || type == OR){
-                if(type == AND) type=OR;else
-                if(type == OR) type=AND;
-                for(int i=0;i<dat.size();i++){
+            } else if (type == AND || type == OR) {
+                if (type == AND) type = OR;
+                else
+                    if (type == OR) type = AND;
+                for (int i = 0; i < dat.size(); i++) {
                     dat[i].invertExpr();
                 }
-            }else if(type==VAL){
-                val.bar=!val.bar;
+            } else if (type == VAL) {
+                val.bar = !val.bar;
             }
+        }
+        
+        void copy(Expr e){
+            type = e.type;
+            val = e.val;
+            dat = e.dat;            
         }
 
         void delMono() {
@@ -203,9 +254,7 @@ namespace normalizerCNF {
                 exit(0);
             }
 
-            type = dat[0].type;            
-            val = dat[0].val;
-            dat = dat[0].dat;
+            copy(dat[0]);
         }
 
     };
@@ -244,21 +293,21 @@ void formesDirectes(int sz) {
 }
 
 void simpleForm() {
-    Expr r = Expr(XOR,
-            Expr(XOR, Expr(Var(1)), Expr(Var(2))),
-            Expr(XOR,
-            Expr(NOT, Expr(Var(1))),
-            Expr(NOT, Expr(Var(2)))
+    Expr r = Expr(OR,
+            Expr(AND, Expr(Var(1)), Expr(Var(2))),
+            Expr(AND,
+            Expr( Expr(Var(1))),
+            Expr(Expr(Var(2)))
             )
             );
 
     r.debug(0);
-    cout << "+++++++++ UNXOR +++++++++" << endl;
-    r.unxor();
-    r.debug(0);
-    cout << "+++++++++ PUSH NOT +++++++++" << endl;
-    r.pushnot();
-    r.debug(0);
+    //cout << "+++++++++  FLATTEN  +++++++++" << endl;
+    //r.flatten();
+    //r.debug(0);    
+    cout << "+++++++++  PUSH OR  +++++++++" << endl;
+    r.pushor();
+    r.debug(0);     
 }
 
 /*
