@@ -6,6 +6,7 @@
                    projectFiles="true">
       <itemPath>BitLogicNintendo2.h</itemPath>
       <itemPath>BlN_ext001.h</itemPath>
+      <itemPath>Normalizer.h</itemPath>
       <itemPath>Notes.h</itemPath>
       <itemPath>SurfaceHard_saves001.h</itemPath>
     </logicalFolder>
@@ -57,6 +58,8 @@
       </item>
       <item path="Normaliser.cpp" ex="false" tool="1" flavor2="0">
       </item>
+      <item path="Normalizer.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="Notes.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="OfficialEncoder.cpp" ex="false" tool="1" flavor2="0">
@@ -95,6 +98,8 @@
       <item path="BlN_ext001.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Normaliser.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Normalizer.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Notes.h" ex="false" tool="3" flavor2="0">
       </item>
