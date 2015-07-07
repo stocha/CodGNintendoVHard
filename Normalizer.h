@@ -230,6 +230,8 @@ namespace normalizerCNF {
             return hasPushed;
         }
 
+    public:
+
         void invertExpr() {
             if (type != AND && type != OR && type != VAL && type != NOT) {
                 cerr << "invariant fail : invert base expr";
@@ -286,67 +288,68 @@ namespace normalizerCNF {
 
         return res;
     }
-    
-    debug( pair<vector<vector<int>>, vector<vector<int>>> conj){
-        for(int i=0;i<conj.first.size();i++){
-            for(int j=0;j<conj[i];j++){
-                cout << conj[i] << "|";
-            }
-        }
-    }
 
-    pair<vector<vector<int>>, vector<vector<int>>> solverCNFormule(vector<bool> input, int sz) {
-        // 1 disjonction [] (and) [] (or) not? int addr
+    class SolverFormule {
+        vector<vector<int>> discon;
+        vector<vector<int>> conintrovar;
 
-        vector<Expr> form = formulesDirectForSize(sz);
-        for (int i = 0; i < form.size(); i++) {
-            form[i].normalizeAndOr();
-        }
-
-        for (int i = 0; i < form.size(); i++) {
-            if (input[i] == false) {
-                form[i].invertExpr();
+        SolverFormule(vector<bool> input, int sz) {
+            vector<Expr> form = formulesDirectForSize(sz);
+            for (int i = 0; i < form.size(); i++) {
                 form[i].normalizeAndOr();
             }
+
+            for (int i = 0; i < form.size(); i++) {
+                if (input[i] == false) {
+                    form[i].invertExpr();
+                    form[i].normalizeAndOr();
+                }
+            }
+
+            for (int f = 0; f < form.size(); f++) {
+                for (int dis = 0; dis < form[f].dat.size(); dis++) {
+                    vector<int> curr;
+                    for (int con = 0; con < form[f].dat[dis].dat.size(); con++) {
+                        Expr e = form[f].dat[dis].dat[con];
+                        curr.push_back(e.val.bar ? -e.val.value : e.val.value);
+
+                    }
+                    discon.push_back(curr);
+                }
+
+            }
+
+            unordered_set<int> hash;
+
+            int did = 0;
+            for (vector<int> v : discon) {
+                int cid = 0;
+                vector<int> ntolvl;
+                for (int n : v) {
+                    if (hash.find(n) != hash.end()) {
+                        ntolvl.push_back(n);
+                    }
+                    hash.insert(n);
+                    cid++;
+                }
+                conintrovar.push_back(ntolvl);
+                did++;
+            }
         }
 
-        vector<vector<int>> allConj;
-        for (int f = 0; f < form.size(); f++) {
-            for (int dis = 0; dis < form[f].dat.size(); dis++) {
-                vector<int> curr;
-                for (int con = 0; con < form[f].dat[dis].dat.size(); con++) {
-                    Expr e=form[f].dat[dis].dat[con];
-                    curr.push_back(e.val.bar ? -e.val.value : e.val.value);
+        debug() {
+            //            for (int i = 0; i < conj.first.size(); i++) {
+            //                for (int j = 0; j < conj[i]; j++) {
+            //                    cout << conj[i] << "|";
+            //                }
+            //            }
+        }
 
-                }
-                allConj.push(curr);
-            }
-            
-        }
-        
-        unordered_set<int> hash;
-        
-        vector<vector<int>> ntolvlPerLevel;
-        int did=0;
-        for(vector<int> v : allConj){
-            int cid=0;
-            vector<int> ntolvl;
-            for(int n : v){
-                if(hash.find(n)!=hash.end()){
-                  ntolvl.push_back(n);  
-                }
-                hash.insert(n);
-                cid++;
-            }
-            ntolvlPerLevel.push_back(ntolvl);
-            did++;
-        }
-        
-        
-        
-        return pair<allConj,ntolvlPerLevel>;
-    }
+    };
+
 }
+
+
 
 #endif	/* NORMALIZER_H */
 

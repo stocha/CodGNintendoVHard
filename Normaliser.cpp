@@ -195,7 +195,13 @@ void testFullDirect(int dim) {
 
             done.insert(my);
 
-            //cout << " from " << toStringBs(myori, sz) << " inverting " <<toStringBs(my, sz)<< endl;
+            cout << " from " << toStringBs(myori, sz) << " inverting " <<toStringBs(my, sz)<< endl;
+            
+            vector<bool> v;
+            for(int i=0;i<sz;i++){
+                v.push_back(my[i]);
+                
+            }
             clock_t begin = clock();
             //std::unordered_set<bitset < SZVEC >> res = solveIt(my,my, sz,0);
             //            std::unordered_set<bitset < SZVEC >> res = solveItV3(my, sz);
@@ -264,7 +270,7 @@ int main(int argc, char** argv) {
     cout << "hello forme normale" << endl;
     //simpleForm();
     //formesDirectes(10);
-    testFullDirect(8);
+    testFullDirect(4);
 
     return 0;
 }
