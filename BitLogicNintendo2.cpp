@@ -7,6 +7,8 @@
 
 #include "BitLogicNintendo2.h"
 
+using namespace version2;
+
 
 
 
@@ -84,36 +86,13 @@ std::unordered_set<bitset < SZVEC >> solveItV3(bitset<SZVEC> input, int size) {
 }
 
 
-void randize(bitset<SZVEC>& r,int a, int b, int c, int d, int sz){
-    bitset<SZVEC> one=1;
-    one =a;
-    r=one;
-    r=r<<16;
-    one =b;
-    r|=one;
-    r=r<<16;
-    one =c;
-    r|=one;
-    r=r<<16;
-    one =d;
-    r|one;
-           
-    bitset<SZVEC> m=1;
-    one=1;
-    while(sz-1>0){
-        sz=sz-1;
-        m=m<<1 | one;
-    }
-    //r=r&m;
-}
-
 void testAndValidateMyInvertingAtRandomWithManualSize() {
 
     bool showResult = true;
 
     cout << "testAndValidateMyInvertingAtRandomWithManualSize " << endl;
     std::unordered_set<bitset < SZVEC >> done;
-    srand(0x4787599F4);
+    srand(0x47875F4);
     bitset<SZVEC> my;
     int sz = 48;
     unsigned int val = 0x0e24FF;
