@@ -286,6 +286,14 @@ namespace normalizerCNF {
 
         return res;
     }
+    
+    debug( pair<vector<vector<int>>, vector<vector<int>>> conj){
+        for(int i=0;i<conj.first.size();i++){
+            for(int j=0;j<conj[i];j++){
+                cout << conj[i] << "|";
+            }
+        }
+    }
 
     pair<vector<vector<int>>, vector<vector<int>>> solverCNFormule(vector<bool> input, int sz) {
         // 1 disjonction [] (and) [] (or) not? int addr
@@ -315,7 +323,28 @@ namespace normalizerCNF {
             }
             
         }
-        return pair<allConj,allConj>;
+        
+        unordered_set<int> hash;
+        
+        vector<vector<int>> ntolvlPerLevel;
+        int did=0;
+        for(vector<int> v : allConj){
+            int cid=0;
+            vector<int> ntolvl;
+            for(int n : v){
+                if(hash.find(n)!=hash.end()){
+                  ntolvl.push_back(n);  
+                }
+                hash.insert(n);
+                cid++;
+            }
+            ntolvlPerLevel.push_back(ntolvl);
+            did++;
+        }
+        
+        
+        
+        return pair<allConj,ntolvlPerLevel>;
     }
 }
 
