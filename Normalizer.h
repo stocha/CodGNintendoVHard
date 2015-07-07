@@ -286,6 +286,13 @@ namespace normalizerCNF {
 
         return res;
     }
+    
+    pair<vector<vector<int>>,vector<vector<int>>> solverCNFormule(vector<bool> input,int sz){
+        vector<Expr> form=formulesDirectForSize(sz);
+        for(int i=0;i<form.size();i++){
+            
+        }
+    }
 }
 
 #endif	/* NORMALIZER_H */
