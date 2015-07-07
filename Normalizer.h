@@ -117,8 +117,8 @@ namespace normalizerCNF {
 
         void pushor() {
             while (pushor_rec()) {
-                 //cout << "debug partiel pushor"<<endl;
-                  // debug(0);   
+                //cout << "debug partiel pushor"<<endl;
+                // debug(0);   
                 //  cout << " fin debug partiel pushor"<<endl;
             };
         }
@@ -225,8 +225,8 @@ namespace normalizerCNF {
 
 
             for (int i = 0; i < dat.size(); i++) {
-             hasPushed=hasPushed||dat[i].pushor_rec();
-            }            
+                hasPushed = hasPushed || dat[i].pushor_rec();
+            }
             return hasPushed;
         }
 
@@ -267,7 +267,7 @@ namespace normalizerCNF {
     };
 
     vector<Expr> formulesDirectForSize(int sz) {
-        vector<Expr> res(sz-1);
+        vector<Expr> res(sz - 1);
 
         for (int i = 0; i < sz / 2; i++) {
             for (int j = 0; j < sz / 2; j++) {
@@ -286,12 +286,36 @@ namespace normalizerCNF {
 
         return res;
     }
-    
-    pair<vector<vector<int>>,vector<vector<int>>> solverCNFormule(vector<bool> input,int sz){
-        vector<Expr> form=formulesDirectForSize(sz);
-        for(int i=0;i<form.size();i++){
+
+    pair<vector<vector<int>>, vector<vector<int>>> solverCNFormule(vector<bool> input, int sz) {
+        // 1 disjonction [] (and) [] (or) not? int addr
+
+        vector<Expr> form = formulesDirectForSize(sz);
+        for (int i = 0; i < form.size(); i++) {
+            form[i].normalizeAndOr();
+        }
+
+        for (int i = 0; i < form.size(); i++) {
+            if (input[i] == false) {
+                form[i].invertExpr();
+                form[i].normalizeAndOr();
+            }
+        }
+
+        vector<vector<int>> allConj;
+        for (int f = 0; f < form.size(); f++) {
+            for (int dis = 0; dis < form[f].dat.size(); dis++) {
+                vector<int> curr;
+                for (int con = 0; con < form[f].dat[dis].dat.size(); con++) {
+                    Expr e=form[f].dat[dis].dat[con];
+                    curr.push_back(e.val.bar ? -e.val.value : e.val.value);
+
+                }
+                allConj.push(curr);
+            }
             
         }
+        return pair<allConj,allConj>;
     }
 }
 
