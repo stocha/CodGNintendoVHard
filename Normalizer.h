@@ -290,10 +290,18 @@ namespace normalizerCNF {
     }
 
     class SolverFormule {
+    public:
         vector<vector<int>> discon;
         vector<vector<int>> conintrovar;
+        vector<bool> input;
+        int sz;
+        Expr exprbit;
 
         SolverFormule(vector<bool> input, int sz) {
+            for (int i = 0; i < input.size(); i++) {
+                this->input.push_back(input[i]);
+            }
+            this->sz = sz;
             vector<Expr> form = formulesDirectForSize(sz);
             for (int i = 0; i < form.size(); i++) {
                 form[i].normalizeAndOr();
@@ -304,7 +312,9 @@ namespace normalizerCNF {
                     form[i].invertExpr();
                     form[i].normalizeAndOr();
                 }
+                exprbit.dat.push_back(form[i]);
             }
+            exprbit.type=AND;
 
             for (int f = 0; f < form.size(); f++) {
                 for (int dis = 0; dis < form[f].dat.size(); dis++) {
@@ -337,12 +347,32 @@ namespace normalizerCNF {
             }
         }
 
-        debug() {
-            //            for (int i = 0; i < conj.first.size(); i++) {
-            //                for (int j = 0; j < conj[i]; j++) {
-            //                    cout << conj[i] << "|";
-            //                }
-            //            }
+        debugFormule() {
+
+            vector<Expr> fdr = formulesDirectForSize(sz);
+            for (int i = 0; i < fdr.size(); i++) {
+                cout << "------- " << i << " NORMED ----------" << endl;
+                fdr[i].normalizeAndOr();
+                fdr[i].debug(0);
+            }
+            cout << "debug formule for ";
+            for (int i = 0; i < input.size(); i++) {
+                cout << input[i] ? "1" : "0";
+            }
+            cout << endl;
+            cout << "USED FORMULE "<<endl;
+            exprbit.debug(0);
+
+            for (int i = 0; i < discon.size(); i++) {
+                for (int j = 0; j < discon[i].size(); j++) {
+                    cout << discon[i][j] << "|";
+                }
+                cout << "( ";
+                for (int j = 0; j < conintrovar[i].size(); j++) {
+                    cout << conintrovar[i][j] << "|";
+                }
+                cout << " )" << endl;
+            }
         }
 
     };

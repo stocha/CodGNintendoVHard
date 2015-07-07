@@ -199,9 +199,12 @@ void testFullDirect(int dim) {
             
             vector<bool> v;
             for(int i=0;i<sz;i++){
-                v.push_back(my[i]);
-                
+                //v.push_back(my[i]);
+                v.push_back(true);
             }
+            SolverFormule sf(v,sz);
+            sf.debugFormule();
+            
             clock_t begin = clock();
             //std::unordered_set<bitset < SZVEC >> res = solveIt(my,my, sz,0);
             //            std::unordered_set<bitset < SZVEC >> res = solveItV3(my, sz);
