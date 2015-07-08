@@ -298,6 +298,13 @@ namespace normalizerCNF {
         Expr exprbit;
 
 
+    private :
+       static bool wayToSort(const vector<int> &i,const vector<int> &j) { 
+                        if(i.size()<j.size())return true;
+                        if(i.size()>j.size())return false;
+       
+                        if(i[0]>j[0])return true; 
+                        return false; }
     public:
 
         void simplify() {
@@ -320,11 +327,33 @@ namespace normalizerCNF {
                     }
                 }
                 if (kip && find(dcheck.begin(), dcheck.end(), check) == dcheck.end()) {
+                    sort(csimp.begin(),csimp.end());
                     dsimp.push_back(csimp);
                     dcheck.push_back(check);
                 }
             }
+            sort(dsimp.begin(),dsimp.end(),wayToSort);
             discon = dsimp;
+            
+            
+            unordered_set<int> hash;
+
+            int did = 0;
+            for (int i = 0; i < discon.size(); i++) {
+                vector<int> v = discon[i];
+                int cid = 0;
+                vector<int> ntolvl;
+                for (int j = 0; j < v.size(); j++) {
+                    int n = getIndex(v[j]);
+                    if (hash.find(n) == hash.end()) {
+                        ntolvl.push_back(n);
+                    }
+                    hash.insert(n);
+                    cid++;
+                }
+                conintrovar.push_back(ntolvl);
+                did++;
+            }            
         }
 
     private:
@@ -426,24 +455,7 @@ namespace normalizerCNF {
             }
            // cout << "DIS CON FIRST FORM DONE" << endl;
 
-            unordered_set<int> hash;
 
-            int did = 0;
-            for (int i = 0; i < discon.size(); i++) {
-                vector<int> v = discon[i];
-                int cid = 0;
-                vector<int> ntolvl;
-                for (int j = 0; j < v.size(); j++) {
-                    int n = getIndex(v[j]);
-                    if (hash.find(n) == hash.end()) {
-                        ntolvl.push_back(n);
-                    }
-                    hash.insert(n);
-                    cid++;
-                }
-                conintrovar.push_back(ntolvl);
-                did++;
-            }
         }
 
         bool getNeg(int v) {

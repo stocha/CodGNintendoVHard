@@ -153,7 +153,7 @@ bitset<SZVEC> applyFormulesDirectes(bitset<SZVEC> input, int sz) {
             //sf.debugFormule();
             sf.simplify();
             cout << "Simplify "<<endl;
-            //sf.debugFormule();
+            sf.debugFormule();
             vector<vector<bool>> solu=sf.solveFullParcIt();
             
             
@@ -172,6 +172,73 @@ bitset<SZVEC> applyFormulesDirectes(bitset<SZVEC> input, int sz) {
 
 //namespace{
 //const int SZVEC = 64;
+ 
+ 
+void testAndValidateMyInvertingAtRandomWithManualSize(int sz,int nbNumberToTry) {
+
+    bool showResult = true;
+
+    cout << "testAndValidateMyInvertingAtRandomWithManualSize " << endl;
+    std::unordered_set<bitset < SZVEC >> done;
+    srand(0x47875F4);
+    bitset<SZVEC> my;
+    unsigned int val = 0x0e24FF;
+    //cout << formula(size/2) << endl;         
+    //cout << formula(size) << endl;     
+    //cout << formula(size*2) << endl;
+
+    long maxValue = 1;
+    for (int i = 0; i < sz - 1; i++) {
+        maxValue |= maxValue << 1;
+    }
+
+    cout << "MaxValue " << maxValue << endl;
+    for (int i = 0; i < nbNumberToTry; i++) {
+        long rl = rand()^(((long) rand()) << 32);
+        
+        rl = rl % maxValue;
+
+        //cout << " Random " << hex << rl << endl;
+
+        if(sz <=16)
+                my = rl;
+        else{
+            randize(my,rand(),rand(),rand(),rand(),sz);
+        }        
+        
+        bitset<SZVEC> myori = my;
+        my = applyDirectFun(my, sz);
+            bitset<SZVEC> checkIt;
+        if (done.find(my) == done.end()) {
+            cout << toStringBs(myori, sz) << " Appli direct -> "<< toStringBs(my, sz) << endl;            
+            
+            done.insert(my);
+
+            cout << " from " << toStringBs(myori, sz) << " inverting " <<toStringBs(my, sz)<< endl;
+            clock_t begin = clock();
+            //std::unordered_set<bitset < SZVEC >> res = solveIt(my,my, sz,0);
+            std::unordered_set<bitset < SZVEC >> res = solveItV4(my, sz);
+            {
+                int elemind = 0;
+                if (showResult) for (const auto& elem : res) {
+                    checkIt=applyDirectFun(elem, sz);
+                    bool valid=(checkIt==my);
+                        cout << (elemind++) << " : " << toStringBs(elem, sz)<< " valid " << valid << endl;
+                    }
+            }
+            clock_t end = clock();
+            double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+            cout << "  { exec time " << elapsed_secs << " s " << endl;
+            if (res.find(myori) == res.end()) {
+                cout << " ERROR " << toStringBs(myori, sz) << " not found " << endl;
+            }
+        }
+
+    }
+    cout << "----------- END OF testAndValidateMyInvertingAtRandomWithManualSize --------" << endl;
+
+
+}
 
 void testFullDirect(int dim) {
 
@@ -292,7 +359,8 @@ int main(int argc, char** argv) {
     cout << "hello forme normale" << endl;
     //simpleForm();
     //formesDirectes(10);
-    testFullDirect(8);
+    //testFullDirect(8);
+    testAndValidateMyInvertingAtRandomWithManualSize(8,5);
 
     return 0;
 }
