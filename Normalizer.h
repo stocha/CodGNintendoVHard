@@ -117,7 +117,7 @@ namespace normalizerCNF {
 
         void pushor() {
             while (pushor_rec()) {
-                //cout << "debug partiel pushor"<<endl;
+                // cout << "debug partiel pushor"<<endl;
                 // debug(0);   
                 //  cout << " fin debug partiel pushor"<<endl;
             };
@@ -206,18 +206,18 @@ namespace normalizerCNF {
             }
 
             if (cc != -1) {
-                hasPushed = true;
                 Expr head = dat[cc];
                 dat.erase(dat.begin() + cc);
                 if (dat.size() == 1) {
                     delMono();
-
+                    hasPushed = true;
                 }
 
                 Expr nth = *this;
                 for (int i = 0; i < head.dat.size(); i++) {
                     Expr old = head.dat[i];
                     head.dat[i] = Expr(OR, head.dat[i], nth);
+                    hasPushed = true;
                 }
                 copy(head);
             }
@@ -296,88 +296,90 @@ namespace normalizerCNF {
         vector<bool> input;
         int sz;
         Expr exprbit;
-        
-        
-    public :
-        void simplify(){
+
+
+    public:
+
+        void simplify() {
             vector<vector<int>> dsimp;
             vector<unordered_set<int>> dcheck;
-            
-            for(int i=0;i< discon.size();i++){
+
+            for (int i = 0; i < discon.size(); i++) {
                 vector<int> csimp;
                 unordered_set<int> check;
-                bool kip=true;
-                for(int j=0;j<discon[i].size();j++){
-                    int d=discon[i][j];
-                    if(check.find(d)==check.end()){
+                bool kip = true;
+                for (int j = 0; j < discon[i].size(); j++) {
+                    int d = discon[i][j];
+                    if (check.find(d) == check.end()) {
                         check.insert(d);
                         csimp.push_back(d);
                     }
-                    if(check.find(-d)!=check.end()){
-                        kip=false;
+                    if (check.find(-d) != check.end()) {
+                        kip = false;
                         break;
                     }
                 }
-                if(kip && find(dcheck.begin(),dcheck.end(),check)==dcheck.end()){
+                if (kip && find(dcheck.begin(), dcheck.end(), check) == dcheck.end()) {
                     dsimp.push_back(csimp);
                     dcheck.push_back(check);
                 }
             }
-            discon=dsimp;
+            discon = dsimp;
         }
-        
-    private :
-        bool fullCheck(vector<bool> v){
-            bool disr=true;
-            bool conjr=false;
-            
-          //  cout << " fullCheck "; debugVecbool(v); cout << endl;
-            
-            for(int dis =0;dis<discon.size();dis++){
-                conjr=false;
-                for(int con =0;con<discon[dis].size();con++){
-                    int ind=getIndex(discon[dis][con]);
-                    bool bar=getNeg(discon[dis][con]);
-                    conjr=conjr || (bar?!v[ind]:v[ind]);
-            //        cout << "check " << ind << "_"<<bar <<" curr="<<conjr<<endl;
-                }        
-                disr=disr&conjr;
+
+    private:
+
+        bool fullCheck(vector<bool> v) {
+            bool disr = true;
+            bool conjr = false;
+
+            //  cout << " fullCheck "; debugVecbool(v); cout << endl;
+
+            for (int dis = 0; dis < discon.size(); dis++) {
+                conjr = false;
+                for (int con = 0; con < discon[dis].size(); con++) {
+                    int ind = getIndex(discon[dis][con]);
+                    bool bar = getNeg(discon[dis][con]);
+                    conjr = conjr || (bar ? !v[ind] : v[ind]);
+                    //        cout << "check " << ind << "_"<<bar <<" curr="<<conjr<<endl;
+                }
+                disr = disr&conjr;
             }
-            
+
             return disr;
         }
-    public :
-        void debugVecbool(vector<bool> it){            
-            for(int i=0;i<it.size();i++){
-                cout << it[it.size()-1-i]?"1":"-";
+    public:
+
+        void debugVecbool(vector<bool> it) {
+            for (int i = 0; i < it.size(); i++) {
+                cout << it[it.size() - 1 - i] ? "1" : "-";
             }
             cout << endl;
         }
-        
-        vector<vector<bool>> solveFullParcIt(){
-            vector<vector<bool>> result;
-            
-            vector<bool> res(sz);            
-            int max=1<<sz;
-            for(int hyp=0;hyp<max;hyp++){
-                for(int i=0;i<sz;i++){
-                    res[i]=(((hyp>>i)&1)==1);
+
+        vector<vector<bool>> solveFullParcIt() {
+            vector < vector<bool>> result;
+
+            vector<bool> res(sz);
+            int max = 1 << sz;
+            for (int hyp = 0; hyp < max; hyp++) {
+                for (int i = 0; i < sz; i++) {
+                    res[i] = (((hyp >> i)&1) == 1);
                 }
-                
-                if(fullCheck(res)){
+
+                if (fullCheck(res)) {
                     result.push_back(res);
                 }
             }
-            
-            for(int i=0;i<result.size();i++){
+
+            for (int i = 0; i < result.size(); i++) {
                 cout << "inverse " << i << " is ";
                 debugVecbool(result[i]);
             }
-            
+
             return result;
-        
+
         }
-        
 
         SolverFormule(vector<bool> input, int sz) {
             for (int i = 0; i < input.size(); i++) {
@@ -386,49 +388,53 @@ namespace normalizerCNF {
             this->sz = sz;
             vector<Expr> form = formulesDirectForSize(sz);
             for (int i = 0; i < form.size(); i++) {
-                form[i].normalizeAndOr();
+               // form[i].normalizeAndOr();
+                form[i].unxor();
             }
-            cout << "DIRECT FORMULE DONE" << endl;
+            //cout << "DIRECT FORMULE DONE" << endl;
             for (int i = 0; i < form.size(); i++) {
+               // cout << i << "/" << (form.size() - 1) << endl;
                 if (input[i] == false) {
+                    //form[i].debug(0);
                     form[i].invertExpr();
                 }
                 exprbit.dat.push_back(form[i]);
             }
-            exprbit.type=AND;
+            exprbit.type = AND;
             exprbit.normalizeAndOr();
-            cout << "AND FORUM NORMALIZED" << endl;
+            //cout << "AND FORUM NORMALIZED" << endl;
 
             for (int f = 0; f < exprbit.dat.size(); f++) {
-                Expr disex=exprbit.dat[f];
-                 vector<int> curr;
-                if(disex.type==VAL){
-                    curr.push_back(disex.val.bar ? -disex.val.value-1 : disex.val.value+1);
+                Expr disex = exprbit.dat[f];
+                vector<int> curr;
+                if (disex.type == VAL) {
+                    curr.push_back(disex.val.bar ? -disex.val.value - 1 : disex.val.value + 1);
                     discon.push_back(curr);
-                }else{
-                    if(disex.type!=OR){
-                        cerr << "conjonction not OR !" << endl; exit(1);
+                } else {
+                    if (disex.type != OR) {
+                        cerr << "conjonction not OR !" << endl;
+                        exit(1);
                     }
                     for (int con = 0; con < disex.dat.size(); con++) {
                         Expr e = disex.dat[con];
-                        curr.push_back(e.val.bar ? -e.val.value-1 : e.val.value+1);
+                        curr.push_back(e.val.bar ? -e.val.value - 1 : e.val.value + 1);
 
-                    }       
+                    }
                     discon.push_back(curr);
                 }
 
             }
-            cout << "DIS CON FIRST FORM DONE" << endl;
+           // cout << "DIS CON FIRST FORM DONE" << endl;
 
             unordered_set<int> hash;
 
             int did = 0;
-            for (int i=0;i<discon.size();i++) {
+            for (int i = 0; i < discon.size(); i++) {
                 vector<int> v = discon[i];
                 int cid = 0;
                 vector<int> ntolvl;
-                for (int j=0;j<v.size();j++) {
-                    int n= getIndex(v[j]);
+                for (int j = 0; j < v.size(); j++) {
+                    int n = getIndex(v[j]);
                     if (hash.find(n) == hash.end()) {
                         ntolvl.push_back(n);
                     }
@@ -439,38 +445,38 @@ namespace normalizerCNF {
                 did++;
             }
         }
-        
-        bool getNeg(int v){
+
+        bool getNeg(int v) {
             return (v < 0);
         }
-        
-        int getIndex(int v){
-            return ((v<0 )?-v -1 : v-1);
+
+        int getIndex(int v) {
+            return ((v < 0) ? -v - 1 : v - 1);
         }
 
         debugFormule() {
 
-//            vector<Expr> fdr = formulesDirectForSize(sz);
-//            for (int i = 0; i < fdr.size(); i++) {
-//                cout << "------- " << i << " NORMED ----------" << endl;
-//                fdr[i].normalizeAndOr();
-//                fdr[i].debug(0);
-//            }
-//            cout << "debug formule for ";
-//            for (int i = 0; i < input.size(); i++) {
-//                cout << input[i] ? "1" : "0";
-//            }
-//            cout << endl;
-//            cout << "USED FORMULE "<<endl;
-//            exprbit.debug(0);
+            //            vector<Expr> fdr = formulesDirectForSize(sz);
+            //            for (int i = 0; i < fdr.size(); i++) {
+            //                cout << "------- " << i << " NORMED ----------" << endl;
+            //                fdr[i].normalizeAndOr();
+            //                fdr[i].debug(0);
+            //            }
+            //            cout << "debug formule for ";
+            //            for (int i = 0; i < input.size(); i++) {
+            //                cout << input[i] ? "1" : "0";
+            //            }
+            //            cout << endl;
+            //            cout << "USED FORMULE "<<endl;
+            //            exprbit.debug(0);
 
             for (int i = 0; i < discon.size(); i++) {
                 for (int j = 0; j < discon[i].size(); j++) {
-                    cout << (getNeg(discon[i][j])?"!":" ") << getIndex(discon[i][j]) << "|";
+                    cout << (getNeg(discon[i][j]) ? "!" : " ") << getIndex(discon[i][j]) << "|";
                 }
                 cout << "( ";
                 for (int j = 0; j < conintrovar[i].size(); j++) {
-                    cout << conintrovar[i][j]<< "|";
+                    cout << conintrovar[i][j] << "|";
                 }
                 cout << " )" << endl;
             }

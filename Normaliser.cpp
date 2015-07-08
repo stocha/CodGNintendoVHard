@@ -206,7 +206,7 @@ void testFullDirect(int dim) {
             //sf.debugFormule();
             sf.simplify();
             cout << "Simplify "<<endl;
-            sf.debugFormule();
+            //sf.debugFormule();
             vector<vector<bool>> solu=sf.solveFullParcIt();
             
             clock_t begin = clock();
