@@ -310,27 +310,27 @@ namespace normalizerCNF {
             for (int i = 0; i < form.size(); i++) {
                 if (input[i] == false) {
                     form[i].invertExpr();
-                    form[i].normalizeAndOr();
                 }
                 exprbit.dat.push_back(form[i]);
             }
             exprbit.type=AND;
+            exprbit.normalizeAndOr();
 
-            for (int f = 0; f < form.size(); f++) {
-                for (int dis = 0; dis < form[f].dat.size(); dis++) {
-                    vector<int> curr;
-                    
-                    if(form[f].dat[dis].type==OR)
-                    for (int con = 0; con < form[f].dat[dis].dat.size(); con++) {
-                        Expr e = form[f].dat[dis].dat[con];
+            for (int f = 0; f < exprbit.dat.size(); f++) {
+                Expr disex=exprbit.dat[f];
+                 vector<int> curr;
+                if(disex.type==VAL){
+                    curr.push_back(disex.val.bar ? -disex.val.value-1 : disex.val.value+1);
+                    discon.push_back(curr);
+                }else{
+                    if(disex.type!=OR){
+                        cerr << "conjonction not OR !" << endl; exit(1);
+                    }
+                    for (int con = 0; con < disex.dat.size(); con++) {
+                        Expr e = disex.dat[con];
                         curr.push_back(e.val.bar ? -e.val.value-1 : e.val.value+1);
 
-                    }
-                    else{
-                        Expr e = form[f].dat[dis];
-                        curr.push_back(e.val.bar ? -e.val.value-1 : e.val.value+1);                        
-                    }
-                   
+                    }       
                     discon.push_back(curr);
                 }
 
