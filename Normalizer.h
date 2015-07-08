@@ -339,14 +339,16 @@ namespace normalizerCNF {
             unordered_set<int> hash;
 
             int did = 0;
-            for (vector<int> v : discon) {
+            for (int i=0;i<discon.size();i++) {
+                vector<int> v = discon[i];
                 int cid = 0;
                 vector<int> ntolvl;
-                for (int n : v) {
-                    if (hash.find(getIndex(n)) != hash.end()) {
-                        ntolvl.push_back(getIndex(n));
+                for (int j=0;j<v.size();j++) {
+                    int n= getIndex(v[j]);
+                    if (hash.find(n) == hash.end()) {
+                        ntolvl.push_back(n);
                     }
-                    hash.insert(getIndex(n));
+                    hash.insert(n);
                     cid++;
                 }
                 conintrovar.push_back(ntolvl);

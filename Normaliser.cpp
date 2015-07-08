@@ -199,8 +199,8 @@ void testFullDirect(int dim) {
             
             vector<bool> v;
             for(int i=0;i<sz;i++){
-                //v.push_back(my[i]);
-                v.push_back(true);
+                v.push_back(my[i]);
+                //v.push_back(true);
             }
             SolverFormule sf(v,sz);
             sf.debugFormule();
