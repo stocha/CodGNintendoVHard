@@ -373,7 +373,7 @@ namespace normalizerCNF {
             }
 
             for (int i = 0; i < result.size(); i++) {
-                cout << "inverse " << i << " is ";
+                //cout << "inverse " << i << " is ";
                 debugVecbool(result[i]);
             }
 

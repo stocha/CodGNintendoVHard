@@ -143,7 +143,32 @@ bitset<SZVEC> applyFormulesDirectes(bitset<SZVEC> input, int sz) {
     return res;
 }
 
-
+ std::unordered_set<bitset < SZVEC >> solveItV4(bitset < SZVEC > my,int sz){
+                 vector<bool> v;
+            for(int i=0;i<sz;i++){
+                v.push_back(my[i]);
+                //v.push_back(true);
+            }
+            SolverFormule sf(v,sz);
+            //sf.debugFormule();
+            sf.simplify();
+            cout << "Simplify "<<endl;
+            //sf.debugFormule();
+            vector<vector<bool>> solu=sf.solveFullParcIt();
+            
+            
+            
+     unordered_set<bitset < SZVEC >> res;
+     
+     for(int i=0;i<solu.size();i++){
+         bitset < SZVEC > sol;
+         for(int j=0;j<solu[i].size();j++){
+             sol[j]=solu[i][j];
+         }
+         res.insert(sol);
+     }
+     return res;
+ }
 
 //namespace{
 //const int SZVEC = 64;
@@ -197,29 +222,19 @@ void testFullDirect(int dim) {
 
             cout << " from " << toStringBs(myori, sz) << " inverting " <<toStringBs(my, sz)<< endl;
             
-            vector<bool> v;
-            for(int i=0;i<sz;i++){
-                v.push_back(my[i]);
-                //v.push_back(true);
-            }
-            SolverFormule sf(v,sz);
-            //sf.debugFormule();
-            sf.simplify();
-            cout << "Simplify "<<endl;
-            //sf.debugFormule();
-            vector<vector<bool>> solu=sf.solveFullParcIt();
             
             clock_t begin = clock();
             //std::unordered_set<bitset < SZVEC >> res = solveIt(my,my, sz,0);
             //            std::unordered_set<bitset < SZVEC >> res = solveItV3(my, sz);
-            //            {
-            //                int elemind = 0;
-            //                if (showResult) for (const auto& elem : res) {
-            //                    checkIt=applyDirectFun(elem, sz);
-            //                    bool valid=(checkIt==my);
-            //                        cout << (elemind++) << " : " << toStringBs(elem, sz)<< " valid " << valid << endl;
-            //                    }
-            //            }
+            std::unordered_set<bitset < SZVEC >> res = solveItV4(my, sz);
+                        {
+                            int elemind = 0;
+                            if (showResult) for (const auto& elem : res) {
+                                checkIt=applyDirectFun(elem, sz);
+                                bool valid=(checkIt==my);
+                                    cout << (elemind++) << " : " << toStringBs(elem, sz)<< " valid " << valid << endl;
+                                }
+                        }
             clock_t end = clock();
             double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
             //cout << "  { exec time " << elapsed_secs << " s " << endl;
