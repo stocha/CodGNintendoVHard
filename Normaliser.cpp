@@ -360,7 +360,7 @@ int main(int argc, char** argv) {
     //simpleForm();
     //formesDirectes(10);
     //testFullDirect(8);
-    testAndValidateMyInvertingAtRandomWithManualSize(8,5);
+    testAndValidateMyInvertingAtRandomWithManualSize(12,1);
 
     return 0;
 }

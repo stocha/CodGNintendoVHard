@@ -177,7 +177,9 @@ namespace normalizerCNF {
         void normalizeAndOr() {
             this->unxor();
             this->pushnot();
+            cout << "push not done " << endl;
             pushor();
+            cout << "push or done " << endl;
             flatten();
         }
 
@@ -420,7 +422,6 @@ namespace normalizerCNF {
                // form[i].normalizeAndOr();
                 form[i].unxor();
             }
-            //cout << "DIRECT FORMULE DONE" << endl;
             for (int i = 0; i < form.size(); i++) {
                // cout << i << "/" << (form.size() - 1) << endl;
                 if (input[i] == false) {
@@ -429,9 +430,10 @@ namespace normalizerCNF {
                 }
                 exprbit.dat.push_back(form[i]);
             }
+            cout << "DIRECT FORMULE DONE" << endl;            
             exprbit.type = AND;
             exprbit.normalizeAndOr();
-            //cout << "AND FORUM NORMALIZED" << endl;
+            cout << "AND FORM NORMALIZED" << endl;
 
             for (int f = 0; f < exprbit.dat.size(); f++) {
                 Expr disex = exprbit.dat[f];
