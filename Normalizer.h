@@ -302,12 +302,15 @@ namespace normalizerCNF {
             bool disr=true;
             bool conjr=false;
             
+          //  cout << " fullCheck "; debugVecbool(v); cout << endl;
+            
             for(int dis =0;dis<discon.size();dis++){
                 conjr=false;
                 for(int con =0;con<discon[dis].size();con++){
                     int ind=getIndex(discon[dis][con]);
                     bool bar=getNeg(discon[dis][con]);
                     conjr=conjr || (bar?!v[ind]:v[ind]);
+            //        cout << "check " << ind << "_"<<bar <<" curr="<<conjr<<endl;
                 }        
                 disr=disr&conjr;
             }
@@ -315,7 +318,14 @@ namespace normalizerCNF {
             return disr;
         }
     public :
-        vector<vector<bool>> solveIt(){
+        void debugVecbool(vector<bool> it){            
+            for(int i=0;i<it.size();i++){
+                cout << it[it.size()-1-i]?"1":"-";
+            }
+            cout << endl;
+        }
+        
+        vector<vector<bool>> solveFullParcIt(){
             vector<vector<bool>> result;
             
             vector<bool> res(sz);            
@@ -330,6 +340,10 @@ namespace normalizerCNF {
                 }
             }
             
+            for(int i=0;i<result.size();i++){
+                cout << "inverse " << i << " is ";
+                debugVecbool(result[i]);
+            }
             
             return result;
         

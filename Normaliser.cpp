@@ -203,7 +203,8 @@ void testFullDirect(int dim) {
                 //v.push_back(true);
             }
             SolverFormule sf(v,sz);
-            sf.debugFormule();
+            //sf.debugFormule();
+            vector<vector<bool>> solu=sf.solveFullParcIt();
             
             clock_t begin = clock();
             //std::unordered_set<bitset < SZVEC >> res = solveIt(my,my, sz,0);
