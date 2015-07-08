@@ -277,7 +277,7 @@ int main(int argc, char** argv) {
     cout << "hello forme normale" << endl;
     //simpleForm();
     //formesDirectes(10);
-    testFullDirect(4);
+    testFullDirect(8);
 
     return 0;
 }

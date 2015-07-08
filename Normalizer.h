@@ -377,6 +377,7 @@ namespace normalizerCNF {
             return result;
         
         }
+        
 
         SolverFormule(vector<bool> input, int sz) {
             for (int i = 0; i < input.size(); i++) {
@@ -387,7 +388,7 @@ namespace normalizerCNF {
             for (int i = 0; i < form.size(); i++) {
                 form[i].normalizeAndOr();
             }
-
+            cout << "DIRECT FORMULE DONE" << endl;
             for (int i = 0; i < form.size(); i++) {
                 if (input[i] == false) {
                     form[i].invertExpr();
@@ -396,6 +397,7 @@ namespace normalizerCNF {
             }
             exprbit.type=AND;
             exprbit.normalizeAndOr();
+            cout << "AND FORUM NORMALIZED" << endl;
 
             for (int f = 0; f < exprbit.dat.size(); f++) {
                 Expr disex=exprbit.dat[f];
@@ -416,6 +418,7 @@ namespace normalizerCNF {
                 }
 
             }
+            cout << "DIS CON FIRST FORM DONE" << endl;
 
             unordered_set<int> hash;
 
