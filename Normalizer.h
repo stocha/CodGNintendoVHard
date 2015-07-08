@@ -296,6 +296,44 @@ namespace normalizerCNF {
         vector<bool> input;
         int sz;
         Expr exprbit;
+        
+    private :
+        bool fullCheck(vector<bool> v){
+            bool disr=true;
+            bool conjr=false;
+            
+            for(int dis =0;dis<discon.size();dis++){
+                conjr=false;
+                for(int con =0;con<discon[dis].size();con++){
+                    int ind=getIndex(discon[dis][con]);
+                    bool bar=getNeg(discon[dis][con]);
+                    conjr=conjr || (bar?!v[ind]:v[ind]);
+                }        
+                disr=disr&conjr;
+            }
+            
+            return disr;
+        }
+    public :
+        vector<vector<bool>> solveIt(){
+            vector<vector<bool>> result;
+            
+            vector<bool> res(sz);            
+            int max=1<<sz;
+            for(int hyp=0;hyp<max;hyp++){
+                for(int i=0;i<sz;i++){
+                    res[i]=(((hyp>>i)&1)==1);
+                }
+                
+                if(fullCheck(res)){
+                    result.push_back(res);
+                }
+            }
+            
+            
+            return result;
+        
+        }
 
         SolverFormule(vector<bool> input, int sz) {
             for (int i = 0; i < input.size(); i++) {
