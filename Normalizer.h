@@ -297,6 +297,35 @@ namespace normalizerCNF {
         int sz;
         Expr exprbit;
         
+        
+    public :
+        void simplify(){
+            vector<vector<int>> dsimp;
+            vector<unordered_set<int>> dcheck;
+            
+            for(int i=0;i< discon.size();i++){
+                vector<int> csimp;
+                unordered_set<int> check;
+                bool kip=true;
+                for(int j=0;j<discon[i].size();j++){
+                    int d=discon[i][j];
+                    if(check.find(d)==check.end()){
+                        check.insert(d);
+                        csimp.push_back(d);
+                    }
+                    if(check.find(-d)!=check.end()){
+                        kip=false;
+                        break;
+                    }
+                }
+                if(kip && find(dcheck.begin(),dcheck.end(),check)==dcheck.end()){
+                    dsimp.push_back(csimp);
+                    dcheck.push_back(check);
+                }
+            }
+            discon=dsimp;
+        }
+        
     private :
         bool fullCheck(vector<bool> v){
             bool disr=true;
@@ -418,19 +447,19 @@ namespace normalizerCNF {
 
         debugFormule() {
 
-            vector<Expr> fdr = formulesDirectForSize(sz);
-            for (int i = 0; i < fdr.size(); i++) {
-                cout << "------- " << i << " NORMED ----------" << endl;
-                fdr[i].normalizeAndOr();
-                fdr[i].debug(0);
-            }
-            cout << "debug formule for ";
-            for (int i = 0; i < input.size(); i++) {
-                cout << input[i] ? "1" : "0";
-            }
-            cout << endl;
-            cout << "USED FORMULE "<<endl;
-            exprbit.debug(0);
+//            vector<Expr> fdr = formulesDirectForSize(sz);
+//            for (int i = 0; i < fdr.size(); i++) {
+//                cout << "------- " << i << " NORMED ----------" << endl;
+//                fdr[i].normalizeAndOr();
+//                fdr[i].debug(0);
+//            }
+//            cout << "debug formule for ";
+//            for (int i = 0; i < input.size(); i++) {
+//                cout << input[i] ? "1" : "0";
+//            }
+//            cout << endl;
+//            cout << "USED FORMULE "<<endl;
+//            exprbit.debug(0);
 
             for (int i = 0; i < discon.size(); i++) {
                 for (int j = 0; j < discon[i].size(); j++) {
