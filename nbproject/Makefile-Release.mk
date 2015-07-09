@@ -37,9 +37,11 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 OBJECTFILES= \
 	${OBJECTDIR}/BitLogicNintendo.o \
 	${OBJECTDIR}/BitLogicNintendo2.o \
+	${OBJECTDIR}/FirstTry.o \
 	${OBJECTDIR}/Normaliser.o \
 	${OBJECTDIR}/OfficialEncoder.o \
-	${OBJECTDIR}/main.o
+	${OBJECTDIR}/v5_Formulaz.o \
+	${OBJECTDIR}/v5_main.o
 
 
 # C Compiler Flags
@@ -76,6 +78,11 @@ ${OBJECTDIR}/BitLogicNintendo2.o: BitLogicNintendo2.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/BitLogicNintendo2.o BitLogicNintendo2.cpp
 
+${OBJECTDIR}/FirstTry.o: FirstTry.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/FirstTry.o FirstTry.cpp
+
 ${OBJECTDIR}/Normaliser.o: Normaliser.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
@@ -86,10 +93,15 @@ ${OBJECTDIR}/OfficialEncoder.o: OfficialEncoder.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/OfficialEncoder.o OfficialEncoder.cpp
 
-${OBJECTDIR}/main.o: main.cpp 
+${OBJECTDIR}/v5_Formulaz.o: v5_Formulaz.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/v5_Formulaz.o v5_Formulaz.cpp
+
+${OBJECTDIR}/v5_main.o: v5_main.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/v5_main.o v5_main.cpp
 
 # Subprojects
 .build-subprojects:

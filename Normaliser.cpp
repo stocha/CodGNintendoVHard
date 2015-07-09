@@ -331,23 +331,16 @@ void formesDirectes(int sz) {
 
 void simpleForm() {
 
-    Expr r = Expr(OR,
-            Expr(AND, Expr(Var(1)), Expr(Var(2))),
-            Expr(AND,
-            Expr(Expr(Var(3))),
-            Expr(Expr(Var(4)))
-            )
-            );
+    Expr rXor = Expr(XOR,
+                    Expr(AND, Expr(Var(1)), Expr(Var(2))),
+                    Expr(AND, Expr(Var(3)), Expr(Var(4)))
+                );
+    Expr x56 = Expr(XOR,rXor,Expr(AND, Expr(Var(5)), Expr(Var(6))));
+          Expr r=x56;  
 
     r.debug(0);
-    //cout << "+++++++++  FLATTEN  +++++++++" << endl;
-    //r.flatten();
-    //r.debug(0);    
-    cout << "+++++++++  PUSH OR  +++++++++" << endl;
-    r.pushor();
-    r.debug(0);
-    cout << "+++++++++  FLATTEN  +++++++++" << endl;
-    r.flatten();
+    cout << "+++++++++  DISJUNCNORM  +++++++++" << endl;
+    r.normalizeAndOr();
     r.debug(0);
 }
 // namespace end}
@@ -355,12 +348,12 @@ void simpleForm() {
 /*
  * 
  */
-int main(int argc, char** argv) {
+int main_Normalizer(int argc, char** argv) {
     cout << "hello forme normale" << endl;
-    //simpleForm();
+    simpleForm();
     //formesDirectes(10);
     //testFullDirect(8);
-    testAndValidateMyInvertingAtRandomWithManualSize(12,1);
+    //testAndValidateMyInvertingAtRandomWithManualSize(12,1);
 
     return 0;
 }

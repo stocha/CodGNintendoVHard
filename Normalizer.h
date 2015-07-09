@@ -16,7 +16,6 @@
 #include <algorithm>
 #include <string>
 #include <iostream>
-#include <vector>
 #include <sstream> //this is where istringstream is defined
 #include <string>
 #include <memory>
@@ -282,6 +281,7 @@ namespace normalizerCNF {
             this->pushnot();
             cout << "push not done " << endl;
             pushor();
+            //pushor2();
             cout << "push or done " << endl;
             flatten();
         }
@@ -536,9 +536,13 @@ namespace normalizerCNF {
                 exprbit.dat.push_back(form[i]);
             }
             cout << "DIRECT FORMULE DONE" << endl;
+            exprbit.debug(0);
             exprbit.type = AND;
             exprbit.normalizeAndOr();
+
             cout << "AND FORM NORMALIZED" << endl;
+            exprbit.debug(0);   
+            exit(0);
 
             for (int f = 0; f < exprbit.dat.size(); f++) {
                 Expr disex = exprbit.dat[f];
