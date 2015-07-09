@@ -123,6 +123,84 @@ namespace normalizerCNF {
             };
         }
 
+    private:
+
+        int exprSz() {
+            if (type != VAL) return dat.size();
+
+            return 1;
+        }
+
+        Expr& valAt(int i) {
+            if ((type == VAL && i != 0) || (type != VAL && dat[i].type != VAL)) {
+                cerr << " Invariant casse valeur simple only " << endl;
+                exit(1);
+            }
+            if (type == VAL) return *this;
+            return dat[i];
+        }
+
+        void flattenNodeOnly() {
+            if (type != AND && type != OR && type != VAL) {
+                cerr << " flatten invariant fail : invert base expr";
+                exit(0);
+            }
+
+            if (type == VAL) return;
+            op me = type;
+
+            while (true) {
+                int cc = -1;
+                for (int i = 0; i < dat.size(); i++) {
+                    if (dat[i].type == me) {
+                        cc = i;
+                        break;
+                    }
+                }
+
+                if (cc != -1) {
+                    Expr e = dat[cc];
+                    dat.erase(dat.begin() + cc);
+                    for (int i = 0; i < e.dat.size(); i++) {
+                        dat.push_back(e.dat[i]);
+                    }
+                    continue;
+                }
+
+                break;
+            }
+        }
+
+        pushor2rec() {
+            for (Expr e : dat) {
+                pushor2rec();
+            }
+            flattenNodeOnly();
+
+            if (type != OR) {
+                return;
+            }
+
+
+            Expr andOrNode;
+            andOrNode.type = AND;
+            
+            vector<int> sz;
+            for(int i=0;i<dat.size();i++){
+                
+            }
+
+
+        }
+    public:
+
+        void pushor2() {
+            pushor2rec();
+
+
+
+        }
+
         void flatten() {
             if (type != AND && type != OR && type != VAL) {
                 cerr << " flatten invariant fail : invert base expr";
@@ -300,13 +378,15 @@ namespace normalizerCNF {
         Expr exprbit;
 
 
-    private :
-       static bool wayToSort(const vector<int> &i,const vector<int> &j) { 
-                        if(i.size()<j.size())return true;
-                        if(i.size()>j.size())return false;
-       
-                        if(i[0]>j[0])return true; 
-                        return false; }
+    private:
+
+        static bool wayToSort(const vector<int> &i, const vector<int> &j) {
+            if (i.size() < j.size())return true;
+            if (i.size() > j.size())return false;
+
+            if (i[0] > j[0])return true;
+            return false;
+        }
     public:
 
         void simplify() {
@@ -329,15 +409,15 @@ namespace normalizerCNF {
                     }
                 }
                 if (kip && find(dcheck.begin(), dcheck.end(), check) == dcheck.end()) {
-                    sort(csimp.begin(),csimp.end());
+                    sort(csimp.begin(), csimp.end());
                     dsimp.push_back(csimp);
                     dcheck.push_back(check);
                 }
             }
-            sort(dsimp.begin(),dsimp.end(),wayToSort);
+            sort(dsimp.begin(), dsimp.end(), wayToSort);
             discon = dsimp;
-            
-            
+
+
             unordered_set<int> hash;
 
             int did = 0;
@@ -355,7 +435,7 @@ namespace normalizerCNF {
                 }
                 conintrovar.push_back(ntolvl);
                 did++;
-            }            
+            }
         }
 
     private:
@@ -419,18 +499,18 @@ namespace normalizerCNF {
             this->sz = sz;
             vector<Expr> form = formulesDirectForSize(sz);
             for (int i = 0; i < form.size(); i++) {
-               // form[i].normalizeAndOr();
+                // form[i].normalizeAndOr();
                 form[i].unxor();
             }
             for (int i = 0; i < form.size(); i++) {
-               // cout << i << "/" << (form.size() - 1) << endl;
+                // cout << i << "/" << (form.size() - 1) << endl;
                 if (input[i] == false) {
                     //form[i].debug(0);
                     form[i].invertExpr();
                 }
                 exprbit.dat.push_back(form[i]);
             }
-            cout << "DIRECT FORMULE DONE" << endl;            
+            cout << "DIRECT FORMULE DONE" << endl;
             exprbit.type = AND;
             exprbit.normalizeAndOr();
             cout << "AND FORM NORMALIZED" << endl;
@@ -455,7 +535,7 @@ namespace normalizerCNF {
                 }
 
             }
-           // cout << "DIS CON FIRST FORM DONE" << endl;
+            // cout << "DIS CON FIRST FORM DONE" << endl;
 
 
         }
