@@ -171,7 +171,7 @@ namespace normalizerCNF {
             }
         }
 
-        pushor2rec() {
+        void pushor2rec() {
             for (Expr e : dat) {
                 pushor2rec();
             }
@@ -186,11 +186,36 @@ namespace normalizerCNF {
             andOrNode.type = AND;
             
             vector<int> sz;
+            vector<int> parc;
             for(int i=0;i<dat.size();i++){
+                sz.push_back(dat[i].exprSz());
+                parc.push_back(0);
+            }
+            
+            while(parc[sz.size()-1]<sz[sz.size()-1]){
                 
+                Expr orNode;
+                orNode.type=OR;
+                
+                for(int i=0;i<sz.size();i++){
+                    orNode.dat.push_back(dat[i].valAt(i));
+                }
+                andOrNode.dat.push_back(orNode);
+                
+                for(int i=0;true;i++){
+                    parc[i]+=1;
+                    if(parc[i]<sz[i]){
+                        break;
+                    }
+                    if(i==(sz.size()-1)){
+                        break;
+                    }         
+                    parc[i]=0;
+                }
             }
 
-
+            this->type=AND;
+            this->dat=andOrNode.dat;
         }
     public:
 
