@@ -20,17 +20,38 @@
 #include <string>
 #include <memory>
 using namespace std;
+
 class Formulaz {
 public:
     Formulaz();
     Formulaz(const Formulaz& orig);
     virtual ~Formulaz();
-    
-    virtual bool evaluate(const vector<bool>& it)=0;
-    virtual int inputSize()=0;
+
+    virtual bool evaluate(const vector<bool>& it) = 0;
+    virtual int inputSize() = 0;
 private:
 
 };
+
+class bitField {
+private:
+    vector<bool> dat;
+
+public :
+    bitField();
+    bitField(int startSz);
+    bitField(string strHex);
+    
+    vector<bool> v(){
+        return dat;
+    }
+    
+    string str();
+    string strHex();
+    
+    
+};
+
 
 #endif	/* FORMULAZ_H */
 

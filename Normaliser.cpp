@@ -152,8 +152,8 @@ bitset<SZVEC> applyFormulesDirectes(bitset<SZVEC> input, int sz) {
             SolverFormule sf(v,sz);
             //sf.debugFormule();
             sf.simplify();
-            cout << "Simplify "<<endl;
-            sf.debugFormule();
+            //cout << "Simplify "<<endl;
+            //sf.debugFormule();
             vector<vector<bool>> solu=sf.solveFullParcIt();
             
             
@@ -335,12 +335,19 @@ void simpleForm() {
                     Expr(AND, Expr(Var(1)), Expr(Var(2))),
                     Expr(AND, Expr(Var(3)), Expr(Var(4)))
                 );
-    Expr x56 = Expr(XOR,rXor,Expr(AND, Expr(Var(5)), Expr(Var(6))));
-          Expr r=x56;  
+     Expr r=rXor;
+     int repeat=1;
+    for(int i=0;i<repeat;i++){
+            Expr next = Expr(XOR,r,Expr(AND, Expr(Var(i)), Expr(Var(i+repeat))));
+            r=next;
+    }
+                    
 
     r.debug(0);
     cout << "+++++++++  DISJUNCNORM  +++++++++" << endl;
-    r.normalizeAndOr();
+    //r.unxor();
+    r.unxor_dis();
+    r.pushnot();
     r.debug(0);
 }
 // namespace end}
@@ -348,11 +355,11 @@ void simpleForm() {
 /*
  * 
  */
-int main_Normalizer(int argc, char** argv) {
+int main_normalizer(int argc, char** argv) {
     cout << "hello forme normale" << endl;
-    simpleForm();
+    //simpleForm();
     //formesDirectes(10);
-    //testFullDirect(8);
+    testFullDirect(8);
     //testAndValidateMyInvertingAtRandomWithManualSize(12,1);
 
     return 0;

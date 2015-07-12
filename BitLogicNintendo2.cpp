@@ -94,7 +94,7 @@ void testAndValidateMyInvertingAtRandomWithManualSize() {
     std::unordered_set<bitset < SZVEC >> done;
     srand(0x47875F4);
     bitset<SZVEC> my;
-    int sz = 48;
+    int sz = 16;
     unsigned int val = 0x0e24FF;
     //cout << formula(size/2) << endl;         
     //cout << formula(size) << endl;     
@@ -219,7 +219,7 @@ std::string formula(int size) {
     return res;
 }
 
-int main_blnd2(int argc, char** argv) {
+int main_biylogicV2(int argc, char** argv) {
    // cout << formula(4) << endl;
     //cout << formula(64) << endl;
     testAndValidateMyInvertingAtRandomWithManualSize();

@@ -103,6 +103,25 @@ namespace normalizerCNF {
                 dat[i].unxor();
             }
         }
+        
+        void unxor_dis() {
+            if (type == XOR) {
+                if (dat.size() != 2) {
+                    cerr << "invariant fail XOR a deux arguments" << endl;
+                }
+
+                Expr l = dat[0];
+                Expr r = dat[1];
+
+                dat.clear();
+                type = OR;
+                dat.push_back(Expr(AND, Expr(NOT, l), r));
+                dat.push_back(Expr(AND, Expr(NOT, r), l));
+            }
+            for (int i = 0; i < dat.size(); i++) {
+                dat[i].unxor_dis();
+            }
+        }        
 
         void pushnot() {
             if (type == NOT) {
