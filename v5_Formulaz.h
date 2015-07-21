@@ -42,13 +42,13 @@ public :
         return (at-num);
     }
     int coefLsec(int at,int num){
-        return sz-1-at-num;
+        return sz-1-num-at ;
     }
     int coefR(int at,int num){
-        return (at-coefL(at,num));
+        return num;
     }
     int coefRsec(int at,int num){
-        return (at-coefLsec(at,num));
+        return sz-1-num;
     }    
 
     
