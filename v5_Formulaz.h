@@ -53,17 +53,19 @@ public :
 
     
     void debug_coef(){
+        
+        const int fillnb=1;
         for(int i=0;i<sz/2;i++){
-            cout << i << " :: ";
+            cout<< setfill('0')<< setw(3) << i << " :: ";
             for(int j=0;j<nbXor(i);j++){
-                cout << "(" << coefL(i,j) << "&" << coefR(i,j) << ")+";
+                cout<< setfill('0')  << "("<< setw(fillnb) << coefL(i,j) << "&"<< setw(fillnb) << coefR(i,j) << ")+";
             }
             cout<<" & "<<endl;
             
             if(i+1==sz/2) break;
-             cout << i << " :: ";
+             cout<< setfill('0')<< setw(3) << i << " :: ";
             for(int j=0;j<nbXor(i);j++){
-                cout << "(" << coefLsec(i,j) << "&" << coefRsec(i,j) << ")+";
+                cout<< setfill('0')  << "("<< setw(fillnb) << coefLsec(i,j) << "&"<< setw(fillnb) << coefRsec(i,j) << ")+";
             }
             cout<<" & "<<endl;            
         }
