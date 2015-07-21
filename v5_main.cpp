@@ -6,6 +6,7 @@
  */
 
 #include <cstdlib>
+#include "v5_Formulaz.h"
 
 using namespace std;
 
@@ -13,7 +14,10 @@ using namespace std;
  * 
  */
 int main(int argc, char** argv) {
-
+    cout << "V5" << endl;
+    SoluSimp ss(8);
+    ss.debug_coef();
+    
     return 0;
 }
 
