@@ -15,7 +15,7 @@ using namespace std;
  */
 int main(int argc, char** argv) {
     cout << "V5" << endl;
-    SoluSimp ss(8);
+    SoluSimp ss(32);
     ss.debug_coef();
     
     return 0;

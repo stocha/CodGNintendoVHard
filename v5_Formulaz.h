@@ -42,13 +42,13 @@ public :
         return (at-num);
     }
     int coefLsec(int at,int num){
-        return sz-1-num-at ;
+        return sz/2-1+num-at ;
     }
     int coefR(int at,int num){
-        return num;
+        return num +sz/2; 
     }
     int coefRsec(int at,int num){
-        return sz-1-num;
+        return sz/2-1-num +sz/2;
     }    
 
     
@@ -59,14 +59,21 @@ public :
                 cout << "(" << coefL(i,j) << "&" << coefR(i,j) << ")+";
             }
             cout<<" & "<<endl;
-        }
-        for(int i=0;i<sz/2 -1;i++){
-            cout << i << " :: ";
+            
+            if(i+1==sz/2) break;
+             cout << i << " :: ";
             for(int j=0;j<nbXor(i);j++){
                 cout << "(" << coefLsec(i,j) << "&" << coefRsec(i,j) << ")+";
             }
-            cout<<" & "<<endl;
-        }        
+            cout<<" & "<<endl;            
+        }
+//        for(int i=0;i<sz/2 -1;i++){
+//            cout << i << " :: ";
+//            for(int j=0;j<nbXor(i);j++){
+//                cout << "(" << coefLsec(i,j) << "&" << coefRsec(i,j) << ")+";
+//            }
+//            cout<<" & "<<endl;
+//        }        
     
     }
  };
