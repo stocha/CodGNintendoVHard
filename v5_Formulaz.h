@@ -54,7 +54,7 @@ public :
     
     void debug_coef(){
         
-        const int fillnb=1;
+        const int fillnb=2;
         for(int i=0;i<sz/2;i++){
             cout<< setfill('0')<< setw(3) << i << " :: ";
             for(int j=0;j<nbXor(i);j++){
