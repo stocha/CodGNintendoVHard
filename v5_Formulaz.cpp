@@ -15,3 +15,9 @@ Formulaz::Formulaz(const Formulaz& orig) {
 Formulaz::~Formulaz() {
 }
 
+void FormulazTests::testBitField(){
+
+    cout << "Test BitField" << endl;
+    
+}
+

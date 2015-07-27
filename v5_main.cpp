@@ -15,9 +15,10 @@ using namespace std;
  */
 int main(int argc, char** argv) {
     cout << "V5" << endl;
-    SoluSimp ss(32);
-    ss.debug_coef();
+    //SoluSimp ss(32);
+    //ss.debug_coef();
     
+    FormulazTests::testBitField();
     return 0;
 }
 
