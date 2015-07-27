@@ -101,9 +101,18 @@ private:
     vector<bool> dat;
 
 public:
-    bitField();
-    bitField(int startSz);
+    //bitField(){};
+    bitField(int startSz) : dat(startSz){
+    }
     bitField(string strHex);
+    
+    long operator[](const int other){
+        return dat[other]?1:0;
+    }
+    
+    int size(){
+        return dat.size();
+    }
 
     vector<bool> v() {
         return dat;
