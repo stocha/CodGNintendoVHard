@@ -113,6 +113,10 @@ public:
         return dat[pos]?1:0;
     }
     
+    void set(long v, std::size_t at){
+        dat[at]=v;
+    }
+    
     int size(){
         return dat.size();
     }
