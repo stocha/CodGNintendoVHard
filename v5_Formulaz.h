@@ -103,11 +103,14 @@ private:
 public:
     //bitField(){};
     bitField(int startSz) : dat(startSz){
+        dat.resize(startSz);
     }
     bitField(string strHex);
     
-    long operator[](const int other){
-        return dat[other]?1:0;
+    
+    
+    constexpr long operator[]( std::size_t pos){
+        return dat[pos]?1:0;
     }
     
     int size(){
