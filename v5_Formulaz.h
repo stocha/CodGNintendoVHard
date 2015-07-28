@@ -109,7 +109,7 @@ public:
     
     
     
-    constexpr long operator[]( std::size_t pos){
+    long operator[]( std::size_t pos) const{
         return dat[pos]?1:0;
     }
     
