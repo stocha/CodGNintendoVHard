@@ -98,12 +98,11 @@ private:
 
 class bitField {
 private:
-    vector<bool> dat;
-
+     bitset<512> dat;
+     int sz;
 public:
     //bitField(){};
-    bitField(int startSz) : dat(startSz){
-        dat.resize(startSz);
+    bitField(int startSz) : sz(startSz){
     }
     bitField(string strHex);
     
@@ -113,16 +112,12 @@ public:
         return dat[pos]?1:0;
     }
     
-    void set(long v, std::size_t at){
-        dat[at]=v;
+    void set(std::size_t at,long value){
+        dat[at]=value;
     }
     
     int size(){
         return dat.size();
-    }
-
-    vector<bool> v() {
-        return dat;
     }
 
     string str();
