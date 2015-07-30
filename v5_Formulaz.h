@@ -117,7 +117,7 @@ public:
     }
     
     int size(){
-        return dat.size();
+        return sz;
     }
 
     string str();
