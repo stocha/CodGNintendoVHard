@@ -104,7 +104,29 @@ public:
     //bitField(){};
     bitField(int startSz) : sz(startSz){
     }
-    bitField(string strHex);
+    bitField(string strHex){
+        
+        unique_ptr<std::istringstream> in=Tools::stringToStdin(data);
+        int size=0;
+        *in >> size;    
+
+        unsigned int a[size / 16];
+        bitset<32> ab[size / 16]; 
+        for (int i = 0; i < size / 16; i++) {
+          *in >> hex >> a[i];
+          ab[i]=bitset<32>(a[i]);
+        }
+
+        for(int i=0;i<size*2;i++){
+            int dec=i/32;
+            int ind=i%32;
+            dat[i]=ab[dec][ind];
+        }        
+        
+        
+        sz=size*2;
+                
+    }
     
     
     
@@ -121,7 +143,9 @@ public:
     }
 
     string str();
-    string strHex();
+    string strHex(){
+        
+    }
 
 
 };
