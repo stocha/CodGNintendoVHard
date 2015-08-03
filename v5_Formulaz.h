@@ -106,14 +106,14 @@ public:
     }
     bitField(string strHex){
         
-        unique_ptr<std::istringstream> in=Tools::stringToStdin(data);
+        istringstream in(strHex);
         int size=0;
-        *in >> size;    
+        in >> size;    
 
         unsigned int a[size / 16];
         bitset<32> ab[size / 16]; 
         for (int i = 0; i < size / 16; i++) {
-          *in >> hex >> a[i];
+          in >> hex >> a[i];
           ab[i]=bitset<32>(a[i]);
         }
 
@@ -144,7 +144,22 @@ public:
 
     string str();
     string strHex(){
+
+        std::ostringstream sout;
         
+        unsigned int a [sz / 32];
+        bitset<32> ab[sz / 32];
+        for (int i = 0; i < sz; i++) {
+            int dec = i / 32;
+            int ind = i % 32;
+            ab[dec][ind] = dat[i];
+        }
+        for (int i = 0; i < (sz / 32); i++)
+            sout << setfill('0') << setw(8) << hex << ab[i].to_ulong() << " "; // print result       
+        sout << endl;        
+        
+        string res = sout.str();
+        return res;
     }
 
 
