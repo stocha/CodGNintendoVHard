@@ -142,7 +142,22 @@ public:
         return sz;
     }
 
-    string str();
+    string str(){        
+        std::ostringstream sout;        
+        unsigned int a [sz / 32];
+        //bitset<32> ab[sz / 32];
+        for (int i = sz-1; i >=0; --i) {
+            sout << (dat[i] ? '1':'0') ; // print result    
+            if(i%4 == 0) sout << ".";
+            if(i%8 == 0) sout << " ";
+        }  
+        sout << endl;        
+        
+        string res = sout.str();
+        return res;        
+    
+        
+    }
     string strHex(){
 
         std::ostringstream sout;
