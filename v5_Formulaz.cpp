@@ -26,5 +26,19 @@ void FormulazTests::testBitField(){
     cout << bf.str() << endl;
     
     
+    bitField rf(4);
+    
+    int nbVal=20;
+    for(int i=0;i<nbVal;i++){
+        rf.randomize();
+        cout << rf.str() << endl;
+    }
+    nbVal=16;
+    cout << "----------- INCR ------------" << endl;
+    for(int i=0;i<nbVal;i++){
+        ++rf;
+        cout << rf.str() << endl;
+    }
+    
 }
 

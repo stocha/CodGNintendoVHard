@@ -101,15 +101,12 @@ private:
      bitset<512> dat;
      int sz;
 public:
-    //bitField(){};
     bitField(int startSz) : sz(startSz){
     }
-    bitField(string strHex){
-        
+    bitField(string strHex){        
         istringstream in(strHex);
         int size=0;
         in >> size;    
-
         unsigned int a[size / 16];
         bitset<32> ab[size / 16]; 
         for (int i = 0; i < size / 16; i++) {
@@ -121,13 +118,22 @@ public:
             int dec=i/32;
             int ind=i%32;
             dat[i]=ab[dec][ind];
-        }        
-        
-        
-        sz=size*2;
-                
+        }                        
+        sz=size*2;                
     }
     
+    bitField& operator++ ()     // prefix ++
+    {
+        
+        for(int i=0;i<size();i++){
+            if((*this)[i]==0){
+                set(i,1);
+                return *this;
+            }
+            set(i,0);
+        }
+       return *this;
+    }    
     
     
     long operator[]( std::size_t pos) const{
@@ -141,6 +147,12 @@ public:
     int size(){
         return sz;
     }
+    
+    void randomize(){
+        for(int i=0;i<size();i++){
+            set(i,rand()%2);
+        }
+    }
 
     string str(){        
         std::ostringstream sout;        
@@ -150,8 +162,7 @@ public:
             sout << (dat[i] ? '1':'0') ; // print result    
             if(i%4 == 0) sout << ".";
             if(i%8 == 0) sout << " ";
-        }  
-        sout << endl;        
+        }          
         
         string res = sout.str();
         return res;        
