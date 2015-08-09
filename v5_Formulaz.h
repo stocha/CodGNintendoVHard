@@ -132,7 +132,16 @@ public:
             set(i,0);
         }
        return *this;
-    }    
+    }  
+    
+    bool operator==(const bitField& other){
+        bool res=other.sz==sz;
+        if(!res) return res;
+        for(int i=0;i<sz;i++){
+            if ((*this)[i]!= other[i]) return false;
+        }
+        return res;
+    }
     
     bool isZero(){
         for(int i=0;i<size();i++){
