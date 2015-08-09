@@ -123,8 +123,7 @@ public:
     }
     
     bitField& operator++ ()     // prefix ++
-    {
-        
+    {        
         for(int i=0;i<size();i++){
             if((*this)[i]==0){
                 set(i,1);
@@ -152,6 +151,12 @@ public:
         for(int i=0;i<size();i++){
             set(i,rand()%2);
         }
+    }
+    
+    void clear(){
+        for(int i=0;i<size();i++){
+            set(i,0);
+        }        
     }
 
     string str(){        
@@ -190,6 +195,9 @@ public:
 
 
 };
+
+    
+    bitField applyEncode(bitField in);
 
 class FormulazTests {
 public:

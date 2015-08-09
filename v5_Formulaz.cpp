@@ -6,6 +6,19 @@
  */
 #include "v5_Formulaz.h"
 
+bitField applyEncode(bitField in)
+{
+        int sz=in.size();
+        bitField rr(sz);
+        for(int i=0;i<(sz/2);i++){
+            for(int j=0;j<(sz/2);j++){
+                rr.set(i+j,rr[i+j]^(in[i]&in[j+(sz/2)]));
+            }            
+        }
+        
+        return rr;
+}
+
 Formulaz::Formulaz() {
 }
 
@@ -31,13 +44,14 @@ void FormulazTests::testBitField(){
     int nbVal=20;
     for(int i=0;i<nbVal;i++){
         rf.randomize();
-        cout << rf.str() << endl;
+        cout << rf.str() << "->" << applyEncode(rf).str() << endl;
     }
     nbVal=16;
+    rf.clear();
     cout << "----------- INCR ------------" << endl;
     for(int i=0;i<nbVal;i++){
         ++rf;
-        cout << rf.str() << endl;
+        cout << rf.str() << "->" << applyEncode(rf).str() << endl;
     }
     
 }
