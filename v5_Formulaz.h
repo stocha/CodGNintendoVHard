@@ -134,6 +134,15 @@ public:
        return *this;
     }    
     
+    bool isZero(){
+        for(int i=0;i<size();i++){
+            if((*this)[i]!=0){
+                return false;
+            }
+        }
+        return true;        
+    }
+    
     
     long operator[]( std::size_t pos) const{
         return dat[pos]?1:0;
@@ -198,6 +207,33 @@ public:
 
     
     bitField applyEncode(bitField in);
+    
+    class inverterInterface{
+        virtual vector<bitField> invert(bitField in)=0;
+    };
+    
+    class refInvert : inverterInterface{
+        vector<bitField> invert(bitField in){
+            vector<bitField> resvv;
+            
+            bitField res(in.size());
+            
+            
+            while(true){
+                
+                if(applyEncode(res)==in){
+                    cout << res.str() << " is solution " << endl;
+                    resvv.push_back(res);
+                }
+                
+                ++res;
+                if(res.isZero()) break;
+            }
+            
+            
+            return resvv;
+        }
+    };
 
 class FormulazTests {
 public:
