@@ -247,6 +247,8 @@ public:
 class FormulazTests {
 public:
     static void testBitField();
+    static void testInvertRef();
+    static void testAll();
 
 };
 

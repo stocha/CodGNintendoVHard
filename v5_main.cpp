@@ -18,7 +18,7 @@ int main(int argc, char** argv) {
     //SoluSimp ss(32);
     //ss.debug_coef();
     
-    FormulazTests::testBitField();
+    FormulazTests::testAll();
     return 0;
 }
 
