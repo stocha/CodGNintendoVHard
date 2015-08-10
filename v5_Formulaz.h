@@ -218,10 +218,11 @@ public:
     bitField applyEncode(bitField in);
     
     class inverterInterface{
-        virtual vector<bitField> invert(bitField in)=0;
+    public : virtual vector<bitField> invert(bitField in)=0;
     };
     
     class refInvert : inverterInterface{
+        public : 
         vector<bitField> invert(bitField in){
             vector<bitField> resvv;
             

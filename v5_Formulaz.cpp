@@ -58,34 +58,27 @@ void FormulazTests::testBitField(){
 
 
 void FormulazTests::testInvertRef(){
-
+cout << "----------- ##### ------------" << endl;
     cout << "Test InvertRef" << endl;
+    cout << "----------- --- ------------" << endl;
+    bitField bf(4);
+    refInvert ri;
     
-    string form="16\nb0c1 52f9";
-    bitField bf(form);
+    int nbVal=0;
     
-    cout << bf.strHex() << endl;
-    cout << bf.str() << endl;
-    
-    
-    bitField rf(4);
-    
-    int nbVal=20;
-    for(int i=0;i<nbVal;i++){
-        rf.randomize();
-        cout << rf.str() << "->" << applyEncode(rf).str() << endl;
-    }
     nbVal=16;
-    rf.clear();
+    bf.clear();
     cout << "----------- INCR ------------" << endl;
     for(int i=0;i<nbVal;i++){
-        ++rf;
-        cout << rf.str() << "->" << applyEncode(rf).str() << endl;
+        ++bf;
+        cout << bf.str() << "->" <<  "" << endl ;
+        ri.invert(bf);
     }
     
 }
 
 void FormulazTests::testAll(){
+    testBitField();
     testInvertRef();
 }
 
