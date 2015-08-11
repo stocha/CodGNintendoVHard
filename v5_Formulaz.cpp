@@ -77,9 +77,16 @@ cout << "----------- ##### ------------" << endl;
     
 }
 
+void testCompImpl(){
+    refInvert refInv;
+    compareImpl imp(&refInv,&refInv);
+    imp.compareThem(16,4);
+}
+
 void FormulazTests::testAll(){
-    testBitField();
-    testInvertRef();
+    testCompImpl();
+    //testBitField();
+    //testInvertRef();
 }
 
 

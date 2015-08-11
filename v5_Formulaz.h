@@ -98,152 +98,221 @@ private:
 
 class bitField {
 private:
-     bitset<512> dat;
-     int sz;
+    bitset<512> dat;
+    int sz;
 public:
-    bitField(int startSz) : sz(startSz){
+
+    bitField(int startSz) : sz(startSz) {
     }
-    bitField(string strHex){        
+
+    bitField(string strHex) {
         istringstream in(strHex);
-        int size=0;
-        in >> size;    
+        int size = 0;
+        in >> size;
         unsigned int a[size / 16];
-        bitset<32> ab[size / 16]; 
+        bitset<32> ab[size / 16];
         for (int i = 0; i < size / 16; i++) {
-          in >> hex >> a[i];
-          ab[i]=bitset<32>(a[i]);
+            in >> hex >> a[i];
+            ab[i] = bitset<32>(a[i]);
         }
 
-        for(int i=0;i<size*2;i++){
-            int dec=i/32;
-            int ind=i%32;
-            dat[i]=ab[dec][ind];
-        }                        
-        sz=size*2;                
+        for (int i = 0; i < size * 2; i++) {
+            int dec = i / 32;
+            int ind = i % 32;
+            dat[i] = ab[dec][ind];
+        }
+        sz = size * 2;
     }
-    
-    bitField& operator++ ()     // prefix ++
-    {        
-        for(int i=0;i<size();i++){
-            if((*this)[i]==0){
-                set(i,1);
+
+    bitField& operator++() // prefix ++
+    {
+        for (int i = 0; i < size(); i++) {
+            if ((*this)[i] == 0) {
+                set(i, 1);
                 return *this;
             }
-            set(i,0);
+            set(i, 0);
         }
-       return *this;
-    }  
-    
-    bool operator==(const bitField& other){
-        bool res=other.sz==sz;
-        if(!res) return res;
-        for(int i=0;i<sz;i++){
-            if ((*this)[i]!= other[i]) return false;
+        return *this;
+    }
+
+    bool operator==(const bitField& other) {
+        bool res = other.sz == sz;
+        if (!res) return res;
+        for (int i = 0; i < sz; i++) {
+            if ((*this)[i] != other[i]) return false;
         }
         return res;
     }
-    
-    bool isZero(){
-        for(int i=0;i<size();i++){
-            if((*this)[i]!=0){
+
+    bool isZero() {
+        for (int i = 0; i < size(); i++) {
+            if ((*this)[i] != 0) {
                 return false;
             }
         }
-        return true;        
+        return true;
     }
-    
-    
-    long operator[]( std::size_t pos) const{
-        return dat[pos]?1:0;
+
+    long operator[](std::size_t pos) const {
+        return dat[pos] ? 1 : 0;
     }
-    
-    void set(std::size_t at,long value){
-        dat[at]=value;
+
+    void set(std::size_t at, long value) {
+        dat[at] = value;
     }
-    
-    int size(){
+
+    int size() {
         return sz;
     }
-    
-    void randomize(){
-        for(int i=0;i<size();i++){
-            set(i,rand()%2);
+
+    void randomize() {
+        for (int i = 0; i < size(); i++) {
+            set(i, rand() % 2);
         }
     }
-    
-    void clear(){
-        for(int i=0;i<size();i++){
-            set(i,0);
-        }        
+
+    void clear() {
+        for (int i = 0; i < size(); i++) {
+            set(i, 0);
+        }
     }
 
-    string str(){        
-        std::ostringstream sout;        
+    string str() {
+        std::ostringstream sout;
         unsigned int a [sz / 32];
         //bitset<32> ab[sz / 32];
-        for (int i = sz-1; i >=0; --i) {
-            sout << (dat[i] ? '1':'0') ; // print result    
-            if(i%4 == 0) sout << ".";
-            if(i%8 == 0) sout << " ";
-        }          
-        
+        for (int i = sz - 1; i >= 0; --i) {
+            sout << (dat[i] ? '1' : '0'); // print result    
+            if (i % 4 == 0) sout << ".";
+            if (i % 8 == 0) sout << " ";
+        }
+
         string res = sout.str();
-        return res;        
-    
-        
+        return res;
+
+
     }
-    string strHex(){
+
+    string strHex() {
 
         std::ostringstream sout;
-        
-        unsigned int a [sz / 32];
-        bitset<32> ab[sz / 32];
+        int nb = sz / 32;
+        if (sz % 32 != 0) nb += 1;
+        unsigned int a [nb];
+        bitset<32> ab[nb];
         for (int i = 0; i < sz; i++) {
             int dec = i / 32;
             int ind = i % 32;
             ab[dec][ind] = dat[i];
         }
-        for (int i = 0; i < (sz / 32); i++)
+        for (int i = 0; i < (nb); i++)
             sout << setfill('0') << setw(8) << hex << ab[i].to_ulong() << " "; // print result       
-        sout << endl;        
-        
-        string res = sout.str();
-        return res;
+
+        return sout.str();
     }
 
 
 };
 
-    
-    bitField applyEncode(bitField in);
-    
-    class inverterInterface{
-    public : virtual vector<bitField> invert(bitField in)=0;
-    };
-    
-    class refInvert : inverterInterface{
-        public : 
-        vector<bitField> invert(bitField in){
-            vector<bitField> resvv;
-            
-            bitField res(in.size());
-            
-            
-            while(true){
-                
-                if(applyEncode(res)==in){
-                    cout << res.str() << " is solution " << endl;
-                    resvv.push_back(res);
-                }
-                
-                ++res;
-                if(res.isZero()) break;
+
+bitField applyEncode(bitField in);
+
+class inverterInterface {
+public:
+    virtual vector<bitField> invert(bitField in) = 0;
+};
+
+class refInvert : public inverterInterface {
+public:
+
+    vector<bitField> invert(bitField in) {
+        vector<bitField> resvv;
+
+        bitField res(in.size());
+
+
+        while (true) {
+
+            if (applyEncode(res) == in) {
+                //cout << res.str() << " is solution " << endl;
+                resvv.push_back(res);
             }
-            
-            
-            return resvv;
+
+            ++res;
+            if (res.isZero()) break;
         }
-    };
+
+
+        return resvv;
+    }
+};
+
+class compareImpl {
+    inverterInterface *a;
+    inverterInterface *b;
+public:
+
+    compareImpl(inverterInterface *a, inverterInterface *b) : a(a), b(b) {
+
+    }
+
+    void compareThem(int bitSz, int nbNum) {
+
+        clock_t start = clock();
+
+
+        bitField bf(bitSz);
+        for (int essai = 0; essai < nbNum; essai++) {
+            bf.randomize();
+            cout << "test " << bf.strHex() << " / " << bf.str() << endl;
+
+            auto ra = a->invert(bf);
+            auto rb = b->invert(bf);
+
+            bool eq = true;
+
+            if (ra.size() == rb.size()) {
+                //cout << " nb result " << ra.size() << endl;
+
+                for (int i = 0; i < ra.size(); i++) {
+                    if (!(ra[i] == rb[i])) {
+                        eq = false;
+                        break;
+                    }
+                }
+            } else {
+                eq = false;
+            }
+
+
+
+
+            if (!eq) {
+                cout << "ERROR for " << bf.str() << endl;
+                cout << "----------" << endl;
+                for (auto e : ra) {
+                    cout << e.str() << "|" << endl;
+                }
+                cout << "----------" << endl;
+                for (auto e : rb) {
+                    cout << e.str() << "|" << endl;
+                }
+                cout << "----------" << endl;
+                exit(1);
+            }
+
+        }
+
+        clock_t end = clock();
+        double time = (double) (end - start) / CLOCKS_PER_SEC ;
+        cout << " time spent for " << bitSz << " bit and " << nbNum << " values is "<<time << endl;
+        if(time>0){
+            cout << "" << nbNum/time << " inst per second " << endl;
+        }
+    }
+
+};
 
 class FormulazTests {
 public:
