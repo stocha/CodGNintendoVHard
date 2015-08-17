@@ -19,15 +19,6 @@ bitField applyEncode(bitField in)
         return rr;
 }
 
-Formulaz::Formulaz() {
-}
-
-Formulaz::Formulaz(const Formulaz& orig) {
-}
-
-Formulaz::~Formulaz() {
-}
-
 void FormulazTests::testBitField(){
 
     cout << "Test BitField" << endl;
@@ -78,9 +69,15 @@ cout << "----------- ##### ------------" << endl;
 }
 
 void testCompImpl(){
+    int nbBit=8;
+    
+    SoluSimp ss(nbBit);
+    ss.debug_coef();
+    
     refInvert refInv;
-    compareImpl imp(&refInv,&refInv);
-    imp.compareThem(16,4);
+    seqInvert seqInv;
+    compareImpl imp(&refInv,&seqInv);
+    imp.compareThem(8,nbBit);
 }
 
 void FormulazTests::testAll(){

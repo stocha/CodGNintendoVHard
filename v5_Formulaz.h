@@ -84,17 +84,6 @@ public:
     }
 };
 
-class Formulaz {
-public:
-    Formulaz();
-    Formulaz(const Formulaz& orig);
-    virtual ~Formulaz();
-
-    virtual bool evaluate(const vector<bool>& it) = 0;
-    virtual int inputSize() = 0;
-private:
-
-};
 
 class bitField {
 private:
@@ -135,6 +124,18 @@ public:
         }
         return *this;
     }
+    
+    bitField& incAt(int at) // prefix ++
+    {
+        for (int i = at; i < size(); i++) {
+            if ((*this)[i] == 0) {
+                set(i, 1);
+                return *this;
+            }
+            set(i, 0);
+        }
+        return *this;
+    }    
 
     bool operator==(const bitField& other) {
         bool res = other.sz == sz;
@@ -241,6 +242,55 @@ public:
 
             ++res;
             if (res.isZero()) break;
+        }
+
+
+        return resvv;
+    }
+};
+
+class seqInvert : public inverterInterface {
+public:
+
+    vector<bitField> invert(bitField in) {
+        
+        SoluSimp ss(in.size());
+        vector<bitField> resvv;
+
+        bitField res(in.size());
+        res.clear();
+
+        const int halfSize=in.size()/2;
+        int depth=0;
+        while (true) {
+            
+            long v=in[depth];
+            
+            if(depth<=halfSize){
+                for(int i=0;i<ss.nbXor(depth);i++){
+                    v^= res[ss.coefL(depth,i)&ss.coefR(depth,i)];
+                }
+            }else{
+                for(int i=0;i<ss.nbXor(depth-halfSize);i++){
+                    v^= res[ss.coefLsec(depth-halfSize,i)&ss.coefRsec(depth-halfSize,i)];
+                }                
+            }
+            if(v!=0){
+                ++res;
+                depth=0;
+                if (res.isZero()) break;
+                
+                continue;
+            }            
+
+            depth++;
+            if(depth>=in.size()) {
+                depth=0;
+                resvv.push_back(res);
+                ++res;
+                if (res.isZero()) break;                
+            }
+            
         }
 
 
