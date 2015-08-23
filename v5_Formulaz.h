@@ -254,6 +254,8 @@ public:
 
     vector<bitField> invert(bitField in) {
         
+         //cout << "seqInvert " << endl;
+        
         SoluSimp ss(in.size());
         vector<bitField> resvv;
 
@@ -264,15 +266,20 @@ public:
         int depth=0;
         while (true) {
             
+            cout << "CHECK " << res.str() << " against " << in.str() << endl;
+            
             long v=in[depth];
             
             if(depth<=halfSize){
+                cout << "depth " << depth <<" nbXor "<< ss.nbXor(depth)<< endl;
                 for(int i=0;i<ss.nbXor(depth);i++){
-                    v^= res[ss.coefL(depth,i)&ss.coefR(depth,i)];
+                    cout << v << " ^= " << res[ss.coefL(depth,i)] << " & " << res[ss.coefR(depth,i)]<< endl;
+                    v^= res[res[ss.coefL(depth,i)]&res[ss.coefR(depth,i)]];
                 }
             }else{
-                for(int i=0;i<ss.nbXor(depth-halfSize);i++){
-                    v^= res[ss.coefLsec(depth-halfSize,i)&ss.coefRsec(depth-halfSize,i)];
+                for(int i=0;i<ss.nbXor(depth-halfSize)-1;i++){
+                    cout << v << " ^= " << res[ss.coefLsec(depth-halfSize,i)] << " & " << res[ss.coefRsec(depth-halfSize,i)]<< endl;
+                    v^= res[res[ss.coefLsec(depth-halfSize,i)]&res[ss.coefRsec(depth-halfSize,i)]];
                 }                
             }
             if(v!=0){
@@ -319,11 +326,12 @@ public:
 
             auto ra = a->invert(bf);
             auto rb = b->invert(bf);
+            
 
             bool eq = true;
 
             if (ra.size() == rb.size()) {
-                //cout << " nb result " << ra.size() << endl;
+                cout << " nb result " << ra.size() << endl;
 
                 for (int i = 0; i < ra.size(); i++) {
                     if (!(ra[i] == rb[i])) {
