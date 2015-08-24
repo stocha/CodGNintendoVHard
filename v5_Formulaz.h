@@ -277,7 +277,7 @@ public:
                     v^= res[res[ss.coefL(depth,i)]&res[ss.coefR(depth,i)]];
                 }
             }else{
-                for(int i=0;i<ss.nbXor(depth-halfSize)-1;i++){
+                for(int i=0;i<ss.nbXor(depth-halfSize-1);i++){
                     cout << v << " ^= " << res[ss.coefLsec(depth-halfSize,i)] << " & " << res[ss.coefRsec(depth-halfSize,i)]<< endl;
                     v^= res[res[ss.coefLsec(depth-halfSize,i)]&res[ss.coefRsec(depth-halfSize,i)]];
                 }                
@@ -291,7 +291,7 @@ public:
             }            
 
             depth++;
-            if(depth>=in.size()) {
+            if(!depth<in.size()) {
                 depth=0;
                 resvv.push_back(res);
                 ++res;
