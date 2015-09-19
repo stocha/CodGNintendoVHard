@@ -72,16 +72,17 @@ cout << "----------- ##### ------------" << endl;
 }
 
 void testCompImpl(){
-    int nbBit=8;
+    int nbBit=20;
     
     SoluSimp ss(nbBit);
     ss.debug_coef();
     
     refInvert refInv;
     seqInvert seqInv;
-    compareImpl imp(&refInv,&seqInv);   
+    //compareImpl imp(&refInv,&seqInv);   
     //compareImpl imp(&refInv,&refInv);
-    imp.compareThem(nbBit,20);
+    compareImpl imp(&seqInv,&seqInv);   
+    imp.compareThem(nbBit,30);
 }
 
 void FormulazTests::testAll(){

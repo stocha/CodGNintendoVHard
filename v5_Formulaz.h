@@ -273,19 +273,19 @@ public:
             long v=in[depth];
             
             if(depth<halfSize){
-                cout << "depth " << depth <<" nbXor "<< ss.nbXor(depth)<< endl;
+                //cout << "depth " << depth <<" nbXor "<< ss.nbXor(depth)<< endl;
                 for(int i=0;i<ss.nbXor(depth);i++){
-                    cout << v << " ^= " << res[ss.coefL(depth,i)] << " & " << res[ss.coefR(depth,i)]<< endl;
-                    cout << "addr" << depth << " ^= " << ss.coefL(depth,i) << " & " << ss.coefR(depth,i)<< endl;
+                  //  cout << v << " ^= " << res[ss.coefL(depth,i)] << " & " << res[ss.coefR(depth,i)]<< endl;
+                    //cout << "addr" << depth << " ^= " << ss.coefL(depth,i) << " & " << ss.coefR(depth,i)<< endl;
                     v^= (res[ss.coefL(depth,i)]&res[ss.coefR(depth,i)]);
                 }
             }else{
                 int ndDepth=in.size()-depth-2;
-                cout << "depth " << depth << " ndDepth " << ndDepth << " nbXor ";
-                cout << ss.nbXor(ndDepth)<< endl;
+                //cout << "depth " << depth << " ndDepth " << ndDepth << " nbXor ";
+                //cout << ss.nbXor(ndDepth)<< endl;
                 for(int i=0;i<ss.nbXor(ndDepth);i++){
-                    cout << v << " ^= " << res[ss.coefLsec(ndDepth,i)] << " & " << res[ss.coefRsec(ndDepth,i)]<< endl;
-                    cout << "addr" << depth << " ^= " << ss.coefLsec(ndDepth,i) << " & " << ss.coefRsec(ndDepth,i)<< endl;
+                  //  cout << v << " ^= " << res[ss.coefLsec(ndDepth,i)] << " & " << res[ss.coefRsec(ndDepth,i)]<< endl;
+                    //cout << "addr" << depth << " ^= " << ss.coefLsec(ndDepth,i) << " & " << ss.coefRsec(ndDepth,i)<< endl;
                     v^= (res[ss.coefLsec(ndDepth,i)]&res[ss.coefRsec(ndDepth,i)]);
                 }                
             }
@@ -303,7 +303,7 @@ public:
 
             depth++;
             if(!(depth<in.size()-1)) {
-                cout << "Depth end : " << depth << endl;
+                //cout << "Depth end : " << depth << endl;
                 depth=0;
                 resvv.push_back(res);
                 ++res;
