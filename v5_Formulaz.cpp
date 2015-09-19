@@ -79,7 +79,7 @@ void testCompImpl(){
     
     refInvert refInv;
     seqInvert seqInv;
-    compareImpl imp(&refInv,&seqInv);
+    compareImpl imp(&refInv,&seqInv);   
     //compareImpl imp(&refInv,&refInv);
     imp.compareThem(nbBit,20);
 }

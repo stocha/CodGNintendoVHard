@@ -280,7 +280,7 @@ public:
                     v^= (res[ss.coefL(depth,i)]&res[ss.coefR(depth,i)]);
                 }
             }else{
-                int ndDepth=depth-halfSize;
+                int ndDepth=in.size()-depth-2;
                 cout << "depth " << depth << " ndDepth " << ndDepth << " nbXor ";
                 cout << ss.nbXor(ndDepth)<< endl;
                 for(int i=0;i<ss.nbXor(ndDepth);i++){
