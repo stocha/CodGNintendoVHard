@@ -268,7 +268,7 @@ public:
         int depth=0;
         while (true) {
             
-            cout << "CHECK " << res.str() << " against " << in.str() << " depth " << depth << " half " << halfSize << endl;
+           // cout << "CHECK " << res.str() << " against " << in.str() << " depth " << depth << " half " << halfSize << endl;
             
             long v=in[depth];
             
@@ -276,7 +276,7 @@ public:
                 cout << "depth " << depth <<" nbXor "<< ss.nbXor(depth)<< endl;
                 for(int i=0;i<ss.nbXor(depth);i++){
                     cout << v << " ^= " << res[ss.coefL(depth,i)] << " & " << res[ss.coefR(depth,i)]<< endl;
-                    cout << v << " ^= " << ss.coefL(depth,i) << " & " << ss.coefR(depth,i)<< endl;
+                    cout << "addr" << depth << " ^= " << ss.coefL(depth,i) << " & " << ss.coefR(depth,i)<< endl;
                     v^= (res[ss.coefL(depth,i)]&res[ss.coefR(depth,i)]);
                 }
             }else{
@@ -285,24 +285,24 @@ public:
                 cout << ss.nbXor(ndDepth)<< endl;
                 for(int i=0;i<ss.nbXor(ndDepth);i++){
                     cout << v << " ^= " << res[ss.coefLsec(ndDepth,i)] << " & " << res[ss.coefRsec(ndDepth,i)]<< endl;
-                    cout << v << " ^= " << ss.coefLsec(ndDepth,i) << " & " << ss.coefRsec(ndDepth,i)<< endl;
+                    cout << "addr" << depth << " ^= " << ss.coefLsec(ndDepth,i) << " & " << ss.coefRsec(ndDepth,i)<< endl;
                     v^= (res[ss.coefLsec(ndDepth,i)]&res[ss.coefRsec(ndDepth,i)]);
                 }                
             }
             if(v!=0){
                 ++res;
                 depth=0;
-                cout << "next res" << res.str() << endl;
+                //cout << "next res" << res.str() << endl;
                 if (res.isZero()){
                     
                     break;
                 }
                 continue;
             }            
-            cout << "PASSED " << depth << endl;
+            //cout << "PASSED " << depth << endl;
 
             depth++;
-            if(!(depth<in.size())) {
+            if(!(depth<in.size()-1)) {
                 cout << "Depth end : " << depth << endl;
                 depth=0;
                 resvv.push_back(res);
