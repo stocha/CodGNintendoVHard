@@ -259,6 +259,8 @@ public:
         SoluSimp ss(in.size());
         vector<bitField> resvv;
 
+        if(in[in.size()-1]==1) return resvv;
+        
         bitField res(in.size());
         res.clear();
 

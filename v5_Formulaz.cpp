@@ -63,7 +63,10 @@ cout << "----------- ##### ------------" << endl;
     for(int i=0;i<nbVal;i++){
         ++bf;
         cout << bf.str() << "->" <<  "" << endl ;
-        ri.invert(bf);
+        for( bitField e : ri.invert(bf)){
+           cout << "----->" <<  e.str() << endl ;
+        }
+        
     }
     
 }
@@ -82,7 +85,7 @@ void testCompImpl(){
 }
 
 void FormulazTests::testAll(){
-    //testInvertRef();
+    testInvertRef();
     testCompImpl();
     //testBitField();
 
