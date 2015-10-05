@@ -84,7 +84,6 @@ public:
     }
 };
 
-
 class bitField {
 private:
     bitset<512> dat;
@@ -124,7 +123,55 @@ public:
         }
         return *this;
     }
-    
+
+    void incSymetric() // prefix ++
+    {
+        if (!isSymetric()) {
+            ++(*this);
+            return;
+        }
+
+        int s = size() / 2;
+        for (int i = s; i < size(); i++) {
+            if ((*this)[i] == 0) {
+                set(i, 1);
+
+
+                for (int i = 0; i < s; i++) { // mise a 0
+                    set(i, 0);
+                }
+                return;
+            }
+            set(i, 0);
+        }
+
+        for (int i = 0; i < s; i++) {
+            set(i, 0);
+        }
+    }
+
+    bool isSymetric() {
+        bool res = true;
+        int s = size() / 2;
+        for (int i = 0; i < s; i++) {
+            if ((*this)[i] != (*this)[i + s]) {
+                return false;
+            }
+        }
+
+        return res;
+    }
+
+    bitField& swap() {
+        int s = size() / 2;
+        for (int i = 0; i < s; i++) {
+            int l = (*this)[i + s];
+            set((i + s), (*this)[i]);
+            set((i), l);
+        }
+        return *this;
+    }
+
     bitField& incAt(int at) // prefix ++
     {
         for (int i = at; i < size(); i++) {
@@ -135,7 +182,7 @@ public:
             set(i, 0);
         }
         return *this;
-    }    
+    }
 
     bool operator==(const bitField& other) {
         bool res = other.sz == sz;
@@ -253,66 +300,143 @@ class seqInvert : public inverterInterface {
 public:
 
     vector<bitField> invert(bitField in) {
-        
-         //cout << "seqInvert " << endl;
-        
+
+        //cout << "seqInvert " << endl;
+
         SoluSimp ss(in.size());
         vector<bitField> resvv;
 
-        if(in[in.size()-1]==1) return resvv;
-        
+        if (in[in.size() - 1] == 1) return resvv;
+
         bitField res(in.size());
         res.clear();
 
-        const int halfSize=in.size()/2;
-        int depth=0;
+        const int halfSize = in.size() / 2;
+        int depth = 0;
         while (true) {
-            
-           // cout << "CHECK " << res.str() << " against " << in.str() << " depth " << depth << " half " << halfSize << endl;
-            
-            long v=in[depth];
-            
-            if(depth<halfSize){
+
+            // cout << "CHECK " << res.str() << " against " << in.str() << " depth " << depth << " half " << halfSize << endl;
+
+            long v = in[depth];
+
+            if (depth < halfSize) {
                 //cout << "depth " << depth <<" nbXor "<< ss.nbXor(depth)<< endl;
-                for(int i=0;i<ss.nbXor(depth);i++){
-                  //  cout << v << " ^= " << res[ss.coefL(depth,i)] << " & " << res[ss.coefR(depth,i)]<< endl;
+                for (int i = 0; i < ss.nbXor(depth); i++) {
+                    //  cout << v << " ^= " << res[ss.coefL(depth,i)] << " & " << res[ss.coefR(depth,i)]<< endl;
                     //cout << "addr" << depth << " ^= " << ss.coefL(depth,i) << " & " << ss.coefR(depth,i)<< endl;
-                    v^= (res[ss.coefL(depth,i)]&res[ss.coefR(depth,i)]);
+                    v ^= (res[ss.coefL(depth, i)] & res[ss.coefR(depth, i)]);
                 }
-            }else{
-                int ndDepth=in.size()-depth-2;
+            } else {
+                int ndDepth = in.size() - depth - 2;
                 //cout << "depth " << depth << " ndDepth " << ndDepth << " nbXor ";
                 //cout << ss.nbXor(ndDepth)<< endl;
-                for(int i=0;i<ss.nbXor(ndDepth);i++){
-                  //  cout << v << " ^= " << res[ss.coefLsec(ndDepth,i)] << " & " << res[ss.coefRsec(ndDepth,i)]<< endl;
+                for (int i = 0; i < ss.nbXor(ndDepth); i++) {
+                    //  cout << v << " ^= " << res[ss.coefLsec(ndDepth,i)] << " & " << res[ss.coefRsec(ndDepth,i)]<< endl;
                     //cout << "addr" << depth << " ^= " << ss.coefLsec(ndDepth,i) << " & " << ss.coefRsec(ndDepth,i)<< endl;
-                    v^= (res[ss.coefLsec(ndDepth,i)]&res[ss.coefRsec(ndDepth,i)]);
-                }                
+                    v ^= (res[ss.coefLsec(ndDepth, i)] & res[ss.coefRsec(ndDepth, i)]);
+                }
             }
-            if(v!=0){
+            if (v != 0) {
                 ++res;
-                depth=0;
+                depth = 0;
                 //cout << "next res" << res.str() << endl;
-                if (res.isZero()){
-                    
+                if (res.isZero()) {
+
                     break;
                 }
                 continue;
-            }            
+            }
             //cout << "PASSED " << depth << endl;
 
             depth++;
-            if(!(depth<in.size()-1)) {
+            if (!(depth < in.size() - 1)) {
                 //cout << "Depth end : " << depth << endl;
-                depth=0;
+                depth = 0;
                 resvv.push_back(res);
                 ++res;
-                if (res.isZero()) break;                
+                if (res.isZero()) break;
             }
-            
+
         }
 
 
+        return resvv;
+    }
+};
+
+class seqInvertSimetric : public inverterInterface {
+public:
+
+    vector<bitField> invert(bitField in) {
+
+        //cout << "seqInvert " << endl;
+
+        SoluSimp ss(in.size());
+        vector<bitField> resvv;
+
+        if (in[in.size() - 1] == 1) return resvv;
+
+        bitField res(in.size());
+        res.clear();
+
+        const int halfSize = in.size() / 2;
+        int depth = 0;
+        while (true) {
+
+            //cout << "CHECK " << res.str() << " against " << in.str() << " depth " << depth << " half " << halfSize << endl;
+
+            long v = in[depth];
+
+            if (depth < halfSize) {
+                //cout << "depth " << depth <<" nbXor "<< ss.nbXor(depth)<< endl;
+                for (int i = 0; i < ss.nbXor(depth); i++) {
+                    //  cout << v << " ^= " << res[ss.coefL(depth,i)] << " & " << res[ss.coefR(depth,i)]<< endl;
+                    //cout << "addr" << depth << " ^= " << ss.coefL(depth,i) << " & " << ss.coefR(depth,i)<< endl;
+                    v ^= (res[ss.coefL(depth, i)] & res[ss.coefR(depth, i)]);
+                }
+            } else {
+                int ndDepth = in.size() - depth - 2;
+                //cout << "depth " << depth << " ndDepth " << ndDepth << " nbXor ";
+                //cout << ss.nbXor(ndDepth)<< endl;
+                for (int i = 0; i < ss.nbXor(ndDepth); i++) {
+                    //  cout << v << " ^= " << res[ss.coefLsec(ndDepth,i)] << " & " << res[ss.coefRsec(ndDepth,i)]<< endl;
+                    //cout << "addr" << depth << " ^= " << ss.coefLsec(ndDepth,i) << " & " << ss.coefRsec(ndDepth,i)<< endl;
+                    v ^= (res[ss.coefLsec(ndDepth, i)] & res[ss.coefRsec(ndDepth, i)]);
+                }
+            }
+            if (v != 0) {
+                res.incSymetric();
+                depth = 0;
+                //cout << "next res" << res.str() << endl;
+                if (res.isZero()) {
+
+                    break;
+                }
+                continue;
+            }
+            //cout << "PASSED " << depth << endl;
+
+            depth++;
+            if (!(depth < in.size() - 1)) {
+                //cout << "Depth end : " << depth << endl;
+
+                if (!res.isSymetric()) {
+                  //  cout << "swap res" << res.str() << endl;
+                    res.swap();
+                    resvv.push_back(res);
+                    res.swap();
+                }else{
+                    //cout << "is symetric" << res.str() << endl;
+                }
+                depth = 0;
+                resvv.push_back(res);                
+                res.incSymetric();
+                if (res.isZero()) break;
+            }
+
+        }
+
+        //sort (resvv.begin(), resvv.end());
         return resvv;
     }
 };
@@ -338,7 +462,7 @@ public:
 
             auto ra = a->invert(bf);
             auto rb = b->invert(bf);
-            
+
 
             bool eq = true;
 
@@ -375,10 +499,10 @@ public:
         }
 
         clock_t end = clock();
-        double time = (double) (end - start) / CLOCKS_PER_SEC ;
-        cout << " time spent for " << bitSz << " bit and " << nbNum << " values is "<<time << endl;
-        if(time>0){
-            cout << "" << nbNum/time << " inst per second " << endl;
+        double time = (double) (end - start) / CLOCKS_PER_SEC;
+        cout << " time spent for " << bitSz << " bit and " << nbNum << " values is " << time << endl;
+        if (time > 0) {
+            cout << "" << nbNum / time << " inst per second " << endl;
         }
     }
 

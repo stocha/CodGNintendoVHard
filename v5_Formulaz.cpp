@@ -72,16 +72,18 @@ cout << "----------- ##### ------------" << endl;
 }
 
 void testCompImpl(){
-    int nbBit=20;
+    int nbBit=8;
     
     SoluSimp ss(nbBit);
     ss.debug_coef();
     
     refInvert refInv;
     seqInvert seqInv;
+    seqInvertSimetric seqSym;
     //compareImpl imp(&refInv,&seqInv);   
     //compareImpl imp(&refInv,&refInv);
-    compareImpl imp(&seqInv,&seqInv);   
+   // compareImpl imp(&seqInv,&seqInv); 
+    compareImpl imp(&seqInv,&seqSym);
     imp.compareThem(nbBit,30);
 }
 
