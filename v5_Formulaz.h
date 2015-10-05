@@ -263,6 +263,46 @@ public:
 
 };
 
+class varEqField {
+    int v[512 + 2];
+    int sz;
+
+    varEqField(int sz) {
+        this.sz = sz
+        for (int i = 0; i < sz; i++) {
+            v[i] = i
+        }
+
+        long operator[](std::size_t pos) const 
+            int curr=pos+2;
+            int next=v[pos+2]
+                
+            while(next!=curr){
+                
+                v[curr]=v[next];
+                curr=next;
+                next=v[next]                                
+            }            
+            return v[next];
+        }
+    
+        void setVarEquivalenceAEqB(int a, int b){
+            int ca=(*this)[a+2];
+            int cb=(*this)[b+2];
+            
+            int i,j;
+            if(ca>cb){
+                j=ca;i=cb;
+            }else{
+                i=cb,j=ca; // i<j
+            }
+            
+            v[j]=v[i]                        
+        }
+    }
+
+
+}
 
 bitField applyEncode(bitField in);
 
@@ -364,10 +404,78 @@ public:
     }
 };
 
+class eq01Invert : public inverterInterface {
+public:
+
+    vector<bitField> invert(bitField in) {
+
+        //cout << "seqInvert " << endl;
+
+        SoluSimp ss(in.size());
+        vector<bitField> resvv;
+
+        if (in[in.size() - 1] == 1) return resvv;
+
+        bitField res(in.size());
+        res.clear();
+
+        const int halfSize = in.size() / 2;
+        int depth = 0;
+        while (true) {
+
+            // cout << "CHECK " << res.str() << " against " << in.str() << " depth " << depth << " half " << halfSize << endl;
+
+            long v = in[depth];
+
+            if (depth < halfSize) {
+                //cout << "depth " << depth <<" nbXor "<< ss.nbXor(depth)<< endl;
+                for (int i = 0; i < ss.nbXor(depth); i++) {
+                    //  cout << v << " ^= " << res[ss.coefL(depth,i)] << " & " << res[ss.coefR(depth,i)]<< endl;
+                    //cout << "addr" << depth << " ^= " << ss.coefL(depth,i) << " & " << ss.coefR(depth,i)<< endl;
+                    v ^= (res[ss.coefL(depth, i)] & res[ss.coefR(depth, i)]);
+                }
+            } else {
+                int ndDepth = in.size() - depth - 2;
+                //cout << "depth " << depth << " ndDepth " << ndDepth << " nbXor ";
+                //cout << ss.nbXor(ndDepth)<< endl;
+                for (int i = 0; i < ss.nbXor(ndDepth); i++) {
+                    //  cout << v << " ^= " << res[ss.coefLsec(ndDepth,i)] << " & " << res[ss.coefRsec(ndDepth,i)]<< endl;
+                    //cout << "addr" << depth << " ^= " << ss.coefLsec(ndDepth,i) << " & " << ss.coefRsec(ndDepth,i)<< endl;
+                    v ^= (res[ss.coefLsec(ndDepth, i)] & res[ss.coefRsec(ndDepth, i)]);
+                }
+            }
+            if (v != 0) {
+                ++res;
+                depth = 0;
+                //cout << "next res" << res.str() << endl;
+                if (res.isZero()) {
+
+                    break;
+                }
+                continue;
+            }
+            //cout << "PASSED " << depth << endl;
+
+            depth++;
+            if (!(depth < in.size() - 1)) {
+                //cout << "Depth end : " << depth << endl;
+                depth = 0;
+                resvv.push_back(res);
+                ++res;
+                if (res.isZero()) break;
+            }
+
+        }
+
+
+        return resvv;
+    }
+};
+
 class seqInvertSimetric : public inverterInterface {
 public:
 
-    vector<bitField> invert(bitField in) ;
+    vector<bitField> invert(bitField in);
 };
 
 class compareImpl {
