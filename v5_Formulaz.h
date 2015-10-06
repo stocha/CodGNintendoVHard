@@ -276,20 +276,20 @@ class varEqField {
 
     bool partsign = false;
     int nbImpure = 0;
-public :
-    
-    string str(){
-        std::ostringstream sout;    
-        for(int i=0;i<sz;i++){
+public:
+
+    string str() {
+        std::ostringstream sout;
+        for (int i = 0; i < sz; i++) {
             sout << get(i) << "|";
         }
         sout << endl;
-        
+
 
         string res = sout.str();
         return res;
     }
-    
+
     void prepare() {
         partsign = false;
         nbImpure = 0;
@@ -310,8 +310,22 @@ public :
             fa = get(a);
             fb = get(b);
 
+            if (fa == fb) {
+                fb = -1;
+            }
+
+            if (fa < 0) {
+                int sw = fa;
+                fa = fb;
+                fb = sw;
+            }
+
             nbImpure++;
+            
+            cout <<"fa " << fa<<endl;
+            cout << "fb "<< fb<<endl;            
         }
+       
 
 
     }
@@ -323,35 +337,20 @@ public :
             return partsign;
         }
         if (nbImpure == 1) {
-            if (fa < 0) {
-                this->setVarEquivalenceAEqB(fb, partsign ? -1 : -2);
-
-            } else if (fb < 0) {
-                    this->setVarEquivalenceAEqB(fa, partsign ? -1 : -2);                
+            if (fa >= 0 && fb >= 0 && partsign) {
+                            this->setVarEquivalenceAEqB(fa, -1,false);
+                            this->setVarEquivalenceAEqB(fb, -1,false);
+                        }      
+            else
+            if (fb ==-1) {
+                this->setVarEquivalenceAEqB(fa, partsign ? -2 : -1, false);
+                cout << "1 impure " << fa << " <- " << (partsign ? -2 : -1) << endl;
             }
-            else if (fb > 0 && fa > 0 && partsign) {
-                    this->setVarEquivalenceAEqB(fa, -1);                
-                    this->setVarEquivalenceAEqB(fb, -1);
-            }            
         }
         if (nbImpure == 2) {
-            if (fa < 0) {
-                if (ea < 0) {
-                    this->setVarEquivalenceAEqB(fb, eb);
-                } else {
-                    if (eb < 0) {
-                        this->setVarEquivalenceAEqB(fb, ea);
-                    }
-                }
-            } else {
-                if (fb < 0) {
-                    if (ea < 0) {
-                        this->setVarEquivalenceAEqB(fa, eb);
-                    } else {
-                        if (eb < 0) {
-                            this->setVarEquivalenceAEqB(fa, ea);
-                        }
-                    }
+            if (fb < 0) {
+                if (eb < 0) {
+                    this->setVarEquivalenceAEqB(fa, ea, partsign);
                 }
 
             }
@@ -365,7 +364,8 @@ private:
     void p(int dst) {
 
     }
-public :
+public:
+
     bool getAsBool(int i) {
         if (i == -2) false;
         else true;
@@ -373,7 +373,7 @@ public :
 
     varEqField(int sz) {
         this->sz = sz;
-        for (int i = 0; i < sz+2; i++) {
+        for (int i = 0; i < sz + 2; i++) {
             v[i] = i;
             neg[i] = false;
         }
@@ -398,10 +398,14 @@ public :
 
     }
 
-    void setVarEquivalenceAEqB(int a, int b) {
-        int ca = get(a );
-        int cb = get(b );
+    void setVarEquivalenceAEqB(int a, int b, bool s) {
+        
+        
+        int ca = get(a);
+        int cb = get(b);
 
+        cout << "" << ca << "==" << cb;
+        
         int i, j;
         if (ca > cb) {
             j = ca;
@@ -410,7 +414,8 @@ public :
             i = ca, j = cb; // i<j
         }
 
-        v[j+2] = v[i+2];
+        if(j>=0)
+            v[j + 2] = v[i + 2];
     }
 
 
