@@ -175,14 +175,52 @@ void testPushEq() {
     {
         varEqField vef(8);
 
-        cout << "base" << vef.str();
+        cout << "base" << vef.str()<<endl;
 
         vef.prepare();
         vef.push(3, 4);
         vef.sign(false);    // ignored
 
-        cout << "push 3,4 sign false ";
+        cout << "push 3,4 sign false "<<endl;
                 cout << vef.str();
+
+        vef.prepare();  
+        vef.push(3, 4);
+        vef.sign(true); // 3 true, 4 true
+
+        cout << "push 3,4 sign true "<<endl;
+                cout << vef.str();
+                
+        vef.prepare(); // 2==1
+        vef.push(2, 4);
+        vef.push(1, 3);
+        vef.sign(false);
+
+        cout << "push 2,4 - 1,3 sign false "<<endl;
+        cout << vef.str();    
+        
+        vef.prepare();
+        vef.push(2, 1);
+        vef.push(0, 4);
+        vef.sign(false);
+
+        cout << "push 2,1 - 0,4 sign false "<<endl;
+        cout << vef.str();         
+        
+        vef.prepare();
+        vef.push(0, 4);
+        vef.push(3, 4);
+        vef.sign(false);
+
+        cout << "push 2,1 - 3,4 sign false "<<endl;
+        cout << vef.str();            
+    }
+    
+    {
+        // rewind all
+        varEqField vef(8);
+
+        cout << "base-------------------------------------" << vef.str();
 
         vef.prepare();  
         vef.push(3, 4);
@@ -191,12 +229,12 @@ void testPushEq() {
         cout << "push 3,4 sign true ";
                 cout << vef.str();
                 
-        vef.prepare(); // 2==1
+        vef.prepare(); // 2!=1
         vef.push(2, 4);
         vef.push(1, 3);
-        vef.sign(false);
+        vef.sign(true);
 
-        cout << "push 2,4 - 1,3 sign false ";
+        cout << "push 2,4 - 1,3 sign true ";
         cout << vef.str();    
         
         vef.prepare();
@@ -204,7 +242,7 @@ void testPushEq() {
         vef.push(0, 4);
         vef.sign(false);
 
-        cout << "push 2,1 - 0,4 sign false ";
+        cout << "push 2,1 - 0,4 sign true ";
         cout << vef.str();         
         
         vef.prepare();
@@ -212,9 +250,11 @@ void testPushEq() {
         vef.push(3, 4);
         vef.sign(false);
 
-        cout << "push 2,1 - 3,4 sign false ";
-        cout << vef.str();            
-    }
+        cout << "push 2,1 - 3,4 sign true ";
+        cout << vef.str(); 
+        
+        cout << vef.str();
+    }    
 
 }
 

@@ -281,6 +281,8 @@ public:
     string str() {
         std::ostringstream sout;
         for (int i = 0; i < sz; i++) {
+            
+            if(getsign(i)) sout << "!";
             sout << get(i) << "|";
         }
         sout << endl;
@@ -298,12 +300,18 @@ public:
     void push(int a, int b) {
 
         bool pure = get(a) < 0 && get(b) < 0;
-
-
-
         if (pure) {
-
-        } else {
+            if(get(a)!=get(b)){
+                
+            }else{
+                bool ab=getAsBool(get(a));
+                partsign=(partsign!=ab);
+            }
+        }
+        else if( get(a)==get(b) && (getsign(a)!=getsign(b))){
+            
+        }
+        else {
             ea = fa;
             eb = fb;
 
@@ -322,12 +330,9 @@ public:
 
             nbImpure++;
             
-            cout <<"fa " << fa<<endl;
-            cout << "fb "<< fb<<endl;            
+         //   cout <<"fa " << fa<<endl;
+         //   cout << "fb "<< fb<<endl;            
         }
-       
-
-
     }
 
     bool sign(bool sign) {
@@ -344,7 +349,7 @@ public:
             else
             if (fb ==-1) {
                 this->setVarEquivalenceAEqB(fa, partsign ? -2 : -1, false);
-                cout << "1 impure " << fa << " <- " << (partsign ? -2 : -1) << endl;
+              //  cout << " 1 impure " << fa << " <- " << (partsign ? -2 : -1) << endl;
             }
         }
         if (nbImpure == 2) {
@@ -384,18 +389,35 @@ public:
         int next = v[pos + 2];
         bool a = neg[curr];
 
-        while (next != curr) {
+        while (next != curr ) {
 
             //        v[curr]=v[next];
             curr = next;
+            a=(a!=neg[next]);
 
             next = v[next];
         }
+        
+        v[curr]=v[next];
+        neg[curr]=a;
+        
+        curr=pos+2;
+        if (v[next]==0 && neg[curr]){
+            v[curr]=1;neg[curr]=false;
+        }
+        
+      //  cout << v[next] << " " << neg[curr]<<endl;
+        if (v[next]==1 && neg[curr]){
+           // cout << "detected -1 neg " << endl;
+            v[curr]=0;neg[curr]=false;
+        }        
+        
         return v[next] - 2;
     }
 
     bool getsign(std::size_t pos) {
-
+        int g=get(pos);
+        return neg[pos+2];
     }
 
     void setVarEquivalenceAEqB(int a, int b, bool s) {
@@ -404,7 +426,7 @@ public:
         int ca = get(a);
         int cb = get(b);
 
-        cout << "" << ca << "==" << cb;
+      //  cout << "" << ca << "==" << cb<< " whith " << s <<endl;
         
         int i, j;
         if (ca > cb) {
@@ -414,8 +436,11 @@ public:
             i = ca, j = cb; // i<j
         }
 
-        if(j>=0)
+        if(j>=0){
             v[j + 2] = v[i + 2];
+            bool ph=(getsign(j)!=getsign(i));
+            neg[j+2]=(ph!=s);
+        }
     }
 
 
