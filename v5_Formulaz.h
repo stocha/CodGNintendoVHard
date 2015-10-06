@@ -276,7 +276,7 @@ class varEqField {
 
     bool partsign = false;
     int nbImpure = 0;
-
+public :
     void prepare() {
         partsign = false;
         nbImpure = 0;
@@ -303,7 +303,7 @@ class varEqField {
 
     }
 
-    boolean sign(bool sign) {
+    bool sign(bool sign) {
         partsign = (partsign != sign);
 
         if (nbImpure == 0) {
@@ -345,59 +345,47 @@ class varEqField {
 
     }
 
-    private
+private:
 
-            p(int dst) {
+    p(int dst) {
 
     }
-
+public :
     getAsBool(int i) {
-        if (i == -2) false else true;
+        if (i == -2) false;
+        else true;
     }
 
     varEqField(int sz) {
-        this.sz = sz
+        this->sz = sz;
         for (int i = 0; i < sz; i++) {
-            v[i] = i
-                    neg[i] = false
+            v[i] = i;
+            neg[i] = false;
         }
+    }
 
-        long get(std::size_t pos) {
-            int curr = pos + 2;
-            int next = v[pos + 2]
-                    bool a = neg[curr]
-
-            while (next != curr) {
-
-                //        v[curr]=v[next];
-                curr = next;
-
-                next = v[next]
-            }
-            return v[next] - 2;
-        }
-
-        bool getsign(std::size_t pos) {
-
-        }
-
-        long operator[](std::size_t pos, boolean neg) const
-                int curr = pos + 2;
-        int next = abs(v[pos + 2])
-                boolean neg = next > 1 : true ? false;
+    long get(std::size_t pos) {
+        int curr = pos + 2;
+        int next = v[pos + 2];
+        bool a = neg[curr];
 
         while (next != curr) {
 
-            v[curr] = v[next];
+            //        v[curr]=v[next];
             curr = next;
-            next = v[next]
+
+            next = v[next];
         }
-        return v[next];
+        return v[next] - 2;
+    }
+
+    bool getsign(std::size_t pos) {
+
     }
 
     void setVarEquivalenceAEqB(int a, int b) {
-        int ca = (*this)[a + 2];
-        int cb = (*this)[b + 2];
+        int ca = get(a );
+        int cb = get(b );
 
         int i, j;
         if (ca > cb) {
@@ -407,12 +395,11 @@ class varEqField {
             i = cb, j = ca; // i<j
         }
 
-        v[j] = v[i]
+        v[j+2] = v[i+2];
     }
-}
 
 
-}
+};
 
 bitField applyEncode(bitField in);
 

@@ -169,9 +169,21 @@ void testCompImpl() {
     imp.compareThem(nbBit, 30);
 }
 
+void testPushEq(){
+    varEqField vef(4);
+    
+    vef.prepare();
+    
+}
+
 void FormulazTests::testAll() {
-    testInvertRef();
-    testCompImpl();
+    //testInvertRef();
+    //testCompImpl();
+    
+    
+    
+    testPushEq();
+    
     //testBitField();
 
 }
