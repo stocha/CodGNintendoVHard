@@ -266,40 +266,150 @@ public:
 class varEqField {
     int v[512 + 2];
     int sz;
+    bitset<512> neg;
+
+    int ea;
+    int eb;
+
+    int fa;
+    int fb;
+
+    bool partsign = false;
+    int nbImpure = 0;
+
+    void prepare() {
+        partsign = false;
+        nbImpure = 0;
+    }
+
+    void push(int a, int b) {
+
+        bool pure = get(a) < 0 && get(b) < 0;
+
+
+
+        if (pure) {
+
+        } else {
+            ea = fa;
+            eb = fb;
+
+            fa = a;
+            fb = b;
+
+            nbImpure++;
+        }
+
+
+    }
+
+    boolean sign(bool sign) {
+        partsign = (partsign != sign);
+
+        if (nbImpure == 0) {
+            return partsign;
+        }
+        if (nbImpure == 1) {
+            if (fa < 0) {
+                this->setVarEquivalenceAEqB(fb, partsign ? -1 : -2);
+
+            } else {
+                if (fb < 0) {
+                    this->setVarEquivalenceAEqB(fa, partsign ? -1 : -2);
+                }
+            }
+        }
+        if (nbImpure == 2) {
+            if (fa < 0) {
+                if (ea < 0) {
+                    this->setVarEquivalenceAEqB(fb, eb);
+                } else {
+                    if (eb < 0) {
+                        this->setVarEquivalenceAEqB(fb, ea);
+                    }
+                }
+            } else {
+                if (fb < 0) {
+                    if (ea < 0) {
+                        this->setVarEquivalenceAEqB(fa, eb);
+                    } else {
+                        if (eb < 0) {
+                            this->setVarEquivalenceAEqB(fa, ea);
+                        }
+                    }
+                }
+
+            }
+
+        }
+
+    }
+
+    private
+
+            p(int dst) {
+
+    }
+
+    getAsBool(int i) {
+        if (i == -2) false else true;
+    }
 
     varEqField(int sz) {
         this.sz = sz
         for (int i = 0; i < sz; i++) {
             v[i] = i
+                    neg[i] = false
         }
 
-        long operator[](std::size_t pos) const 
-            int curr=pos+2;
-            int next=v[pos+2]
-                
-            while(next!=curr){
-                
-                v[curr]=v[next];
-                curr=next;
-                next=v[next]                                
-            }            
-            return v[next];
-        }
-    
-        void setVarEquivalenceAEqB(int a, int b){
-            int ca=(*this)[a+2];
-            int cb=(*this)[b+2];
-            
-            int i,j;
-            if(ca>cb){
-                j=ca;i=cb;
-            }else{
-                i=cb,j=ca; // i<j
+        long get(std::size_t pos) {
+            int curr = pos + 2;
+            int next = v[pos + 2]
+                    bool a = neg[curr]
+
+            while (next != curr) {
+
+                //        v[curr]=v[next];
+                curr = next;
+
+                next = v[next]
             }
-            
-            v[j]=v[i]                        
+            return v[next] - 2;
         }
+
+        bool getsign(std::size_t pos) {
+
+        }
+
+        long operator[](std::size_t pos, boolean neg) const
+                int curr = pos + 2;
+        int next = abs(v[pos + 2])
+                boolean neg = next > 1 : true ? false;
+
+        while (next != curr) {
+
+            v[curr] = v[next];
+            curr = next;
+            next = v[next]
+        }
+        return v[next];
     }
+
+    void setVarEquivalenceAEqB(int a, int b) {
+        int ca = (*this)[a + 2];
+        int cb = (*this)[b + 2];
+
+        int i, j;
+        if (ca > cb) {
+            j = ca;
+            i = cb;
+        } else {
+            i = cb, j = ca; // i<j
+        }
+
+        v[j] = v[i]
+    }
+}
 
 
 }
