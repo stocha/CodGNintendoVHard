@@ -326,11 +326,13 @@ public :
             if (fa < 0) {
                 this->setVarEquivalenceAEqB(fb, partsign ? -1 : -2);
 
-            } else {
-                if (fb < 0) {
-                    this->setVarEquivalenceAEqB(fa, partsign ? -1 : -2);
-                }
+            } else if (fb < 0) {
+                    this->setVarEquivalenceAEqB(fa, partsign ? -1 : -2);                
             }
+            else if (fb > 0 && fa > 0 && partsign) {
+                    this->setVarEquivalenceAEqB(fa, -1);                
+                    this->setVarEquivalenceAEqB(fb, -1);
+            }            
         }
         if (nbImpure == 2) {
             if (fa < 0) {

@@ -7,17 +7,18 @@
 #include "v5_Formulaz.h"
 
 struct myclass {
-  bool operator() (bitField a,bitField b) { 
-      for(int i=0;i<a.size();i++){
-          int ind =a.size()-i-1; 
-          if(a[ind]<b[ind]) return true; else if(a[ind]>b[ind]) return false;
-      }
-      return true;
-  }
+
+    bool operator()(bitField a, bitField b) {
+        for (int i = 0; i < a.size(); i++) {
+            int ind = a.size() - i - 1;
+            if (a[ind] < b[ind]) return true;
+            else if (a[ind] > b[ind]) return false;
+        }
+        return true;
+    }
 } compareBits;
 
-vector<bitField> seqInvertSimetric::invert(bitField in)
- {
+vector<bitField> seqInvertSimetric::invert(bitField in) {
 
     //cout << "seqInvert " << endl;
 
@@ -85,7 +86,7 @@ vector<bitField> seqInvertSimetric::invert(bitField in)
         }
 
     }
-       sort (resvv.begin(), resvv.end(),compareBits);
+    sort(resvv.begin(), resvv.end(), compareBits);
     return resvv;
 }
 
@@ -169,23 +170,38 @@ void testCompImpl() {
     imp.compareThem(nbBit, 30);
 }
 
-void testPushEq(){
-    varEqField vef(8);
-    
-    vef.prepare();
-    
-    cout << vef.str();
-    
+void testPushEq() {
+
+    {
+        varEqField vef(8);
+
+        cout << "base" << vef.str();
+
+        vef.prepare();
+        vef.push(3, 4);
+        vef.sign(false);
+
+        cout << "push 3,4 sign false ";
+                cout << vef.str();
+
+        vef.prepare();
+        vef.push(3, 4);
+        vef.sign(true);
+
+        cout << "push 3,4 sign true ";
+                cout << vef.str();
+    }
+
 }
 
 void FormulazTests::testAll() {
     //testInvertRef();
     //testCompImpl();
-    
-    
-    
+
+
+
     testPushEq();
-    
+
     //testBitField();
 
 }
