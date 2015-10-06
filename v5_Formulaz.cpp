@@ -154,19 +154,21 @@ void FormulazTests::testInvertRef() {
 }
 
 void testCompImpl() {
-    int nbBit = 16;
+    int nbBit = 4;
 
     SoluSimp ss(nbBit);
     ss.debug_coef();
 
-    refInvert refInv;
-    seqInvert seqInv;
+    //refInvert refInv;
+    //seqInvert seqInv;
     seqInvertSimetric seqSym;
+    eq01Invert eqInvert;
     //compareImpl imp(&refInv,&seqInv);   
     //compareImpl imp(&refInv,&refInv);
     // compareImpl imp(&seqInv,&seqInv); 
     //compareImpl imp(&seqInv, &seqSym);
-    compareImpl imp(&seqSym, &seqSym);
+    //compareImpl imp(&seqSym, &seqSym);
+    compareImpl imp(&eqInvert, &seqSym);
     imp.compareThem(nbBit, 30);
 }
 
@@ -260,11 +262,11 @@ void testPushEq() {
 
 void FormulazTests::testAll() {
     //testInvertRef();
-    //testCompImpl();
+    testCompImpl();
 
 
 
-    testPushEq();
+    //testPushEq();
 
     //testBitField();
 

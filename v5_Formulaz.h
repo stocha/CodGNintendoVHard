@@ -278,11 +278,27 @@ class varEqField {
     int nbImpure = 0;
 public:
 
+    void cp(varEqField src) {
+        for (int i = 0; i < sz + 2; i++) {
+            v[i] = src.v[i];
+            neg[i] = src.neg[i];
+        }
+    }
+
+    int firstFreeVariable() {
+        for (int i = 0; i < sz; i++) {
+
+            if (get(i) >= 0)
+                return i;
+        }
+        return -1;
+    }
+
     string str() {
         std::ostringstream sout;
         for (int i = 0; i < sz; i++) {
-            
-            if(getsign(i)) sout << "!";
+
+            if (getsign(i)) sout << "!";
             sout << get(i) << "|";
         }
         sout << endl;
@@ -301,17 +317,15 @@ public:
 
         bool pure = get(a) < 0 && get(b) < 0;
         if (pure) {
-            if(get(a)!=get(b)){
-                
-            }else{
-                bool ab=getAsBool(get(a));
-                partsign=(partsign!=ab);
+            if (get(a) != get(b)) {
+
+            } else {
+                bool ab = getAsBool(get(a));
+                partsign = (partsign != ab);
             }
-        }
-        else if( get(a)==get(b) && (getsign(a)!=getsign(b))){
-            
-        }
-        else {
+        } else if (get(a) == get(b) && (getsign(a) != getsign(b))) {
+
+        } else {
             ea = fa;
             eb = fb;
 
@@ -329,39 +343,42 @@ public:
             }
 
             nbImpure++;
-            
-         //   cout <<"fa " << fa<<endl;
-         //   cout << "fb "<< fb<<endl;            
+
+            //   cout <<"fa " << fa<<endl;
+            //   cout << "fb "<< fb<<endl;            
         }
     }
 
-    bool sign(bool sign) {
+    int sign(bool sign) {
+        int res=0;
         partsign = (partsign != sign);
 
         if (nbImpure == 0) {
-            return partsign;
+            if(partsign!=sign) return -1;
         }
         if (nbImpure == 1) {
             if (fa >= 0 && fb >= 0 && partsign) {
-                            this->setVarEquivalenceAEqB(fa, -1,false);
-                            this->setVarEquivalenceAEqB(fb, -1,false);
-                        }      
-            else
-            if (fb ==-1) {
+                this->setVarEquivalenceAEqB(fa, -1, false);
+                this->setVarEquivalenceAEqB(fb, -1, false);
+                res++;
+            } else
+                if (fb == -1) {
                 this->setVarEquivalenceAEqB(fa, partsign ? -2 : -1, false);
-              //  cout << " 1 impure " << fa << " <- " << (partsign ? -2 : -1) << endl;
+                //  cout << " 1 impure " << fa << " <- " << (partsign ? -2 : -1) << endl;
+                res++;
             }
         }
         if (nbImpure == 2) {
             if (fb < 0) {
                 if (eb < 0) {
                     this->setVarEquivalenceAEqB(fa, ea, partsign);
+                    res++;
                 }
 
             }
 
         }
-
+        return res;
     }
 
 private:
@@ -389,45 +406,47 @@ public:
         int next = v[pos + 2];
         bool a = neg[curr];
 
-        while (next != curr ) {
+        while (next != curr) {
 
             //        v[curr]=v[next];
             curr = next;
-            a=(a!=neg[next]);
+            a = (a != neg[next]);
 
             next = v[next];
         }
-        
-        v[curr]=v[next];
-        neg[curr]=a;
-        
-        curr=pos+2;
-        if (v[next]==0 && neg[curr]){
-            v[curr]=1;neg[curr]=false;
+
+        v[curr] = v[next];
+        neg[curr] = a;
+
+        curr = pos + 2;
+        if (v[next] == 0 && neg[curr]) {
+            v[curr] = 1;
+            neg[curr] = false;
         }
-        
-      //  cout << v[next] << " " << neg[curr]<<endl;
-        if (v[next]==1 && neg[curr]){
-           // cout << "detected -1 neg " << endl;
-            v[curr]=0;neg[curr]=false;
-        }        
-        
+
+        //  cout << v[next] << " " << neg[curr]<<endl;
+        if (v[next] == 1 && neg[curr]) {
+            // cout << "detected -1 neg " << endl;
+            v[curr] = 0;
+            neg[curr] = false;
+        }
+
         return v[next] - 2;
     }
 
     bool getsign(std::size_t pos) {
-        int g=get(pos);
-        return neg[pos+2];
+        int g = get(pos);
+        return neg[pos + 2];
     }
 
     void setVarEquivalenceAEqB(int a, int b, bool s) {
-        
-        
+
+
         int ca = get(a);
         int cb = get(b);
 
-      //  cout << "" << ca << "==" << cb<< " whith " << s <<endl;
-        
+        //  cout << "" << ca << "==" << cb<< " whith " << s <<endl;
+
         int i, j;
         if (ca > cb) {
             j = ca;
@@ -436,10 +455,10 @@ public:
             i = ca, j = cb; // i<j
         }
 
-        if(j>=0){
+        if (j >= 0) {
             v[j + 2] = v[i + 2];
-            bool ph=(getsign(j)!=getsign(i));
-            neg[j+2]=(ph!=s);
+            bool ph = (getsign(j) != getsign(i));
+            neg[j + 2] = (ph != s);
         }
     }
 
@@ -549,7 +568,72 @@ public:
 class eq01Invert : public inverterInterface {
 public:
 
+    varEqField transf(varEqField question, bitField in) {
+        varEqField root(in.size());
+        root.cp(question);
+        cout << "input" << root.str() << endl;
+        SoluSimp ss(in.size());
+
+        const int halfSize = in.size() / 2;
+        for (int depth = 0; depth < in.size(); depth++) {
+            long v = in[depth];
+
+            root.prepare();
+            if (depth < halfSize) {
+                //cout << "depth " << depth <<" nbXor "<< ss.nbXor(depth)<< endl;
+                for (int i = 0; i < ss.nbXor(depth); i++) {
+                    //  cout << v << " ^= " << res[ss.coefL(depth,i)] << " & " << res[ss.coefR(depth,i)]<< endl;
+                    //cout << "addr" << depth << " ^= " << ss.coefL(depth,i) << " & " << ss.coefR(depth,i)<< endl;
+//                    v ^= (res[ss.coefL(depth, i)] & res[ss.coefR(depth, i)]);
+                    root.push(ss.coefL(depth, i), ss.coefR(depth, i));
+                }
+                root.sign(in[depth]);
+            } else {
+                int ndDepth = in.size() - depth - 2;
+                //cout << "depth " << depth << " ndDepth " << ndDepth << " nbXor ";
+                //cout << ss.nbXor(ndDepth)<< endl;
+                for (int i = 0; i < ss.nbXor(ndDepth); i++) {
+                    //  cout << v << " ^= " << res[ss.coefLsec(ndDepth,i)] << " & " << res[ss.coefRsec(ndDepth,i)]<< endl;
+                    //cout << "addr" << depth << " ^= " << ss.coefLsec(ndDepth,i) << " & " << ss.coefRsec(ndDepth,i)<< endl;
+             //       v ^= (res[ss.coefLsec(ndDepth, i)] & res[ss.coefRsec(ndDepth, i)]);
+                    root.push(ss.coefL(depth, i), ss.coefR(depth, i));
+                }
+                root.sign(in[depth]);
+            }
+
+        }
+        int firstFree=root.firstFreeVariable();
+        
+        
+        if(firstFree==-1){
+            cout << "found " << root.str() << endl;
+            return root; 
+        }
+        else{
+            cout << "after deduction " << root.str() << endl;
+            cout << "first free variable is " << firstFree << endl;
+            root.setVarEquivalenceAEqB(0,firstFree,false);
+            varEqField left=transf(root,in);
+                    
+            root.setVarEquivalenceAEqB(1,firstFree,false);                    
+            varEqField right=transf(root,in);
+                    
+            if(left.firstFreeVariable()==-1){
+                return left;
+            }
+            if(right.firstFreeVariable()==-1){
+                return right;
+            }   
+            return root;
+        }
+    }
+
     vector<bitField> invert(bitField in) {
+
+        varEqField root(in.size());
+        varEqField answer = transf(root, in);
+
+        cout << answer.str() << endl;
 
         //cout << "seqInvert " << endl;
 
