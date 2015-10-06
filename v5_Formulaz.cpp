@@ -190,6 +190,22 @@ void testPushEq() {
 
         cout << "push 3,4 sign true ";
                 cout << vef.str();
+                
+        vef.prepare();
+        vef.push(2, 4);
+        vef.push(1, 3);
+        vef.sign(false);
+
+        cout << "push 2,4 - 1,3 sign false ";
+        cout << vef.str();    
+        
+        vef.prepare();
+        vef.push(2, 3);
+        vef.push(1, 1);
+        vef.sign(false);
+
+        cout << "push 2,3 - 1,3 sign false ";
+        cout << vef.str();          
     }
 
 }

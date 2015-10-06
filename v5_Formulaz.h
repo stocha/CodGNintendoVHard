@@ -307,8 +307,8 @@ public :
             ea = fa;
             eb = fb;
 
-            fa = a;
-            fb = b;
+            fa = get(a);
+            fb = get(b);
 
             nbImpure++;
         }
@@ -407,7 +407,7 @@ public :
             j = ca;
             i = cb;
         } else {
-            i = cb, j = ca; // i<j
+            i = ca, j = cb; // i<j
         }
 
         v[j+2] = v[i+2];
