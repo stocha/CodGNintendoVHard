@@ -170,9 +170,11 @@ void testCompImpl() {
 }
 
 void testPushEq(){
-    varEqField vef(4);
+    varEqField vef(8);
     
     vef.prepare();
+    
+    cout << vef.str();
     
 }
 

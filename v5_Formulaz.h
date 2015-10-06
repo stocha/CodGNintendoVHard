@@ -277,6 +277,19 @@ class varEqField {
     bool partsign = false;
     int nbImpure = 0;
 public :
+    
+    string str(){
+        std::ostringstream sout;    
+        for(int i=0;i<sz;i++){
+            sout << get(i) << "|";
+        }
+        sout << endl;
+        
+
+        string res = sout.str();
+        return res;
+    }
+    
     void prepare() {
         partsign = false;
         nbImpure = 0;
@@ -347,18 +360,18 @@ public :
 
 private:
 
-    p(int dst) {
+    void p(int dst) {
 
     }
 public :
-    getAsBool(int i) {
+    bool getAsBool(int i) {
         if (i == -2) false;
         else true;
     }
 
     varEqField(int sz) {
         this->sz = sz;
-        for (int i = 0; i < sz; i++) {
+        for (int i = 0; i < sz+2; i++) {
             v[i] = i;
             neg[i] = false;
         }
