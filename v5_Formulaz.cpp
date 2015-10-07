@@ -293,11 +293,11 @@ void testPushEq() {
 
 void FormulazTests::testAll() {
     //testInvertRef();
-    //testCompImpl();
+    testCompImpl();
 
 
 
-    testPushEq();
+    //testPushEq();
 
     //testBitField();
 

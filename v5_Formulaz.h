@@ -277,7 +277,7 @@ class varEqField {
     bool partsign = false;
     int nbImpure = 0;
 
-    bool satisfiable = true;
+public :    bool satisfiable = true;
 public:
 
     void cp(varEqField src) {
@@ -363,9 +363,11 @@ public:
         partsign = (partsign != sign);
 
         if (!satisfiable) return false;
+        
+       // cout << "signing "<< nbImpure << partsign;
 
         if (nbImpure == 0) {
-            if (partsign != sign) {
+            if (partsign ) {
                 satisfiable = false;
                 return false;
             };
@@ -415,7 +417,7 @@ public:
         }
         v[1]=0;
         neg[1]=true;  
-        cout << "init " << str();
+       // cout << "init " << str();
     }
 
     long get(std::size_t pos) {
@@ -595,7 +597,8 @@ public:
 class eq01Invert : public inverterInterface {
 public:
 
-    varEqField transf(varEqField question, bitField in) {
+    void transf(varEqField question, bitField in) {
+        if(!question.satisfiable) return;
         varEqField root(in.size());
         root.cp(question);
         // cout << "input" << root.str() << endl;
@@ -640,12 +643,12 @@ public:
             // cout << "first free variable is " << firstFree << endl;
             root.setVarEquivalenceAEqB(-2, firstFree, false);
             //   cout << "fleft call " << root.str() << endl;
-            varEqField left = transf(root, in);
+            transf(root, in);
 
 
             root.setVarEquivalenceAEqB(-1, firstFree, false);
             //cout << "right call " << root.str() << endl;
-            varEqField right = transf(root, in);
+            transf(root, in);
 
         }
     }
@@ -653,9 +656,8 @@ public:
     vector<bitField> invert(bitField in) {
 
         varEqField root(in.size());
-        varEqField answer = transf(root, in);
-
-        cout << answer.str() << endl;
+         transf(root, in);
+       
 
         //cout << "seqInvert " << endl;
 
