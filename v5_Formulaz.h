@@ -350,11 +350,11 @@ public:
     }
 
     int sign(bool sign) {
-        int res=0;
+        int res = 0;
         partsign = (partsign != sign);
 
         if (nbImpure == 0) {
-            if(partsign!=sign) return -1;
+            if (partsign != sign) return -1;
         }
         if (nbImpure == 1) {
             if (fa >= 0 && fb >= 0 && partsign) {
@@ -571,7 +571,7 @@ public:
     varEqField transf(varEqField question, bitField in) {
         varEqField root(in.size());
         root.cp(question);
-        cout << "input" << root.str() << endl;
+       // cout << "input" << root.str() << endl;
         SoluSimp ss(in.size());
 
         const int halfSize = in.size() / 2;
@@ -584,7 +584,7 @@ public:
                 for (int i = 0; i < ss.nbXor(depth); i++) {
                     //  cout << v << " ^= " << res[ss.coefL(depth,i)] << " & " << res[ss.coefR(depth,i)]<< endl;
                     //cout << "addr" << depth << " ^= " << ss.coefL(depth,i) << " & " << ss.coefR(depth,i)<< endl;
-//                    v ^= (res[ss.coefL(depth, i)] & res[ss.coefR(depth, i)]);
+                    //                    v ^= (res[ss.coefL(depth, i)] & res[ss.coefR(depth, i)]);
                     root.push(ss.coefL(depth, i), ss.coefR(depth, i));
                 }
                 root.sign(in[depth]);
@@ -595,36 +595,31 @@ public:
                 for (int i = 0; i < ss.nbXor(ndDepth); i++) {
                     //  cout << v << " ^= " << res[ss.coefLsec(ndDepth,i)] << " & " << res[ss.coefRsec(ndDepth,i)]<< endl;
                     //cout << "addr" << depth << " ^= " << ss.coefLsec(ndDepth,i) << " & " << ss.coefRsec(ndDepth,i)<< endl;
-             //       v ^= (res[ss.coefLsec(ndDepth, i)] & res[ss.coefRsec(ndDepth, i)]);
+                    //       v ^= (res[ss.coefLsec(ndDepth, i)] & res[ss.coefRsec(ndDepth, i)]);
                     root.push(ss.coefL(depth, i), ss.coefR(depth, i));
                 }
                 root.sign(in[depth]);
             }
 
         }
-        int firstFree=root.firstFreeVariable();
-        
-        
-        if(firstFree==-1){
+        int firstFree = root.firstFreeVariable();
+
+
+        if (firstFree == -1) {
             cout << "found " << root.str() << endl;
-            return root; 
-        }
-        else{
-            cout << "after deduction " << root.str() << endl;
-            cout << "first free variable is " << firstFree << endl;
-            root.setVarEquivalenceAEqB(0,firstFree,false);
-            varEqField left=transf(root,in);
-                    
-            root.setVarEquivalenceAEqB(1,firstFree,false);                    
-            varEqField right=transf(root,in);
-                    
-            if(left.firstFreeVariable()==-1){
-                return left;
-            }
-            if(right.firstFreeVariable()==-1){
-                return right;
-            }   
-            return root;
+            //return root;
+        } else {
+           // cout << "after deduction " << root.str() << endl;
+           // cout << "first free variable is " << firstFree << endl;
+            root.setVarEquivalenceAEqB(-2, firstFree, false);
+            //   cout << "fleft call " << root.str() << endl;
+            varEqField left = transf(root, in);
+
+
+            root.setVarEquivalenceAEqB(-1, firstFree, false);
+            //cout << "right call " << root.str() << endl;
+            varEqField right = transf(root, in);
+
         }
     }
 
