@@ -276,6 +276,8 @@ class varEqField {
 
     bool partsign = false;
     int nbImpure = 0;
+
+    bool satisfiable = true;
 public:
 
     void cp(varEqField src) {
@@ -283,6 +285,7 @@ public:
             v[i] = src.v[i];
             neg[i] = src.neg[i];
         }
+        satisfiable = src.satisfiable;
     }
 
     int firstFreeVariable() {
@@ -301,7 +304,13 @@ public:
             if (getsign(i)) sout << "!";
             sout << get(i) << "|";
         }
-        sout << endl;
+        sout << "sat-" << satisfiable << endl;
+//        for (int i = 0; i < sz+2; i++) {
+//
+//            if (neg[i]) sout << "!";
+//            sout << v[i] << "|";
+//        }        
+//sout << "raw end"  << endl;        
 
 
         string res = sout.str();
@@ -349,12 +358,17 @@ public:
         }
     }
 
-    int sign(bool sign) {
-        int res = 0;
+    bool sign(bool sign) {
+        int res = true;
         partsign = (partsign != sign);
 
+        if (!satisfiable) return false;
+
         if (nbImpure == 0) {
-            if (partsign != sign) return -1;
+            if (partsign != sign) {
+                satisfiable = false;
+                return false;
+            };
         }
         if (nbImpure == 1) {
             if (fa >= 0 && fb >= 0 && partsign) {
@@ -378,7 +392,7 @@ public:
             }
 
         }
-        return res;
+        return satisfiable;
     }
 
 private:
@@ -399,6 +413,9 @@ public:
             v[i] = i;
             neg[i] = false;
         }
+        v[1]=0;
+        neg[1]=true;  
+        cout << "init " << str();
     }
 
     long get(std::size_t pos) {
@@ -419,17 +436,17 @@ public:
         neg[curr] = a;
 
         curr = pos + 2;
-        if (v[next] == 0 && neg[curr]) {
-            v[curr] = 1;
-            neg[curr] = false;
-        }
-
-        //  cout << v[next] << " " << neg[curr]<<endl;
-        if (v[next] == 1 && neg[curr]) {
-            // cout << "detected -1 neg " << endl;
-            v[curr] = 0;
-            neg[curr] = false;
-        }
+//        if (curr>1 && v[next] == 0 && neg[curr]) {
+//            v[curr] = 1;
+//            neg[curr] = false;
+//        }
+//
+//        //  cout << v[next] << " " << neg[curr]<<endl;
+//        if (curr>1 && v[next] == 1 && neg[curr]) {
+//            // cout << "detected -1 neg " << endl;
+//            v[curr] = 0;
+//            neg[curr] = false;
+//        }
 
         return v[next] - 2;
     }
@@ -455,11 +472,21 @@ public:
             i = ca, j = cb; // i<j
         }
 
+
+
+
+
+        bool ph = (getsign(j) != getsign(i));
+        if (v[i+2] == v[j+2] && !ph) {
+            satisfiable = false;
+            return;
+        }
         if (j >= 0) {
             v[j + 2] = v[i + 2];
-            bool ph = (getsign(j) != getsign(i));
             neg[j + 2] = (ph != s);
         }
+        
+
     }
 
 
@@ -571,7 +598,7 @@ public:
     varEqField transf(varEqField question, bitField in) {
         varEqField root(in.size());
         root.cp(question);
-       // cout << "input" << root.str() << endl;
+        // cout << "input" << root.str() << endl;
         SoluSimp ss(in.size());
 
         const int halfSize = in.size() / 2;
@@ -609,8 +636,8 @@ public:
             cout << "found " << root.str() << endl;
             //return root;
         } else {
-           // cout << "after deduction " << root.str() << endl;
-           // cout << "first free variable is " << firstFree << endl;
+            // cout << "after deduction " << root.str() << endl;
+            // cout << "first free variable is " << firstFree << endl;
             root.setVarEquivalenceAEqB(-2, firstFree, false);
             //   cout << "fleft call " << root.str() << endl;
             varEqField left = transf(root, in);

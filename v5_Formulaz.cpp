@@ -174,7 +174,7 @@ void testCompImpl() {
 
 void testPushEq() {
 
-    {
+    if(false){
         varEqField vef(8);
 
         cout << "base" << vef.str()<<endl;
@@ -218,7 +218,7 @@ void testPushEq() {
         cout << vef.str();            
     }
     
-    {
+    if(false){
         // rewind all
         varEqField vef(8);
 
@@ -256,17 +256,48 @@ void testPushEq() {
         cout << vef.str(); 
         
         cout << vef.str();
-    }    
+    }
+
+
+    {
+        // rewind all
+        varEqField vef(8);
+
+        cout << "base-------------------------------------" << vef.str();
+
+        vef.prepare();  
+        vef.push(3, 4);
+        vef.sign(true); // 3 true, 4 true
+
+        cout << "push 3,4 sign true ";
+                cout << vef.str();
+                
+        vef.prepare(); // 2!=1
+        vef.push(2, 4);
+        vef.push(1, 3);
+        vef.sign(true);
+
+        cout << "push 2,4 - 1,3 sign true ";
+        cout << vef.str();    
+        
+        vef.prepare();
+        vef.push(2, 4);
+        vef.push(1, 3);
+        vef.sign(false);
+
+        cout << "push 2,4 - 1,3 sign false "; // contradiction
+        cout << vef.str();                
+    }
 
 }
 
 void FormulazTests::testAll() {
     //testInvertRef();
-    testCompImpl();
+    //testCompImpl();
 
 
 
-    //testPushEq();
+    testPushEq();
 
     //testBitField();
 
