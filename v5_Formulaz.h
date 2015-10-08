@@ -602,7 +602,7 @@ public:
         if (!question.satisfiable) return;
         varEqField root(in.size());
         root.cp(question);
-         cout << "input" << root.str() << endl;
+      //   cout << "input" << root.str() << endl;
         SoluSimp ss(in.size());
 
         const int halfSize = in.size() / 2;
@@ -646,12 +646,12 @@ public:
             // cout << "after deduction " << root.str() << endl;
             // cout << "first free variable is " << firstFree << endl;
             root.setForce(firstFree, false);
-               cout << "fleft call " << root.str() << endl;
+              // cout << "fleft call " << root.str() << endl;
             transf(root, in);
 
 
             root.setForce(firstFree, true);
-            cout << "right call " << root.str() << endl;
+            //cout << "right call " << root.str() << endl;
             transf(root, in);
 
         }
