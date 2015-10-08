@@ -277,7 +277,8 @@ class varEqField {
     bool partsign = false;
     int nbImpure = 0;
 
-public :    bool satisfiable = true;
+public:
+    bool satisfiable = true;
 public:
 
     void cp(varEqField src) {
@@ -305,12 +306,12 @@ public:
             sout << get(i) << "|";
         }
         sout << "sat-" << satisfiable << endl;
-//        for (int i = 0; i < sz+2; i++) {
-//
-//            if (neg[i]) sout << "!";
-//            sout << v[i] << "|";
-//        }        
-//sout << "raw end"  << endl;        
+        //        for (int i = 0; i < sz+2; i++) {
+        //
+        //            if (neg[i]) sout << "!";
+        //            sout << v[i] << "|";
+        //        }        
+        //sout << "raw end"  << endl;        
 
 
         string res = sout.str();
@@ -324,38 +325,29 @@ public:
 
     void push(int a, int b) {
 
-        bool pure = get(a) < 0 && get(b) < 0;
-        if (pure) {
-            if (get(a) != get(b)) {
-
-            } else {
-                bool ab = getAsBool(get(a));
-                partsign = (partsign != ab);
+        if (fa < 0 && fb < 0) {
+            if(getsign(fa) && getsign(fb)){
+                partsign=(partsign!=true);
             }
-        } else if (get(a) == get(b) && (getsign(a) != getsign(b))) {
-
+            else{
+                
+            }
         } else {
+
             ea = fa;
             eb = fb;
 
             fa = get(a);
             fb = get(b);
 
-            if (fa == fb) {
-                fb = -1;
-            }
-
-            if (fa < 0) {
+            if (fa > fb) {
                 int sw = fa;
                 fa = fb;
                 fb = sw;
             }
-
             nbImpure++;
-
-            //   cout <<"fa " << fa<<endl;
-            //   cout << "fb "<< fb<<endl;            
         }
+
     }
 
     bool sign(bool sign) {
@@ -363,11 +355,11 @@ public:
         partsign = (partsign != sign);
 
         if (!satisfiable) return false;
-        
-       // cout << "signing "<< nbImpure << partsign;
+
+        // cout << "signing "<< nbImpure << partsign;
 
         if (nbImpure == 0) {
-            if (partsign ) {
+            if (partsign) {
                 satisfiable = false;
                 return false;
             };
@@ -415,9 +407,9 @@ public:
             v[i] = i;
             neg[i] = false;
         }
-        v[1]=0;
-        neg[1]=true;  
-       // cout << "init " << str();
+        v[1] = 0;
+        neg[1] = true;
+        // cout << "init " << str();
     }
 
     long get(std::size_t pos) {
@@ -438,17 +430,17 @@ public:
         neg[curr] = a;
 
         curr = pos + 2;
-//        if (curr>1 && v[next] == 0 && neg[curr]) {
-//            v[curr] = 1;
-//            neg[curr] = false;
-//        }
-//
-//        //  cout << v[next] << " " << neg[curr]<<endl;
-//        if (curr>1 && v[next] == 1 && neg[curr]) {
-//            // cout << "detected -1 neg " << endl;
-//            v[curr] = 0;
-//            neg[curr] = false;
-//        }
+        //        if (curr>1 && v[next] == 0 && neg[curr]) {
+        //            v[curr] = 1;
+        //            neg[curr] = false;
+        //        }
+        //
+        //        //  cout << v[next] << " " << neg[curr]<<endl;
+        //        if (curr>1 && v[next] == 1 && neg[curr]) {
+        //            // cout << "detected -1 neg " << endl;
+        //            v[curr] = 0;
+        //            neg[curr] = false;
+        //        }
 
         return v[next] - 2;
     }
@@ -479,7 +471,7 @@ public:
 
 
         bool ph = (getsign(j) != getsign(i));
-        if (v[i+2] == v[j+2] && !ph) {
+        if (v[i + 2] == v[j + 2] && !ph) {
             satisfiable = false;
             return;
         }
@@ -487,7 +479,7 @@ public:
             v[j + 2] = v[i + 2];
             neg[j + 2] = (ph != s);
         }
-        
+
 
     }
 
@@ -598,7 +590,7 @@ class eq01Invert : public inverterInterface {
 public:
 
     void transf(varEqField question, bitField in) {
-        if(!question.satisfiable) return;
+        if (!question.satisfiable) return;
         varEqField root(in.size());
         root.cp(question);
         // cout << "input" << root.str() << endl;
@@ -634,6 +626,9 @@ public:
         }
         int firstFree = root.firstFreeVariable();
 
+        if (!root.satisfiable) {
+            return;
+        }
 
         if (firstFree == -1) {
             cout << "found " << root.str() << endl;
@@ -646,7 +641,7 @@ public:
             transf(root, in);
 
 
-            root.setVarEquivalenceAEqB(-1, firstFree, false);
+            root.setVarEquivalenceAEqB(-2, firstFree, true);
             //cout << "right call " << root.str() << endl;
             transf(root, in);
 
@@ -656,8 +651,8 @@ public:
     vector<bitField> invert(bitField in) {
 
         varEqField root(in.size());
-         transf(root, in);
-       
+        transf(root, in);
+
 
         //cout << "seqInvert " << endl;
 
