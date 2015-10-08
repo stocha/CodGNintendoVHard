@@ -324,9 +324,12 @@ public:
     }
 
     void push(int a, int b) {
+        
+        int pa=get(a);
+        int pb=get(b);
 
-        if (fa < 0 && fb < 0) {
-            if(getsign(fa) && getsign(fb)){
+        if (pa < 0 && pb < 0) {
+            if(neg[a+2] && neg[b+2]){
                 partsign=(partsign!=true);
             }
             else{

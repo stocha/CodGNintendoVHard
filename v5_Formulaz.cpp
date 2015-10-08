@@ -327,7 +327,7 @@ void testPushEq() {
 }
 
 void FormulazTests::testAll() {
-    testInvertRef();
+    //testInvertRef();
     testCompImpl();
 
 
