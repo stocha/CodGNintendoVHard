@@ -364,7 +364,7 @@ public:
                 return false;
             };
         }
-        if (nbImpure == 1) {
+        /*if (nbImpure == 1) {
             if (fa >= 0 && fb >= 0 && partsign) {
                 this->setVarEquivalenceAEqB(fa, -1, false);
                 this->setVarEquivalenceAEqB(fb, -1, false);
@@ -385,7 +385,7 @@ public:
 
             }
 
-        }
+        }*/
         return satisfiable;
     }
 
@@ -450,7 +450,16 @@ public:
         return neg[pos + 2];
     }
 
-    void setVarEquivalenceAEqB(int a, int b, bool s) {
+    
+public : void setForce(int a, bool s){
+        int ad=a+2;
+        if(s){
+            v[ad]=0; neg[ad]=true;
+        }else{
+            v[ad]=0; neg[ad]=false;
+        }
+    }
+private : void setVarEquivalenceAEqB(int a, int b, bool s) {
 
 
         int ca = get(a);
@@ -593,7 +602,7 @@ public:
         if (!question.satisfiable) return;
         varEqField root(in.size());
         root.cp(question);
-        // cout << "input" << root.str() << endl;
+         cout << "input" << root.str() << endl;
         SoluSimp ss(in.size());
 
         const int halfSize = in.size() / 2;
@@ -636,13 +645,13 @@ public:
         } else {
             // cout << "after deduction " << root.str() << endl;
             // cout << "first free variable is " << firstFree << endl;
-            root.setVarEquivalenceAEqB(-2, firstFree, false);
-            //   cout << "fleft call " << root.str() << endl;
+            root.setForce(firstFree, false);
+               cout << "fleft call " << root.str() << endl;
             transf(root, in);
 
 
-            root.setVarEquivalenceAEqB(-2, firstFree, true);
-            //cout << "right call " << root.str() << endl;
+            root.setForce(firstFree, true);
+            cout << "right call " << root.str() << endl;
             transf(root, in);
 
         }
@@ -652,66 +661,7 @@ public:
 
         varEqField root(in.size());
         transf(root, in);
-
-
-        //cout << "seqInvert " << endl;
-
-        SoluSimp ss(in.size());
         vector<bitField> resvv;
-
-        if (in[in.size() - 1] == 1) return resvv;
-
-        bitField res(in.size());
-        res.clear();
-
-        const int halfSize = in.size() / 2;
-        int depth = 0;
-        while (true) {
-
-            // cout << "CHECK " << res.str() << " against " << in.str() << " depth " << depth << " half " << halfSize << endl;
-
-            long v = in[depth];
-
-            if (depth < halfSize) {
-                //cout << "depth " << depth <<" nbXor "<< ss.nbXor(depth)<< endl;
-                for (int i = 0; i < ss.nbXor(depth); i++) {
-                    //  cout << v << " ^= " << res[ss.coefL(depth,i)] << " & " << res[ss.coefR(depth,i)]<< endl;
-                    //cout << "addr" << depth << " ^= " << ss.coefL(depth,i) << " & " << ss.coefR(depth,i)<< endl;
-                    v ^= (res[ss.coefL(depth, i)] & res[ss.coefR(depth, i)]);
-                }
-            } else {
-                int ndDepth = in.size() - depth - 2;
-                //cout << "depth " << depth << " ndDepth " << ndDepth << " nbXor ";
-                //cout << ss.nbXor(ndDepth)<< endl;
-                for (int i = 0; i < ss.nbXor(ndDepth); i++) {
-                    //  cout << v << " ^= " << res[ss.coefLsec(ndDepth,i)] << " & " << res[ss.coefRsec(ndDepth,i)]<< endl;
-                    //cout << "addr" << depth << " ^= " << ss.coefLsec(ndDepth,i) << " & " << ss.coefRsec(ndDepth,i)<< endl;
-                    v ^= (res[ss.coefLsec(ndDepth, i)] & res[ss.coefRsec(ndDepth, i)]);
-                }
-            }
-            if (v != 0) {
-                ++res;
-                depth = 0;
-                //cout << "next res" << res.str() << endl;
-                if (res.isZero()) {
-
-                    break;
-                }
-                continue;
-            }
-            //cout << "PASSED " << depth << endl;
-
-            depth++;
-            if (!(depth < in.size() - 1)) {
-                //cout << "Depth end : " << depth << endl;
-                depth = 0;
-                resvv.push_back(res);
-                ++res;
-                if (res.isZero()) break;
-            }
-
-        }
-
 
         return resvv;
     }

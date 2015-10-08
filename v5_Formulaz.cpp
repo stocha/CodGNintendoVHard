@@ -293,14 +293,7 @@ void testPushEq() {
         // rewind all
         varEqField vef(8);
 
-        vef.setVarEquivalenceAEqB(0,-2,true);
-        vef.setVarEquivalenceAEqB(1,-2,true);
-        vef.setVarEquivalenceAEqB(2,-2,true);
-        vef.setVarEquivalenceAEqB(3,-2,true);
-        vef.setVarEquivalenceAEqB(4,-2,false);
-        vef.setVarEquivalenceAEqB(5,-2,false);
-        vef.setVarEquivalenceAEqB(6,-2,false);
-        vef.setVarEquivalenceAEqB(7,-2,false);
+
         
         cout << "base-------------------------------------" << vef.str();        
         
@@ -339,7 +332,7 @@ void FormulazTests::testAll() {
 
 
 
-    testPushEq();
+   // testPushEq();
 
     //testBitField();
 
