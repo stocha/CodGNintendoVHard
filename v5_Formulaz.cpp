@@ -6,7 +6,7 @@
  */
 #include "v5_Formulaz.h"
 
-struct myclass {
+struct myclass001 {
 
     bool operator()(bitField a, bitField b) {
         for (int i = 0; i < a.size(); i++) {
@@ -17,6 +17,16 @@ struct myclass {
         return true;
     }
 } compareBits;
+
+vector<bitField> eq01Invert::invert(bitField in) {
+
+        varEqField root(in.size());
+
+        resvv.clear();
+        transf(root, in);
+        sort(resvv.begin(),resvv.end(),compareBits);
+        return resvv;
+    }
 
 vector<bitField> seqInvertSimetric::invert(bitField in) {
 

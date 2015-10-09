@@ -263,6 +263,8 @@ public:
 
 };
 
+
+
 class varEqField {
     int v[512 + 2];
     int sz;
@@ -321,6 +323,15 @@ public:
     void prepare() {
         partsign = false;
         nbImpure = 0;
+    }
+    
+    bitField asField(){
+        bitField res(sz);
+        
+        for(int i=0;i<sz;i++){
+            res.set(i,neg[i+2]?1L:0L);
+        }
+        return res;
     }
 
     void push(int a, int b) {
@@ -600,6 +611,8 @@ public:
 
 class eq01Invert : public inverterInterface {
 public:
+    
+    vector<bitField> resvv;
 
     void transf(varEqField question, bitField in) {
         if (!question.satisfiable) return;
@@ -644,6 +657,7 @@ public:
 
         if (firstFree == -1) {
             cout << "found " << root.str() << endl;
+            resvv.push_back(root.asField());
             //return root;
         } else {
             // cout << "after deduction " << root.str() << endl;
@@ -660,14 +674,7 @@ public:
         }
     }
 
-    vector<bitField> invert(bitField in) {
-
-        varEqField root(in.size());
-        transf(root, in);
-        vector<bitField> resvv;
-
-        return resvv;
-    }
+    vector<bitField> invert(bitField in);
 };
 
 class seqInvertSimetric : public inverterInterface {
