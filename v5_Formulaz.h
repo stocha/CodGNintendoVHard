@@ -325,6 +325,8 @@ public:
         partsign = false;
         nbImpure = 0;
         nbpushed=0;
+        
+        cout << "prepre " << str() << endl;
     }
     
     bitField asField(){
@@ -381,7 +383,7 @@ public:
 
         if (nbImpure == 0 && nbpushed>0) {
             if (partsign) {
-                cout << "signe 0 impure" << endl;
+                cout << "rejecting signe 0 impure" << endl;
                 satisfiable = false;
                 return false;
             };
@@ -626,18 +628,18 @@ public:
         if(question.firstFreeVariable()==-1)    
         {
         
-            cout << "check for " + question.asField().str() << endl;
+          //  cout << "check for " + question.asField().str() << endl;
         }else{
-            cout << "check for " + question.str() << endl;
+            //cout << "check for " + question.str() << endl;
         }
         
         if (!question.satisfiable){
             if(question.firstFreeVariable()==-1)    
             {
 
-                cout << "reject for " + question.asField().str() << endl;
+              //  cout << "reject for " + question.asField().str() << endl;
             }else{
-                cout << "==== illegal reject for " + question.str() << endl;
+               // cout << "==== illegal reject for " + question.str() << endl;
             }        
             return;
         };
@@ -682,8 +684,12 @@ public:
         //}
 
         if (firstFree == -1) {
-            cout << "found " << root.str() << endl;
-            resvv.push_back(root.asField());
+            
+            if(root.satisfiable){
+                cout << "found " << root.str() << endl;
+                resvv.push_back(root.asField());
+            }else{
+            }
             //return root;
         } else {
             // cout << "after deduction " << root.str() << endl;
