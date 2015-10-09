@@ -278,6 +278,7 @@ class varEqField {
 
     bool partsign = false;
     int nbImpure = 0;
+    int nbpushed=0;
 
 public:
     bool satisfiable = true;
@@ -323,6 +324,7 @@ public:
     void prepare() {
         partsign = false;
         nbImpure = 0;
+        nbpushed=0;
     }
     
     bitField asField(){
@@ -338,6 +340,7 @@ public:
         
         int pa=get(a);
         int pb=get(b);
+        nbpushed++;
 
         if (pa < 0 && pb < 0) {
             if(neg[a+2] && neg[b+2]){
@@ -372,8 +375,9 @@ public:
 
         // cout << "signing "<< nbImpure << partsign;
 
-        if (nbImpure == 0) {
+        if (nbImpure == 0 && nbpushed>0) {
             if (partsign) {
+                cout << "signe 0 impure" << endl;
                 satisfiable = false;
                 return false;
             };
@@ -614,8 +618,26 @@ public:
     
     vector<bitField> resvv;
 
-    void transf(varEqField question, bitField in) {
-        if (!question.satisfiable) return;
+    void transf(varEqField question, bitField in) {        
+        if(question.firstFreeVariable()==-1)    
+        {
+        
+            cout << "check for " + question.asField().str() << endl;
+        }else{
+            cout << "check for " + question.str() << endl;
+        }
+        
+        if (!question.satisfiable){
+            if(question.firstFreeVariable()==-1)    
+            {
+
+                cout << "reject for " + question.asField().str() << endl;
+            }else{
+                cout << "==== illegal reject for " + question.str() << endl;
+            }        
+            return;
+        };
+        
         varEqField root(in.size());
         root.cp(question);
       //   cout << "input" << root.str() << endl;
@@ -651,9 +673,9 @@ public:
         }
         int firstFree = root.firstFreeVariable();
 
-        if (!root.satisfiable) {
-            return;
-        }
+        //if (!root.satisfiable) {
+        //    return;
+        //}
 
         if (firstFree == -1) {
             cout << "found " << root.str() << endl;
@@ -663,12 +685,12 @@ public:
             // cout << "after deduction " << root.str() << endl;
             // cout << "first free variable is " << firstFree << endl;
             root.setForce(firstFree, false);
-              // cout << "fleft call " << root.str() << endl;
+             //  cout << "fleft call " << root.str() << endl;
             transf(root, in);
 
 
             root.setForce(firstFree, true);
-            //cout << "right call " << root.str() << endl;
+              //  cout << "right call " << root.str() << endl;
             transf(root, in);
 
         }
