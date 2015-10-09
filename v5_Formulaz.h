@@ -338,6 +338,8 @@ public:
 
     void push(int a, int b) {
         
+        cout << "push " << a << "&" << b << "+" << endl;
+        
         int pa=get(a);
         int pb=get(b);
         nbpushed++;
@@ -370,6 +372,8 @@ public:
     bool sign(bool sign) {
         int res = true;
         partsign = (partsign != sign);
+        
+        cout << "sign input " << sign << endl;
 
         if (!satisfiable) return false;
 
@@ -644,7 +648,7 @@ public:
         SoluSimp ss(in.size());
 
         const int halfSize = in.size() / 2;
-        for (int depth = 0; depth < in.size(); depth++) {
+        for (int depth = 0; depth < in.size()-1; depth++) {
             long v = in[depth];
 
             root.prepare();
@@ -665,7 +669,7 @@ public:
                     //  cout << v << " ^= " << res[ss.coefLsec(ndDepth,i)] << " & " << res[ss.coefRsec(ndDepth,i)]<< endl;
                     //cout << "addr" << depth << " ^= " << ss.coefLsec(ndDepth,i) << " & " << ss.coefRsec(ndDepth,i)<< endl;
                     //       v ^= (res[ss.coefLsec(ndDepth, i)] & res[ss.coefRsec(ndDepth, i)]);
-                    root.push(ss.coefL(depth, i), ss.coefR(depth, i));
+                    root.push(ss.coefLsec(ndDepth, i), ss.coefRsec(ndDepth, i));
                 }
                 root.sign(in[depth]);
             }
