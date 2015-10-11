@@ -326,7 +326,7 @@ public:
         nbImpure = 0;
         nbpushed=0;
         
-        cout << "prepre " << str() << endl;
+       // cout << "prepre " << str() << endl;
     }
     
     bitField asField(){
@@ -340,18 +340,18 @@ public:
 
     void push(int a, int b) {
         
-        cout << "push " << a << "&" << b << "+" << endl;
+       // cout << "push " << a << "&" << b << "+" << endl;
         
         int pa=get(a);
         int pb=get(b);
         nbpushed++;
         
-        cout << "negs " << neg[a+2] << "  " << neg[b+2] << endl;
+      //  cout << "negs " << neg[a+2] << "  " << neg[b+2] << endl;
 
         if (pa < 0 && pb < 0) {
             if(neg[a+2] && neg[b+2]){
                 partsign=(partsign!=true);
-                cout << "and new partsign " << partsign << endl;
+          //      cout << "and new partsign " << partsign << endl;
             }
             else{
                 
@@ -378,7 +378,7 @@ public:
         int res = true;
         partsign = (partsign != sign);
         
-        cout << "sign input " << sign << endl;
+      //  cout << "sign input " << sign << endl;
 
         if (!satisfiable) return false;
 
@@ -386,7 +386,7 @@ public:
 
         if (nbImpure == 0 && nbpushed>0) {
             if (partsign) {
-                cout << "rejecting signe 0 impure" << endl;
+              //  cout << "rejecting signe 0 impure" << endl;
                 satisfiable = false;
                 return false;
             };
@@ -689,7 +689,7 @@ public:
         if (firstFree == -1) {
             
             if(root.satisfiable){
-                cout << "found " << root.str() << endl;
+               // cout << "found " << root.str() << endl;
                 resvv.push_back(root.asField());
             }else{
             }
