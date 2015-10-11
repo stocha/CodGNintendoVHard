@@ -19,12 +19,11 @@ struct myclass001 {
 } compareBits;
 
 vector<bitField> eq01Invert::invert(bitField in) {
-    
-    if(in[in.size()-1]==1) return resvv;
 
         varEqField root(in.size());
 
         resvv.clear();
+    if(in[in.size()-1]==1) return resvv;        
         transf(root, in);
         sort(resvv.begin(),resvv.end(),compareBits);
         return resvv;
