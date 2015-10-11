@@ -345,10 +345,13 @@ public:
         int pa=get(a);
         int pb=get(b);
         nbpushed++;
+        
+        cout << "negs " << neg[a+2] << "  " << neg[b+2] << endl;
 
         if (pa < 0 && pb < 0) {
             if(neg[a+2] && neg[b+2]){
                 partsign=(partsign!=true);
+                cout << "and new partsign " << partsign << endl;
             }
             else{
                 

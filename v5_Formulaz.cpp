@@ -19,6 +19,8 @@ struct myclass001 {
 } compareBits;
 
 vector<bitField> eq01Invert::invert(bitField in) {
+    
+    if(in[in.size()-1]==1) return resvv;
 
         varEqField root(in.size());
 
@@ -337,7 +339,7 @@ void testPushEq() {
 }
 
 void FormulazTests::testAll() {
-    //testInvertRef();
+    testInvertRef();
     testCompImpl();
 
 
