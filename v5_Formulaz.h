@@ -442,23 +442,31 @@ public:
             else
                 if (gb == -2 && getsign(fb)) {
                    // cout << "fa " << fa << " / fb "  << fb << endl;
-                    cutSimpleEq++;
+                    cutSingleForceVar++;
                     this->setVarEquivalenceAEqB(fa, -2,partsign);
                  // cout << " 1 impure " << fa << " <- " << partsign << endl;
                 res++;
             }
         }
-//        if (nbImpure == 2) {
-//            if (fb < 0) {
-//                if (eb < 0) {
-//                    cutSimpleEq++;
-//                    this->setVarEquivalenceAEqB(fa, ea, partsign);
-//                    res++;
-//                }
-//
-//            }
-//
-//        }
+      /*  if (nbImpure == 2) {
+            int gfa=get(fa);
+            int gfb=get(fb);           
+            int gea=get(ea);
+            int geb=get(eb);     
+            bool sfb=getsign(gfb);
+            bool seb=getsign(geb);
+            if (gfb < 0 && sfb) {
+                if (geb < 0 && seb) {
+                    cutSimpleEq++;
+                    bool pf=(partsign != getsign(fa));
+                    bool pe=(pf != getsign(ea));
+                    this->setVarEquivalenceAEqB(fa, ea, pe);
+                    res++;
+                }
+
+            }
+
+        }*/
         return satisfiable;
     }
 
