@@ -6,6 +6,10 @@
  */
 #include "v5_Formulaz.h"
 
+        int varEqField::cutTrueAnd=0;
+        int varEqField::cutSimpleEq=0;
+        int varEqField::cutSingleForceVar=0;
+
 struct myclass001 {
 
     bool operator()(bitField a, bitField b) {
@@ -20,12 +24,17 @@ struct myclass001 {
 
 vector<bitField> eq01Invert::invert(bitField in) {
 
+    
+    varEqField::resetData();
     varEqField root(in.size());
 
     resvv.clear();
     if (in[in.size() - 1] == 1) return resvv;
     transf(root, in);
     sort(resvv.begin(), resvv.end(), compareBits);
+    
+    
+    cout << varEqField::strData();
     return resvv;
 }
 
@@ -174,14 +183,14 @@ void testCompImpl() {
     //seqInvert seqInv;
     seqInvertSimetric seqSym;
     eq01Invert eqInvert;
-    //compareImpl imp(&refInv,&seqInv);   
+    //compareImpl imp(&refInv,&seqInv);
     //compareImpl imp(&refInv,&refInv);
-    // compareImpl imp(&seqInv,&seqInv); 
+    // compareImpl imp(&seqInv,&seqInv);
     //compareImpl imp(&seqInv, &seqSym);
     //compareImpl imp(&seqSym, &seqSym);
   //  {
    //    compareImpl imp(&eqInvert, &seqSym);
-        //imp.compareThem(nbBit, 30);
+        //imp.compareThem(nbBit, 30);é
   //  }
    // {
        compareImpl imp(&eqInvert, &eqInvert);

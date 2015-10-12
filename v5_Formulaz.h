@@ -279,6 +279,10 @@ class varEqField {
     bool partsign = false;
     int nbImpure = 0;
     int nbpushed=0;
+    
+    static int cutTrueAnd;
+    static int cutSimpleEq;
+    static int cutSingleForceVar;
 
 public:
     bool satisfiable = true;
@@ -373,6 +377,36 @@ public:
         }
 
     }
+    
+    static void resetData(){
+        cutTrueAnd=0;
+        cutSimpleEq=0;
+        cutSingleForceVar=0;
+    }
+    
+    static string strData(){
+        std::ostringstream sout;
+//        for (int i = 0; i < sz; i++) {
+//
+//            if (getsign(i)) sout << "!";
+//            sout << get(i) << "|";
+//        }
+      //  sout << "sat-" << satisfiable << endl;
+        //        for (int i = 0; i < sz+2; i++) {
+        //
+        //            if (neg[i]) sout << "!";
+        //            sout << v[i] << "|";
+        //        }        
+        //sout << "raw end"  << endl;        
+        
+        cout << " |cutTrueAnd " << cutTrueAnd 
+               << " |cutSimpleEq " << cutSimpleEq 
+                << " |cutSingleForceVar " << cutSingleForceVar << endl;
+
+
+        string res = sout.str();
+        return res;        
+    }
 
     bool sign(bool sign) {
         int res = true;
@@ -393,11 +427,13 @@ public:
         }
         if (nbImpure == 1) {
             if (fa >= 0 && fb >= 0 && partsign) {
+                cutTrueAnd++;
                 this->setVarEquivalenceAEqB(fa, -2, true);
                 this->setVarEquivalenceAEqB(fb, -2, true);
                 res++;
             } else
                 if (fb == -2) {
+                    cutSimpleEq++;
                 this->setVarEquivalenceAEqB(fa, fb,partsign);
                 //  cout << " 1 impure " << fa << " <- " << (partsign ? -2 : -1) << endl;
                 res++;
@@ -406,6 +442,7 @@ public:
         if (nbImpure == 2) {
             if (fb < 0) {
                 if (eb < 0) {
+                    cutSimpleEq++;
                     this->setVarEquivalenceAEqB(fa, ea, partsign);
                     res++;
                 }
