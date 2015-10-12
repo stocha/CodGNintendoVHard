@@ -344,7 +344,7 @@ public:
 
     void push(int a, int b) {
         
-       // cout << "push " << a << "&" << b << "+" << endl;
+        cout << "push " << a << "&" << b << "+" << endl;
         
         int pa=get(a);
         int pb=get(b);
@@ -368,7 +368,7 @@ public:
             fa = pa;
             fb = pb;
 
-            if (fa > fb) {
+            if (fa < fb) {
                 int sw = fa;
                 fa = fb;
                 fb = sw;
@@ -412,6 +412,8 @@ public:
         int res = true;
         partsign = (partsign != sign);
         
+        cout << "sign " << sign << " \n" << str() << endl;
+        
       //  cout << "sign input " << sign << endl;
 
         if (!satisfiable) return false;
@@ -426,30 +428,32 @@ public:
             };
         }
         if (nbImpure == 1) {
-            if (fa >= 0 && fb >= 0 && partsign) {
+        /*    if (fa >= 0 && fb >= 0 && partsign) {
                 cutTrueAnd++;
                 this->setVarEquivalenceAEqB(fa, -2, true);
                 this->setVarEquivalenceAEqB(fb, -2, true);
                 res++;
-            } else
-                if (fb == -2) {
+            } 
+            else
+                if (fb == -2 && neg[fb+2]) {
+                    cout << "fa " << fa << " / fb "  << fb << endl;
                     cutSimpleEq++;
-                this->setVarEquivalenceAEqB(fa, fb,partsign);
-                //  cout << " 1 impure " << fa << " <- " << (partsign ? -2 : -1) << endl;
+                    this->setVarEquivalenceAEqB(fa, -2,partsign);
+                  cout << " 1 impure " << fa << " <- " << partsign << endl;
                 res++;
-            }
+            }*/
         }
-        if (nbImpure == 2) {
-            if (fb < 0) {
-                if (eb < 0) {
-                    cutSimpleEq++;
-                    this->setVarEquivalenceAEqB(fa, ea, partsign);
-                    res++;
-                }
-
-            }
-
-        }
+//        if (nbImpure == 2) {
+//            if (fb < 0) {
+//                if (eb < 0) {
+//                    cutSimpleEq++;
+//                    this->setVarEquivalenceAEqB(fa, ea, partsign);
+//                    res++;
+//                }
+//
+//            }
+//
+//        }
         return satisfiable;
     }
 
