@@ -365,13 +365,14 @@ public:
             ea = fa;
             eb = fb;
 
-            fa = pa;
-            fb = pb;
 
-            if (fa < fb) {
-                int sw = fa;
-                fa = fb;
-                fb = sw;
+
+            if (pa < pb) {
+                fa = b;
+                fb = a;
+            }else{
+                fa = a;
+                fb = b;                
             }
             nbImpure++;
         }
@@ -427,14 +428,18 @@ public:
                 return false;
             };
         }
+        
+
         if (nbImpure == 1) {
-        /*    if (fa >= 0 && fb >= 0 && partsign) {
+            int ga=get(fa);
+            int gb=get(fb);            
+            if (ga >= 0 && gb >= 0 && partsign) {
                 cutTrueAnd++;
                 this->setVarEquivalenceAEqB(fa, -2, true);
                 this->setVarEquivalenceAEqB(fb, -2, true);
                 res++;
-            } 
-            else
+            }
+           /* else
                 if (fb == -2 && neg[fb+2]) {
                     cout << "fa " << fa << " / fb "  << fb << endl;
                     cutSimpleEq++;
@@ -536,7 +541,7 @@ private : void setVarEquivalenceAEqB(int a, int b, bool s) {
         //  cout << "" << ca << "==" << cb<< " whith " << s <<endl;
 
         int i, j;
-        if (ca > cb) {
+        if (ca < cb) {
             j = ca;
             i = cb;
         } else {
