@@ -20,14 +20,14 @@ struct myclass001 {
 
 vector<bitField> eq01Invert::invert(bitField in) {
 
-        varEqField root(in.size());
+    varEqField root(in.size());
 
-        resvv.clear();
-    if(in[in.size()-1]==1) return resvv;        
-        transf(root, in);
-        sort(resvv.begin(),resvv.end(),compareBits);
-        return resvv;
-    }
+    resvv.clear();
+    if (in[in.size() - 1] == 1) return resvv;
+    transf(root, in);
+    sort(resvv.begin(), resvv.end(), compareBits);
+    return resvv;
+}
 
 vector<bitField> seqInvertSimetric::invert(bitField in) {
 
@@ -179,173 +179,184 @@ void testCompImpl() {
     // compareImpl imp(&seqInv,&seqInv); 
     //compareImpl imp(&seqInv, &seqSym);
     //compareImpl imp(&seqSym, &seqSym);
-    compareImpl imp(&eqInvert, &seqSym);
-    //compareImpl imp(&eqInvert, &eqInvert);
-    //compareImpl imp(&seqSym, &seqSym);
-    imp.compareThem(nbBit, 30);
+  //  {
+   //    compareImpl imp(&eqInvert, &seqSym);
+        //imp.compareThem(nbBit, 30);
+  //  }
+   // {
+       compareImpl imp(&eqInvert, &eqInvert);
+   //     imp.compareThem(nbBit, 30);
+   // }
+ //   {
+   //     compareImpl imp(&seqSym, &seqSym);
+  //      imp.compareThem(nbBit, 30);
+  //  }
+        
+        imp.compareThem(nbBit, 30);
+
 }
 
 void testPushEq() {
 
-    if(false){
+    if (false) {
         varEqField vef(8);
 
-        cout << "base" << vef.str()<<endl;
+        cout << "base" << vef.str() << endl;
 
         vef.prepare();
         vef.push(3, 4);
-        vef.sign(false);    // ignored
+        vef.sign(false); // ignored
 
-        cout << "push 3,4 sign false "<<endl;
-                cout << vef.str();
+        cout << "push 3,4 sign false " << endl;
+        cout << vef.str();
 
-        vef.prepare();  
+        vef.prepare();
         vef.push(3, 4);
         vef.sign(true); // 3 true, 4 true
 
-        cout << "push 3,4 sign true "<<endl;
-                cout << vef.str();
-                
+        cout << "push 3,4 sign true " << endl;
+        cout << vef.str();
+
         vef.prepare(); // 2==1
         vef.push(2, 4);
         vef.push(1, 3);
         vef.sign(false);
 
-        cout << "push 2,4 - 1,3 sign false "<<endl;
-        cout << vef.str();    
-        
+        cout << "push 2,4 - 1,3 sign false " << endl;
+        cout << vef.str();
+
         vef.prepare();
         vef.push(2, 1);
         vef.push(0, 4);
         vef.sign(false);
 
-        cout << "push 2,1 - 0,4 sign false "<<endl;
-        cout << vef.str();         
-        
+        cout << "push 2,1 - 0,4 sign false " << endl;
+        cout << vef.str();
+
         vef.prepare();
         vef.push(0, 4);
         vef.push(3, 4);
         vef.sign(false);
 
-        cout << "push 2,1 - 3,4 sign false "<<endl;
-        cout << vef.str();            
+        cout << "push 2,1 - 3,4 sign false " << endl;
+        cout << vef.str();
     }
-    
-    if(false){
+
+    if (false) {
         // rewind all
         varEqField vef(8);
 
         cout << "base-------------------------------------" << vef.str();
 
-        vef.prepare();  
+        vef.prepare();
         vef.push(3, 4);
         vef.sign(true); // 3 true, 4 true
 
         cout << "push 3,4 sign true ";
-                cout << vef.str();
-                
+        cout << vef.str();
+
         vef.prepare(); // 2!=1
         vef.push(2, 4);
         vef.push(1, 3);
         vef.sign(true);
 
         cout << "push 2,4 - 1,3 sign true ";
-        cout << vef.str();    
-        
+        cout << vef.str();
+
         vef.prepare();
         vef.push(2, 1);
         vef.push(0, 4);
         vef.sign(false);
 
         cout << "push 2,1 - 0,4 sign true ";
-        cout << vef.str();         
-        
+        cout << vef.str();
+
         vef.prepare();
         vef.push(0, 4);
         vef.push(3, 4);
         vef.sign(false);
 
         cout << "push 2,1 - 3,4 sign true ";
-        cout << vef.str(); 
-        
+        cout << vef.str();
+
         cout << vef.str();
     }
 
 
-    if(false){
+    if (false) {
         // rewind all
         varEqField vef(8);
 
         cout << "base-------------------------------------" << vef.str();
 
-        vef.prepare();  
+        vef.prepare();
         vef.push(3, 4);
         vef.sign(true); // 3 true, 4 true
 
         cout << "push 3,4 sign true ";
-                cout << vef.str();
-                
+        cout << vef.str();
+
         vef.prepare(); // 2!=1
         vef.push(2, 4);
         vef.push(1, 3);
         vef.sign(true);
 
         cout << "push 2,4 - 1,3 sign true ";
-        cout << vef.str();    
-        
+        cout << vef.str();
+
         vef.prepare();
         vef.push(2, 4);
         vef.push(1, 3);
         vef.sign(false);
 
         cout << "push 2,4 - 1,3 sign false "; // contradiction
-        cout << vef.str();                
+        cout << vef.str();
     }
-    
-{
+
+    {
         // rewind all
         varEqField vef(8);
 
 
-        
-        cout << "base-------------------------------------" << vef.str();        
-        
-        
-        
-        vef.prepare();  
-        
+
+        cout << "base-------------------------------------" << vef.str();
+
+
+
+        vef.prepare();
+
         vef.push(3, -2);
         vef.sign(true); // 3 true, 4 true
 
         cout << "push 3,4 sign true ";
-                cout << vef.str();
-                
+        cout << vef.str();
+
         vef.prepare(); // 2!=1
         vef.push(2, 4);
         vef.push(1, 3);
         vef.sign(true);
 
         cout << "push 2,4 - 1,3 sign true ";
-        cout << vef.str();    
-        
+        cout << vef.str();
+
         vef.prepare();
         vef.push(2, 4);
         vef.push(1, 3);
         vef.sign(false);
 
         cout << "push 2,4 - 1,3 sign false "; // contradiction
-        cout << vef.str();                
-    }    
+        cout << vef.str();
+    }
 
 }
 
 void FormulazTests::testAll() {
-   // testInvertRef();
+    // testInvertRef();
     testCompImpl();
 
 
 
-   // testPushEq();
+    // testPushEq();
 
     //testBitField();
 

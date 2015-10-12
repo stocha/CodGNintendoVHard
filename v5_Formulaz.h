@@ -396,14 +396,14 @@ public:
                 this->setVarEquivalenceAEqB(fa, -2, true);
                 this->setVarEquivalenceAEqB(fb, -2, true);
                 res++;
-            } /*else
+            } else
                 if (fb == -2) {
                 this->setVarEquivalenceAEqB(fa, fb,partsign);
                 //  cout << " 1 impure " << fa << " <- " << (partsign ? -2 : -1) << endl;
                 res++;
-            }*/
+            }
         }
-       /* if (nbImpure == 2) {
+        if (nbImpure == 2) {
             if (fb < 0) {
                 if (eb < 0) {
                     this->setVarEquivalenceAEqB(fa, ea, partsign);
@@ -412,7 +412,7 @@ public:
 
             }
 
-        }*/
+        }
         return satisfiable;
     }
 
