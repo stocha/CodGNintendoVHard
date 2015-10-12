@@ -344,7 +344,7 @@ public:
 
     void push(int a, int b) {
         
-        cout << "push " << a << "&" << b << "+" << endl;
+     //   cout << "push " << a << "&" << b << "+" << endl;
         
         int pa=get(a);
         int pb=get(b);
@@ -413,7 +413,7 @@ public:
         int res = true;
         partsign = (partsign != sign);
         
-        cout << "sign " << sign << " \n" << str() << endl;
+      //  cout << "sign " << sign << " \n" << str() << endl;
         
       //  cout << "sign input " << sign << endl;
 
@@ -439,14 +439,14 @@ public:
                 this->setVarEquivalenceAEqB(fb, -2, true);
                 res++;
             }
-           /* else
-                if (fb == -2 && neg[fb+2]) {
-                    cout << "fa " << fa << " / fb "  << fb << endl;
+            else
+                if (gb == -2 && getsign(fb)) {
+                   // cout << "fa " << fa << " / fb "  << fb << endl;
                     cutSimpleEq++;
                     this->setVarEquivalenceAEqB(fa, -2,partsign);
-                  cout << " 1 impure " << fa << " <- " << partsign << endl;
+                 // cout << " 1 impure " << fa << " <- " << partsign << endl;
                 res++;
-            }*/
+            }
         }
 //        if (nbImpure == 2) {
 //            if (fb < 0) {
@@ -542,10 +542,10 @@ private : void setVarEquivalenceAEqB(int a, int b, bool s) {
 
         int i, j;
         if (ca < cb) {
-            j = ca;
-            i = cb;
+            j = a;
+            i = b;
         } else {
-            i = ca, j = cb; // i<j
+            i = a, j = b; // i>j
         }
 
 
@@ -553,13 +553,16 @@ private : void setVarEquivalenceAEqB(int a, int b, bool s) {
 
 
         bool ph = (getsign(j) != getsign(i));
-        if (v[i + 2] == v[j + 2] && !ph) {
+        if ((ca == cb) && !ph) {
             satisfiable = false;
             return;
         }
-        if (j >= 0) {
-            v[j + 2] = v[i + 2];
-            neg[j + 2] = (ph != s);
+        
+        int gi = get(i);
+        int gj = get(j);        
+        if (gj >= 0) {
+            v[i + 2]= gj;
+            neg[i + 2] = (s != getsign(j));
         }
 
 

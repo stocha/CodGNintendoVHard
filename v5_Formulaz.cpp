@@ -174,7 +174,7 @@ void FormulazTests::testInvertRef() {
 }
 
 void testCompImpl() {
-    int nbBit = 4;
+    int nbBit = 18;
     
         srand(0x44576621);
 
@@ -185,6 +185,11 @@ void testCompImpl() {
     //seqInvert seqInv;
     seqInvertSimetric seqSym;
     eq01Invert eqInvert;
+    
+    // time spent for 18 bit and 30 values is 2.324
+//      12.9088 inst per second 
+
+    //
     //compareImpl imp(&refInv,&seqInv);
     //compareImpl imp(&refInv,&refInv);
     // compareImpl imp(&seqInv,&seqInv);
@@ -199,7 +204,7 @@ void testCompImpl() {
    //     imp.compareThem(nbBit, 30);
    // }
  //   {
-   //     compareImpl imp(&seqSym, &seqSym);
+  //      compareImpl imp(&seqSym, &seqSym);
   //      imp.compareThem(nbBit, 30);
   //  }
         
